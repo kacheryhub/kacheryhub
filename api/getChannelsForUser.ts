@@ -18,7 +18,6 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
     }
 
     ;(async () => {
-        console.log('--- test2')
         const auth = request.auth
         if (!auth.userId) throw Error('No auth user id')
         if (!auth.googleIdToken) throw Error('No google id token')
@@ -40,7 +39,6 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
                 console.warn('Not a valid channel config', x)
             }
         }
-        console.log('--- returning', ret)
         return ret
     })().then((result) => {
         res.json(result)

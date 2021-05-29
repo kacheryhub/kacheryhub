@@ -12,7 +12,6 @@ const isGetChannelsConfigRequest = (x: any): x is GetChannelsConfigRequest => {
 }
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {
-    console.log('---- test1')
     const {body: request} = req
     if (!isGetChannelsConfigRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)

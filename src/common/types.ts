@@ -9,7 +9,7 @@ export type GoogleServiceAccountCredentials = {
     client_id: string
 }
 
-export const isGoogleServiceAccountCredentials = (x: any) => {
+export const isGoogleServiceAccountCredentials = (x: any): x is GoogleServiceAccountCredentials => {
     return _validateObject(x, {
         type: isEqualTo('service_account'),
         project_id: isString,
@@ -70,6 +70,18 @@ export type AddChannelRequest = {
 export const isAddChannelRequest = (x: any): x is AddChannelRequest => {
     return _validateObject(x, {
         channel: isChannelConfig,
+        auth: isAuth
+    })
+}
+
+export type DeleteChannelRequest = {
+    channelName: string
+    auth: Auth
+}
+
+export const isDeleteChannelRequest = (x: any): x is DeleteChannelRequest => {
+    return _validateObject(x, {
+        channelName: isString,
         auth: isAuth
     })
 }
