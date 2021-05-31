@@ -3,6 +3,7 @@ import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
 import ChannelListSection from './ChannelListSection'
 import './Home.css'
 import SignInSection from './SignInSection'
+import NodeListSection from './NodeListSection'
 
 type Props = {
     
@@ -19,7 +20,10 @@ const Home: FunctionComponent<Props> = () => {
             <SignInSection />
             {
                 signedIn && (
-                    <ChannelListSection />
+                    <span>
+                        <ChannelListSection />
+                        <NodeListSection />
+                    </span>
                 )
             }
         </div>

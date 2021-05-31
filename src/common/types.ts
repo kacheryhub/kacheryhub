@@ -1,4 +1,4 @@
-import { isEqualTo, isOneOf, isString, optional, _validateObject } from "./kacheryTypes/kacheryTypes"
+import { isEqualTo, isNodeId, isOneOf, isString, NodeId, optional, _validateObject } from "./kacheryTypes/kacheryTypes"
 
 export type GoogleServiceAccountCredentials = {
     type: 'service_account',
@@ -35,6 +35,20 @@ export const isChannelConfig = (x: any): x is ChannelConfig => {
         bucketUri: optional(isString),
         googleServiceAccountCredentials: optional(isOneOf([isGoogleServiceAccountCredentials, isEqualTo('private')])),
         ablyApiKey: optional(isOneOf([isString, isEqualTo('private')]))
+    })
+}
+
+export type NodeConfig = {
+    nodeId: NodeId
+    ownerId: string
+    label: string
+}
+
+export const isNodeConfig = (x: any): x is NodeConfig => {
+    return _validateObject(x, {
+        nodeId: isNodeId,
+        ownerId: isString,
+        label: isString
     })
 }
 
@@ -82,6 +96,18 @@ export type DeleteChannelRequest = {
 export const isDeleteChannelRequest = (x: any): x is DeleteChannelRequest => {
     return _validateObject(x, {
         channelName: isString,
+        auth: isAuth
+    })
+}
+
+export type GetNodesForUserRequest = {
+    userId: string,
+    auth: Auth
+}
+
+export const isGetNodesForUserRequest = (x: any): x is GetNodesForUserRequest => {
+    return _validateObject(x, {
+        userId: isString,
         auth: isAuth
     })
 }

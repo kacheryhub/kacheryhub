@@ -123,7 +123,11 @@ const ChannelListSection: FunctionComponent<Props> = () => {
 
     return (
         <div>
-        <h4>Your channels</h4>
+            <h4>Your channels</h4>
+            <p>
+                These are channels hosted by you; you provide the cloud storage and network communication services.
+                You can configure which nodes can belong to these channels in various roles.
+            </p>
             {
                 (channelsForUser && channelsForUser.length === 0) && (
                     <div>You do not have any channels</div>
