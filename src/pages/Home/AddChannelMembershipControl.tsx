@@ -1,19 +1,19 @@
 import React, { FunctionComponent, useCallback, useState } from 'react'
 
 type Props = {
-    onAddChannel: (channelName: string) => void
+    onAddChannelMembership: (channelName: string) => void
     onCancel: () => void
 }
 
-const AddChannelControl: FunctionComponent<Props> = ({onAddChannel, onCancel}) => {
+const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMembership, onCancel}) => {
     const [editChannelName, setEditChannelName] = useState<string>('')
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setEditChannelName(e.target.value)
     }, [])
     const handleAdd = useCallback(() => {
         setEditChannelName('')
-        onAddChannel(editChannelName)
-    }, [editChannelName, onAddChannel])
+        onAddChannelMembership(editChannelName)
+    }, [editChannelName, onAddChannelMembership])
     return (
         <div>
             <span>
@@ -26,4 +26,4 @@ const AddChannelControl: FunctionComponent<Props> = ({onAddChannel, onCancel}) =
     )
 }
 
-export default AddChannelControl
+export default AddChannelMembershipControl

@@ -24,3 +24,17 @@
     font-style: italic;
     color: gray;
 }
+
+.EditNode {
+    background-color: rgb(194, 195, 214);
+    padding: 8px;
+    margin-bottom: 15px;
+    box-shadow: 4px -4px 5px #CCC;
+}
+
+.EditNode .MuiTableCell-root {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}

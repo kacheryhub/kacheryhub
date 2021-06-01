@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { ChannelConfig, isAddChannelRequest, isChannelConfig } from '../src/common/types'
+import { isAddChannelRequest } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
@@ -24,7 +24,12 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         const channelsCollection = db.collection('channels')
         const channelResults = await channelsCollection.where('channelName', '==', request.channel.channelName).get()
         if (channelResults.docs.length > 0) {
-            throw Error(`Channel with name "${request.channel.channelName}" already exists.`)
+            if ((channelResults.docs.length === 1) && (channelResults.docs[0].get('ownerId') === request.channel.ownerId) && (channelResults.docs[0].get('deleted'))) {
+                await channelResults.docs[0].ref.delete()
+            }
+            else {
+                throw Error(`Channel with name "${request.channel.channelName}" already exists.`)
+            }
         }
         await channelsCollection.add(request.channel)
         return {success: true}

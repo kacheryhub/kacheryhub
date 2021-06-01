@@ -21,7 +21,7 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         const channelsCollection = db.collection('channels')
         const channelResults = await channelsCollection.where('channelName', '==', request.channelName).get()
         if (channelResults.docs.length === 0) {
-            throw Error(`Channel with name "${request.channel.channelName}" does not exist.`)
+            throw Error(`Channel with name "${request.channelName}" does not exist.`)
         }
         if (channelResults.docs.length > 1) {
             throw Error(`Unexpected: more than one channel with name ${request.channelName}`)
@@ -30,7 +30,7 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         if (verifiedUserId !== doc.get('ownerId')) {
             throw Error('Not authorized')
         }
-        await doc.ref.delete()
+        await doc.ref.update({deleted: true})
         return {success: true}
     })().then((result) => {
         res.json(result)

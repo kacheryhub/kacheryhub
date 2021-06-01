@@ -1,12 +1,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { ChannelConfig, isChannelConfig, isGetChannelsForUserRequest } from '../src/common/types'
+import { isAddChannelRequest, isAddNodeRequest } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
-    if (!isGetChannelsForUserRequest(request)) {
+    if (!isAddNodeRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
@@ -16,26 +16,20 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         if (!auth.userId) throw Error('No auth user id')
         if (!auth.googleIdToken) throw Error('No google id token')
         const verifiedUserId = await googleVerifyIdToken(auth.userId, auth.googleIdToken)
-        if (verifiedUserId !== request.userId) {
+        if (verifiedUserId !== request.node.ownerId) {
             throw Error('Not authorized')
         }
 
         const db = firestoreDatabase()
-        const channelsCollection = db.collection('channels')
-        const channelResults = await channelsCollection.where('ownerId', '==', request.userId).get()
-        const ret: ChannelConfig[] = []
-        for (let doc of channelResults.docs) {
-            const x = doc.data()
-            if (isChannelConfig(x)) {
-                if (!x.deleted) {
-                    ret.push(x)
-                }
-            }
-            else {
-                console.warn('Not a valid channel config', x)
-            }
+        const nodesCollection = db.collection('nodes')
+        const nodeResults = await nodesCollection
+                .where('nodeId', '==', request.node.nodeId)
+                .where('ownerId', '==', verifiedUserId).get()
+        if (nodeResults.docs.length > 0) {
+            throw Error(`Node with ID "${request.node.nodeId}" already exists for this owner.`)
         }
-        return ret
+        await nodesCollection.add(request.node)
+        return {success: true}
     })().then((result) => {
         res.json(result)
     }).catch((error: Error) => {

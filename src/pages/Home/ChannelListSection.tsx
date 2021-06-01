@@ -1,9 +1,12 @@
+import { IconButton } from '@material-ui/core'
+import { AddCircle, Refresh } from '@material-ui/icons'
 import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { isArrayOf } from '../../common/kacheryTypes/kacheryTypes'
 import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from '../../common/types'
+import useVisible from '../../commonComponents/useVisible'
 import AddChannelControl from './AddChannelControl'
 import ChannelsTable from './ChannelsTable'
 
@@ -20,6 +23,8 @@ const useChannelsForUser = (userId?: string | null) => {
     useEffect(() => {
         if (!userId) return
         ;(async () => {
+            delete channelsForUser.current[userId]
+            incrementUpdateCode()
             const req: GetChannelsForUserRequest = {
                 userId,
                 auth: {
@@ -85,11 +90,14 @@ const ChannelListSection: FunctionComponent<Props> = () => {
     const [status, setStatus] = useState<'ready' | 'processing'>('ready')
     const [errorMessage, setErrorMessage] = useState<string>('')
 
+    const {visible: addingChannelVisible, show: showAddingChannel, hide: hideAddingChannel} = useVisible()
+
     const handleAddChannel = useCallback((channelName: string) => {
         if (!googleSignInClient) return
         const userId = googleSignInClient.userId
         if (!userId) return
         if (status !== 'ready') return
+        hideAddingChannel()
         setStatus('processing')
         setErrorMessage('')
         const newChannel: ChannelConfig = {
@@ -103,7 +111,7 @@ const ChannelListSection: FunctionComponent<Props> = () => {
             setErrorMessage(err.message)
             setStatus('ready')
         })
-    }, [refreshChannelsForUser, googleSignInClient, status])
+    }, [refreshChannelsForUser, googleSignInClient, status, hideAddingChannel])
 
     const handleDeleteChannel = useCallback((channelName: string) => {
         if (!googleSignInClient) return
@@ -126,26 +134,37 @@ const ChannelListSection: FunctionComponent<Props> = () => {
             <h4>Your channels</h4>
             <p>
                 These are channels hosted by you; you provide the cloud storage and network communication services.
-                You can configure which nodes can belong to these channels in various roles.
+                You can configure which nodes are allowed to belong to these channels in various roles.
             </p>
             {
-                (channelsForUser && channelsForUser.length === 0) && (
-                    <div>You do not have any channels</div>
+                (status === 'ready') && (
+                    <span>
+                        <IconButton onClick={refreshChannelsForUser} title="Refresh channels"><Refresh /></IconButton>
+                        <IconButton onClick={showAddingChannel} title="Add channel"><AddCircle /></IconButton>
+                    </span>
                 )
             }
             {
-                <ChannelsTable channels={channelsForUser || []} onDeleteChannel={(status === 'ready') ? handleDeleteChannel : undefined} />
-            }
-            {
-                (status === 'ready') && (channelsForUser) ? (
-                    <AddChannelControl onAddChannel={handleAddChannel} />
+                ((status === 'ready') && (channelsForUser) && (addingChannelVisible)) ? (
+                    <AddChannelControl onAddChannel={handleAddChannel} onCancel={hideAddingChannel} />
                 ) : (
                     <span>{status === 'processing' && (<span>Processing...</span>)}</span>
                 )
             }
             {
                 errorMessage && (
-                    <span style={{color: 'red'}}>{errorMessage}</span>
+                    <div style={{color: 'red'}}>{errorMessage}</div>
+                )
+            }
+            {
+                channelsForUser ? (
+                    (channelsForUser && channelsForUser.length === 0) ? (
+                        <div>You do not have any channels</div>
+                    ) : (
+                        <ChannelsTable channels={channelsForUser || []} onDeleteChannel={(status === 'ready') ? handleDeleteChannel : undefined} />
+                    )
+                ) : (
+                    <div>Loading...</div>
                 )
             }
         </div>

@@ -1,51 +1,109 @@
+import { IconButton } from '@material-ui/core'
+import { AddCircle, Refresh } from '@material-ui/icons'
 import axios from 'axios'
-import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
+import React, { FunctionComponent, useCallback, useState } from 'react'
+import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
-import { isArrayOf, NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { GetNodesForUserRequest, isNodeConfig, NodeConfig } from '../../common/types'
+import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
+import { AddNodeRequest, DeleteNodeRequest, NodeConfig } from '../../common/types'
+import useVisible from '../../commonComponents/useVisible'
+import AddNodeControl from './AddNodeControl'
 import NodesTable from './NodesTable'
 
 type Props = {
+    nodes?: NodeConfig[]
+    onRefreshNodes: () => void
+    onSelectNode: (nodeId: NodeId) => void
 }
 
-const useNodesForUser = (userId?: string | null) => {
-    const nodesForUser = useRef<{[key: string]: NodeConfig[]}>({})
+const addNode = async (node: NodeConfig, googleSignInClient: GoogleSignInClient) => {
+    const req: AddNodeRequest = {
+        node,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/addNode', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
+}
+
+const deleteNode = async (nodeId: NodeId, googleSignInClient: GoogleSignInClient) => {
+    const req: DeleteNodeRequest = {
+        nodeId,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/deleteNode', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
+}
+
+const NodeListSection: FunctionComponent<Props> = ({nodes, onSelectNode, onRefreshNodes}) => {
     const googleSignInClient = useGoogleSignInClient()
-    const [refreshCode, setRefreshCode] = useState<number>(0)
-    const incrementRefreshCode = useCallback(() => {setRefreshCode(c => (c + 1))}, [])
-    const [, setUpdateCode] = useState<number>(0)
-    const incrementUpdateCode = useCallback(() => {setUpdateCode(c => (c + 1))}, [])
-    useEffect(() => {
+    const [status, setStatus] = useState<'ready' | 'processing'>('ready')
+    const [errorMessage, setErrorMessage] = useState<string>('')
+
+    const {visible: addingNodeVisible, show: showAddingNode, hide: hideAddingNode} = useVisible()
+
+    const handleAddNode = useCallback((nodeId: string) => {
+        if (!googleSignInClient) return
+        const userId = googleSignInClient.userId
         if (!userId) return
-        ;(async () => {
-            const req: GetNodesForUserRequest = {
-                userId,
-                auth: {
-                    userId: googleSignInClient?.userId || undefined,
-                    googleIdToken: googleSignInClient?.idToken || undefined
-                }
-            }
-            const nodes = (await axios.post('/api/getNodesForUser', req)).data
-            if (!isArrayOf(isNodeConfig)(nodes)) {
-                console.warn('Invalid nodes', nodes)
-                return
-            }
-            nodesForUser.current[userId] = nodes
-            incrementUpdateCode()
-        })()
-    }, [userId, googleSignInClient, refreshCode, incrementUpdateCode])
-    return {nodesForUser: userId ? nodesForUser.current[userId] || undefined : undefined, refreshNodesForUser: incrementRefreshCode}
-}
+        if (status !== 'ready') return
+        if (!isNodeId(nodeId)) {
+            setStatus('ready')
+            setErrorMessage('Invalid node ID')
+            return
+        }
+        setStatus('processing')
+        setErrorMessage('')
+        const newNode: NodeConfig = {
+            nodeId,
+            ownerId: userId
+        }
+        addNode(newNode, googleSignInClient).then(() => {
+            onRefreshNodes()
+            setStatus('ready')
+        }).catch((err) => {
+            setErrorMessage(err.message)
+            setStatus('ready')
+        })
+    }, [onRefreshNodes, googleSignInClient, status])
 
-const NodeListSection: FunctionComponent<Props> = () => {
-    const googleSignInClient = useGoogleSignInClient()
-    const {nodesForUser} = useNodesForUser(googleSignInClient?.userId)
-    const [status, ] = useState<'ready' | 'processing'>('ready')
-    const [errorMessage,] = useState<string>('')
-
-    const handleForgetNode = useCallback((nodeId: NodeId) => {
-        // todo
-    }, [])
+    const handleDeleteNode = useCallback((nodeId: NodeId) => {
+        if (!googleSignInClient) return
+        const userId = googleSignInClient.userId
+        if (!userId) return
+        if (status !== 'ready') return
+        hideAddingNode()
+        setStatus('processing')
+        setErrorMessage('')
+        deleteNode(nodeId, googleSignInClient).then(() => {
+            onRefreshNodes()
+            setStatus('ready')
+        }).catch((err) => {
+            setErrorMessage(err.message)
+            setStatus('ready')
+        })
+    }, [onRefreshNodes, googleSignInClient, status, hideAddingNode])
 
     return (
         <div>
@@ -55,18 +113,39 @@ const NodeListSection: FunctionComponent<Props> = () => {
                 You can configure which channels these nodes belong to in which roles.
             </p>
             {
-                (nodesForUser && nodesForUser.length === 0) && (
-                    <div>You do not have any nodes</div>
+                (status === 'ready') && (
+                    <span>
+                        <IconButton onClick={onRefreshNodes} title="Refresh nodes"><Refresh /></IconButton>
+                        <IconButton onClick={showAddingNode} title="Add node"><AddCircle /></IconButton>
+                    </span>
                 )
             }
             {
-                <NodesTable nodes={nodesForUser || []} onForgetNode={(status === 'ready') ? handleForgetNode : undefined} />
+                ((status === 'ready') && (nodes) && (addingNodeVisible)) ? (
+                    <AddNodeControl onAddNode={handleAddNode} onCancel={hideAddingNode} />
+                ) : (
+                    <span>{status === 'processing' && (<span>Processing...</span>)}</span>
+                )
             }
             {
                 errorMessage && (
-                    <span style={{color: 'red'}}>{errorMessage}</span>
+                    <div style={{color: 'red'}}>{errorMessage}</div>
                 )
             }
+            {
+                nodes ? (
+                    (nodes && nodes.length === 0) ? (
+                        <div>You do not have any nodes</div>
+                    ) : (
+                        <NodesTable nodes={nodes || []} onDeleteNode={(status === 'ready') ? handleDeleteNode : undefined} onClickNode={onSelectNode} />
+                    )
+                ) : (
+                    <div>Loading...</div>
+                )
+            }
+
+
+
         </div>
     )
 }

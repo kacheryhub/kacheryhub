@@ -1,12 +1,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { ChannelConfig, isChannelConfig, isGetChannelsForUserRequest } from '../src/common/types'
+import { ChannelConfig, isChannelConfig, isGetChannelsForUserRequest, isGetNodesForUserRequest, isNodeConfig, NodeConfig } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
-    if (!isGetChannelsForUserRequest(request)) {
+    if (!isGetNodesForUserRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
@@ -21,18 +21,18 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
 
         const db = firestoreDatabase()
-        const channelsCollection = db.collection('channels')
-        const channelResults = await channelsCollection.where('ownerId', '==', request.userId).get()
-        const ret: ChannelConfig[] = []
-        for (let doc of channelResults.docs) {
+        const nodesCollection = db.collection('nodes')
+        const nodeResults = await nodesCollection.where('ownerId', '==', request.userId).get()
+        const ret: NodeConfig[] = []
+        for (let doc of nodeResults.docs) {
             const x = doc.data()
-            if (isChannelConfig(x)) {
+            if (isNodeConfig(x)) {
                 if (!x.deleted) {
                     ret.push(x)
                 }
             }
             else {
-                console.warn('Not a valid channel config', x)
+                console.warn('Not a valid node config', x)
             }
         }
         return ret
