@@ -1,11 +1,12 @@
+import { Firestore } from '@google-cloud/firestore'
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isAddNodeChannelMembershipRequest, NodeChannelMembership } from '../src/common/types'
+import { isAddAuthorizedNodeRequest, isAddNodeChannelMembershipRequest, isUpdateNodeChannelAuthorizationRequest, isUpdateNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
-    if (!isAddNodeChannelMembershipRequest(request)) {
+    if (!isUpdateNodeChannelMembershipRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
@@ -19,33 +20,24 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         const db = firestoreDatabase()
         const nodesCollection = db.collection('nodes')
         const nodeResults = await nodesCollection
-            .where('nodeId', '==', request.nodeId)
+            .where('nodeId', '==', request.membership.nodeId)
             .where('ownerId', '==', verifiedUserId).get()
         if (nodeResults.docs.length === 0) {
-            throw Error(`Node with ID "${request.nodeId}" does not exist.`)
+            throw Error(`Node with ID "${request.membership.nodeId}" does not exist.`)
         }
         if (nodeResults.docs.length > 1) {
-            throw Error(`Unexpected: more than one node with ID ${request.nodeId} for this owner`)
+            throw Error(`Unexpected: more than one node with ID ${request.membership.nodeId}`)
         }
         const doc = nodeResults.docs[0]
         if (verifiedUserId !== doc.get('ownerId')) {
             throw Error('Not authorized')
         }
-        const channelMemberships: NodeChannelMembership[] = doc.get('channelMemberships') || []
-        if (channelMemberships.map(x => x.channelName).includes(request.channelName)) {
-            throw Error('Already member of channel')
+        const memberships: NodeChannelMembership[] = doc.get('channelMemberships') || []
+        if (!memberships.map(x => x.channelName).includes(request.membership.channelName)) {
+            throw Error('Channel membership not found')
         }
-        channelMemberships.push({
-            nodeId: request.nodeId,
-            channelName: request.channelName,
-            roles: {
-                downloadFiles: true,
-                downloadFeeds: true,
-                downloadTaskResults: true
-            }
-        })
         await doc.ref.update({
-            channelMemberships: channelMemberships
+            channelMemberships: memberships.map(x => (x.channelName === request.membership.channelName ? request.membership : x))
         })
         return {success: true}
     })().then((result) => {

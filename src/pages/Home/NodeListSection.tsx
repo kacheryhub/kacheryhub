@@ -9,10 +9,9 @@ import { AddNodeRequest, DeleteNodeRequest, NodeConfig } from '../../common/type
 import useVisible from '../../commonComponents/useVisible'
 import AddNodeControl from './AddNodeControl'
 import NodesTable from './NodesTable'
+import useNodesForUser from './useNodesForUser'
 
 type Props = {
-    nodes?: NodeConfig[]
-    onRefreshNodes: () => void
     onSelectNode: (nodeId: NodeId) => void
 }
 
@@ -56,8 +55,9 @@ const deleteNode = async (nodeId: NodeId, googleSignInClient: GoogleSignInClient
     }
 }
 
-const NodeListSection: FunctionComponent<Props> = ({nodes, onSelectNode, onRefreshNodes}) => {
+const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {
     const googleSignInClient = useGoogleSignInClient()
+    const {nodesForUser: nodes, refreshNodesForUser: onRefreshNodes} = useNodesForUser(googleSignInClient?.userId)
     const [status, setStatus] = useState<'ready' | 'processing'>('ready')
     const [errorMessage, setErrorMessage] = useState<string>('')
 

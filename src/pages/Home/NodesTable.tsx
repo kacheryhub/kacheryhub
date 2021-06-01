@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react'
+import formatTime from '../../common/formatTime'
 import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { NodeConfig } from '../../common/types'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
@@ -21,8 +22,8 @@ const NodesTable: FunctionComponent<Props> = ({nodes, onDeleteNode, onClickNode}
             label: 'Label'
         },
         {
-            key: 'lastReport',
-            label: 'Last report'
+            key: 'lastUpdate',
+            label: 'Last update'
         }
     ]), [])
     const rows = useMemo(() => (
@@ -32,8 +33,8 @@ const NodesTable: FunctionComponent<Props> = ({nodes, onDeleteNode, onClickNode}
                 label: {
                     text: node.lastNodeReport ? node.lastNodeReport.nodeLabel : ''
                 },
-                lastReport: {
-                    text: node.lastNodeReportTimestamp ? node.lastNodeReportTimestamp : ''
+                lastUpdate: {
+                    text: node.lastNodeReportTimestamp ? formatTime(new Date(Number(node.lastNodeReportTimestamp))) : ''
                 },
                 nodeId: {
                     text: node.nodeId.toString(),

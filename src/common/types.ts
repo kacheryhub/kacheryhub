@@ -1,4 +1,4 @@
-import { isArrayOf, isBoolean, isEqualTo, isNodeId, isNodeLabel, isOneOf, isSignature, isString, isTimestamp, NodeId, NodeLabel, optional, Signature, Timestamp, _validateObject } from "./kacheryTypes/kacheryTypes"
+import { isArrayOf, isBoolean, isEqualTo, isNodeId, isNodeLabel, isNumber, isOneOf, isSignature, isString, isTimestamp, NodeId, NodeLabel, optional, Signature, Timestamp, _validateObject } from "./kacheryTypes/kacheryTypes"
 
 export type GoogleServiceAccountCredentials = {
     type: 'service_account',
@@ -20,6 +20,37 @@ export const isGoogleServiceAccountCredentials = (x: any): x is GoogleServiceAcc
     }, {allowAdditionalFields: true})
 }
 
+export type NodeChannelAuthorization = {
+    channelName: string
+    nodeId: NodeId
+    permissions: {
+        requestFiles?: boolean
+        requestFeeds?: boolean
+        requestTaskResults?: boolean
+        provideFiles?: boolean
+        provideFeeds?: boolean
+        provideTaskResults?: boolean
+    }
+}
+
+export const isNodeChannelAuthorization = (x: any): x is NodeChannelAuthorization => {
+    return _validateObject(x, {
+        channelName: isString,
+        nodeId: isNodeId,
+        permissions: {
+            downloadFiles: optional(isBoolean),
+            downloadFeeds: optional(isBoolean),
+            downloadTaskResults: optional(isBoolean),
+            requestFiles: optional(isBoolean),
+            requestFeeds: optional(isBoolean),
+            requestTaskResults: optional(isBoolean),
+            provideFiles: optional(isBoolean),
+            provideFeeds: optional(isBoolean),
+            provideTaskResults: optional(isBoolean)
+        }
+    })
+}
+
 export type ChannelConfig = {
     channelName: string
     ownerId: string
@@ -27,6 +58,7 @@ export type ChannelConfig = {
     googleServiceAccountCredentials?: GoogleServiceAccountCredentials | 'private'
     ablyApiKey?: string | 'private'
     deleted?: boolean
+    authorizedNodes?: NodeChannelAuthorization[]
 }
 
 export const isChannelConfig = (x: any): x is ChannelConfig => {
@@ -36,7 +68,8 @@ export const isChannelConfig = (x: any): x is ChannelConfig => {
         bucketUri: optional(isString),
         googleServiceAccountCredentials: optional(isOneOf([isGoogleServiceAccountCredentials, isEqualTo('private')])),
         ablyApiKey: optional(isOneOf([isString, isEqualTo('private')])),
-        deleted: optional(isBoolean)
+        deleted: optional(isBoolean),
+        authorizedNodes: optional(isArrayOf(isNodeChannelAuthorization))
     })
 }
 
@@ -68,6 +101,7 @@ export type NodeChannelMembership = {
         provideFeeds?: boolean
         provideTaskResults?: boolean
     }
+    authorization?: NodeChannelAuthorization // obtained by cross-referencing the channels collection
 }
 
 const isNodeChannelMembership = (x: any): x is NodeChannelMembership => {
@@ -84,7 +118,8 @@ const isNodeChannelMembership = (x: any): x is NodeChannelMembership => {
             provideFiles: optional(isBoolean),
             provideFeeds: optional(isBoolean),
             provideTaskResults: optional(isBoolean)
-        }
+        },
+        authorization: optional(isNodeChannelAuthorization)
     })
 }
 
@@ -102,10 +137,11 @@ export const isNodeConfig = (x: any): x is NodeConfig => {
         nodeId: isNodeId,
         ownerId: isString,
         channelMemberships: optional(isArrayOf(isNodeChannelMembership)),
+        memberships: optional(isNumber), // for historical - remove eventually
         lastNodeReport: optional(isNodeReport),
         lastNodeReportTimestamp: optional(isTimestamp),
         deleted: optional(isBoolean)
-    })
+    }, {callback: x => {console.log('---', x)}})
 }
 
 export type Auth = {
@@ -168,6 +204,32 @@ export const isGetNodesForUserRequest = (x: any): x is GetNodesForUserRequest =>
     })
 }
 
+export type GetNodeForUserRequest = {
+    nodeId: NodeId,
+    userId: string,
+    auth: Auth
+}
+
+export const isGetNodeForUserRequest = (x: any): x is GetNodeForUserRequest => {
+    return _validateObject(x, {
+        nodeId: isNodeId,
+        userId: isString,
+        auth: isAuth
+    })
+}
+
+export type GetChannelRequest = {
+    channelName: string,
+    auth: Auth
+}
+
+export const isGetChannelRequest = (x: any): x is GetChannelRequest => {
+    return _validateObject(x, {
+        channelName: isString,
+        auth: isAuth
+    })
+}
+
 export type AddNodeRequest = {
     node: NodeConfig,
     auth: Auth
@@ -202,6 +264,44 @@ export const isAddNodeChannelMembershipRequest = (x: any): x is AddNodeChannelMe
     return _validateObject(x, {
         nodeId: isNodeId,
         channelName: isString,
+        auth: isAuth
+    })
+}
+
+export type AddAuthorizedNodeRequest = {
+    channelName: string
+    nodeId: NodeId
+    auth: Auth
+}
+
+export const isAddAuthorizedNodeRequest = (x: any): x is AddAuthorizedNodeRequest => {
+    return _validateObject(x, {
+        channelName: isString,
+        nodeId: isNodeId,
+        auth: isAuth
+    })
+}
+
+export type UpdateNodeChannelAuthorizationRequest = {
+    authorization: NodeChannelAuthorization
+    auth: Auth
+}
+
+export const isUpdateNodeChannelAuthorizationRequest = (x: any): x is UpdateNodeChannelAuthorizationRequest => {
+    return _validateObject(x, {
+        authorization: isNodeChannelAuthorization,
+        auth: isAuth
+    })
+}
+
+export type UpdateNodeChannelMembershipRequest = {
+    membership: NodeChannelMembership
+    auth: Auth
+}
+
+export const isUpdateNodeChannelMembershipRequest = (x: any): x is UpdateNodeChannelMembershipRequest => {
+    return _validateObject(x, {
+        membership: isNodeChannelMembership,
         auth: isAuth
     })
 }

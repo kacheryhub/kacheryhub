@@ -1,28 +1,27 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
 import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
-import formatTime from '../../common/formatTime'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
-import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { GetNodeForUserRequest, isNodeConfig, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types'
-import EditNodeChannelMemberships from './EditNodeChannelMemberships'
-import {updateNodeChannelAuthorization} from './EditChannel'
+import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
+import { AddAuthorizedNodeRequest, ChannelConfig, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../common/types'
+import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 
 type Props = {
-    nodeId: NodeId
+    channelName: string
 }
 
-const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
-    const req: UpdateNodeChannelMembershipRequest = {
-        membership,
+const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+    const req: AddAuthorizedNodeRequest = {
+        channelName,
+        nodeId,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
     try {
-        await axios.post('/api/updateNodeChannelMembership', req)
+        await axios.post('/api/addAuthorizedNode', req)
     }
     catch(err) {
         if (err.response) {
@@ -33,33 +32,57 @@ const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
     }
 }
 
-const EditNode: FunctionComponent<Props> = ({nodeId}) => {
-    const [nodeConfig, setNodeConfig] = useState<NodeConfig | undefined>(undefined)
+export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, authorization: NodeChannelAuthorization) => {
+    const req: UpdateNodeChannelAuthorizationRequest = {
+        authorization,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/updateNodeChannelAuthorization', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
+}
+
+const EditChannel: FunctionComponent<Props> = ({channelName}) => {
+    const [channelConfig, setChannelConfig] = useState<ChannelConfig | undefined>(undefined)
     const googleSignInClient = useGoogleSignInClient()
     const userId = googleSignInClient?.userId
     const [refreshCode, setRefreshCode] = useState<number>(0)
     const incrementRefreshCode = useCallback(() => setRefreshCode(c => (c + 1)), [])
     const [errorMessage, setErrorMessage] = useState<string>('')
-    const node = useMemo(() => {
-        if (!userId) return undefined
-        if (!nodeConfig) return undefined
-        if (nodeConfig.ownerId !== userId) {
+    const channel = useMemo(() => {
+        if (!channelName) return undefined
+        if (!channelConfig) return undefined
+        if (channelConfig.ownerId !== userId) {
             return undefined
         }
-        if (nodeConfig.nodeId !== nodeId) return undefined
-        return nodeConfig
-    }, [nodeId, nodeConfig, userId])
-
-    const handleUpdateNodeChannelMembership = useCallback((a: NodeChannelMembership) => {
+        if (channelConfig.channelName !== channelName) return undefined
+        return channelConfig
+    }, [channelName, channelConfig, userId])
+    
+    const handleAddAuthorizedNode = useCallback((channelName: string, nodeId: string) => {
         // hideAddChannelMembership()
         setErrorMessage('')
+        if (!isNodeId(nodeId)) {
+            setErrorMessage('Invalid node ID')
+            return
+        }
         if (!googleSignInClient) {
             setErrorMessage('Not signed in')
             return
         }
         ;(async () => {
             try {
-                await updateNodeChannelMembership(googleSignInClient, a)
+                await addAuthorizedNode(googleSignInClient, channelName, nodeId)
                 incrementRefreshCode()
             }
             catch(err) {
@@ -68,7 +91,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
-    const handleUpdateNodeChannelAuthorization = useCallback((a: NodeChannelAuthorization) => {
+    const handleUpdateAuthorization = useCallback((a: NodeChannelAuthorization) => {
         // hideAddChannelMembership()
         setErrorMessage('')
         if (!googleSignInClient) {
@@ -89,50 +112,39 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
     useEffect(() => {
         if (!userId) return undefined
         ;(async () => {
-            const req: GetNodeForUserRequest = {
-                nodeId,
-                userId,
+            const req: GetChannelRequest = {
+                channelName,
                 auth: {
                     userId: googleSignInClient?.userId || undefined,
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const x = (await axios.post('/api/getNodeForUser', req)).data
-            if (!isNodeConfig(x)) {
-                console.warn('Invalid node', x)
+            const x = (await axios.post('/api/getChannel', req)).data
+            if (!isChannelConfig(x)) {
+                console.warn('Invalid channel', x)
                 return
             }
-            setNodeConfig(x)
+            setChannelConfig(x)
         })()
-    }, [nodeId, userId, googleSignInClient, refreshCode])
+    }, [channelName, userId, googleSignInClient, refreshCode])
 
     const tableRows = useMemo(() => {
         const ret: {key: string, label: string | JSX.Element, value: any}[] = []
         ret.push({
-            key: 'nodeId',
-            label: <span style={{fontWeight: 'bold'}}>Node:</span>,
-            value: <span style={{fontWeight: 'bold'}}>{nodeId}</span>
-        })
-        ret.push({
-            key: 'label',
-            label: 'Label:',
-            value: <span>{node?.lastNodeReport ? node?.lastNodeReport.nodeLabel : ''}</span>
+            key: 'channelName',
+            label: <span style={{fontWeight: 'bold'}}>Channel:</span>,
+            value: <span style={{fontWeight: 'bold'}}>{channelName}</span>
         })
         ret.push({
             key: 'owner',
             label: 'Owner:',
-            value: <span>{node?.lastNodeReport ? node?.lastNodeReport.ownerId : ''}</span>
-        })
-        ret.push({
-            key: 'lastUpdate',
-            label: 'Last update:',
-            value: <span>{node?.lastNodeReportTimestamp ? formatTime(new Date(Number(node?.lastNodeReportTimestamp))) : ''}</span>
+            value: <span>{channel?.ownerId || ''}</span>
         })
         return ret
-    }, [nodeId, node])
+    }, [channelName, channel])
     return (
-        <div className="EditNode">
-            <h2>Node configuration</h2>
+        <div className="EditChannel">
+            <h2>Channel configuration</h2>
             <div style={{maxWidth: 600}}>
                 <Table>
                     <TableBody>
@@ -148,12 +160,8 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 </Table>
             </div>
             {
-                node && (
-                    <EditNodeChannelMemberships
-                        node={node}
-                        onUpdateNodeChannelMembership={handleUpdateNodeChannelMembership}
-                        onUpdateNodeChannelAuthorization={handleUpdateNodeChannelAuthorization}
-                    />
+                channel && (
+                    <EditChannelAuthorizedNodes channel={channel} onAddAuthorizedNode={handleAddAuthorizedNode} onUpdateAuthorization={handleUpdateAuthorization} />
                 )
             }
             {
@@ -163,4 +171,4 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
     )
 }
 
-export default EditNode
+export default EditChannel

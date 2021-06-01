@@ -1,11 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isDeleteChannelRequest } from '../src/common/types'
+import { isAddAuthorizedNodeRequest, isAddNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
-    if (!isDeleteChannelRequest(request)) {
+    if (!isAddAuthorizedNodeRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
@@ -18,7 +18,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
 
         const db = firestoreDatabase()
         const channelsCollection = db.collection('channels')
-        const channelResults = await channelsCollection.where('channelName', '==', request.channelName).get()
+        const channelResults = await channelsCollection
+            .where('channelName', '==', request.channelName)
+            .where('ownerId', '==', verifiedUserId).get()
         if (channelResults.docs.length === 0) {
             throw Error(`Channel with name "${request.channelName}" does not exist.`)
         }
@@ -29,7 +31,18 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         if (verifiedUserId !== doc.get('ownerId')) {
             throw Error('Not authorized')
         }
-        await doc.ref.update({deleted: true})
+        const authorizedNodes: NodeChannelAuthorization[] = doc.get('authorizedNodes') || []
+        if (authorizedNodes.map(x => x.nodeId).includes(request.nodeId)) {
+            throw Error('Node is already authorized')
+        }
+        authorizedNodes.push({
+            channelName: request.channelName,
+            nodeId: request.nodeId,
+            permissions: {}
+        })
+        await doc.ref.update({
+            authorizedNodes: authorizedNodes
+        })
         return {success: true}
     })().then((result) => {
         res.json(result)

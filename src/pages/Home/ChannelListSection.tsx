@@ -11,6 +11,7 @@ import AddChannelControl from './AddChannelControl'
 import ChannelsTable from './ChannelsTable'
 
 type Props = {
+    onSelectChannel: (channel: string) => void
 }
 
 const useChannelsForUser = (userId?: string | null) => {
@@ -84,7 +85,7 @@ const deleteChannel = async (channelName: string, googleSignInClient: GoogleSign
     }
 }
 
-const ChannelListSection: FunctionComponent<Props> = () => {
+const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
     const googleSignInClient = useGoogleSignInClient()
     const {channelsForUser, refreshChannelsForUser} = useChannelsForUser(googleSignInClient?.userId)
     const [status, setStatus] = useState<'ready' | 'processing'>('ready')
@@ -161,7 +162,7 @@ const ChannelListSection: FunctionComponent<Props> = () => {
                     (channelsForUser && channelsForUser.length === 0) ? (
                         <div>You do not have any channels</div>
                     ) : (
-                        <ChannelsTable channels={channelsForUser || []} onDeleteChannel={(status === 'ready') ? handleDeleteChannel : undefined} />
+                        <ChannelsTable channels={channelsForUser || []} onClickChannel={onSelectChannel} onDeleteChannel={(status === 'ready') ? handleDeleteChannel : undefined} />
                     )
                 ) : (
                     <div>Loading...</div>

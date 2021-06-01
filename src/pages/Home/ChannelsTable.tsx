@@ -1,13 +1,15 @@
 import React, { FunctionComponent, useMemo } from 'react'
 import { ChannelConfig } from '../../common/types'
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 
 type Props = {
     channels: ChannelConfig[]
+    onClickChannel?: (channelName: string) => void
     onDeleteChannel?: (channelName: string) => void
 }
 
-const ChannelsTable: FunctionComponent<Props> = ({channels, onDeleteChannel}) => {
+const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDeleteChannel}) => {
     const columns = useMemo(() => ([
         {
             key: 'channelName',
@@ -19,11 +21,12 @@ const ChannelsTable: FunctionComponent<Props> = ({channels, onDeleteChannel}) =>
             key: channel.channelName,
             columnValues: {
                 channelName: {
-                    text: channel.channelName
+                    text: channel.channelName,
+                    element: <Hyperlink onClick={() => {onClickChannel && onClickChannel(channel.channelName)}}>{channel.channelName}</Hyperlink>
                 }
             }
         }))
-    ), [channels])
+    ), [channels, onClickChannel])
     return (
         <NiceTable
             rows={rows}

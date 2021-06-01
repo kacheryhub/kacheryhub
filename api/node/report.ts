@@ -1,8 +1,8 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { NodeId, nowTimestamp, PublicKey, PublicKeyHex } from '../src/common/kacheryTypes/kacheryTypes'
-import { isNodeReportRequest } from '../src/common/types'
-import firestoreDatabase from './common/firestoreDatabase'
-import verifySignature from './common/verifySignature'
+import { NodeId, nowTimestamp, PublicKey, PublicKeyHex } from '../../src/common/kacheryTypes/kacheryTypes'
+import { isNodeReportRequest } from '../../src/common/types'
+import firestoreDatabase from '../common/firestoreDatabase'
+import verifySignature from '../common/verifySignature'
 
 const ed25519PubKeyPrefix = "302a300506032b6570032100";
 export const hexToPublicKey = (x: PublicKeyHex): PublicKey => {

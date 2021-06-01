@@ -1,8 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { ChannelConfig, isChannelConfig, isGetChannelsForUserRequest, isGetNodesForUserRequest, isNodeConfig, NodeConfig } from '../src/common/types'
+import { isGetNodesForUserRequest, isNodeConfig, NodeConfig } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
-
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -32,7 +31,8 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
                 }
             }
             else {
-                console.warn('Not a valid node config', x)
+                console.warn(JSON.stringify(x, null, 4))
+                console.warn('Not a valid node config')
             }
         }
         return ret

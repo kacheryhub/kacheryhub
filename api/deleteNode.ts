@@ -1,8 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isDeleteChannelRequest, isDeleteNodeRequest } from '../src/common/types'
+import { isDeleteNodeRequest } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
-
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req

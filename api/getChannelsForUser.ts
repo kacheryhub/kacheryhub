@@ -2,7 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node'
 import { ChannelConfig, isChannelConfig, isGetChannelsForUserRequest } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
-
+import hideChannelSecrets from './common/hideChannelSecrets'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -28,7 +28,7 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
             const x = doc.data()
             if (isChannelConfig(x)) {
                 if (!x.deleted) {
-                    ret.push(x)
+                    ret.push(hideChannelSecrets(x))
                 }
             }
             else {
