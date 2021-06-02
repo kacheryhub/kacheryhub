@@ -4,7 +4,7 @@ import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } f
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { AddAuthorizedNodeRequest, ChannelConfig, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../common/types'
+import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../common/types'
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 
 type Props = {
@@ -42,6 +42,27 @@ export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleS
     }
     try {
         await axios.post('/api/updateNodeChannelAuthorization', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
+}
+
+export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+    const req: DeleteNodeChannelAuthorizationRequest = {
+        channelName,
+        nodeId,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/deleteNodeChannelAuthorization', req)
     }
     catch(err) {
         if (err.response) {
@@ -109,9 +130,29 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
+    const handleDeleteAuthorization = useCallback((channelName: string, nodeId: NodeId) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await deleteNodeChannelAuthorization(googleSignInClient, channelName, nodeId)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
     useEffect(() => {
+        console.log('----- test 1')
         if (!userId) return undefined
         ;(async () => {
+            console.log('----- test 2')
             const req: GetChannelRequest = {
                 channelName,
                 auth: {
@@ -120,10 +161,12 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 }
             }
             const x = (await axios.post('/api/getChannel', req)).data
+            console.log('----- test 3')
             if (!isChannelConfig(x)) {
                 console.warn('Invalid channel', x)
                 return
             }
+            console.log('----- test 4', x)
             setChannelConfig(x)
         })()
     }, [channelName, userId, googleSignInClient, refreshCode])
@@ -161,7 +204,12 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             </div>
             {
                 channel && (
-                    <EditChannelAuthorizedNodes channel={channel} onAddAuthorizedNode={handleAddAuthorizedNode} onUpdateAuthorization={handleUpdateAuthorization} />
+                    <EditChannelAuthorizedNodes
+                        channel={channel}
+                        onAddAuthorizedNode={handleAddAuthorizedNode}
+                        onUpdateAuthorization={handleUpdateAuthorization}
+                        onDeleteAuthorization={handleDeleteAuthorization}
+                    />
                 )
             }
             {

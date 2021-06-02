@@ -1,11 +1,8 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
-import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
-import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
-import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { AddNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership, NodeConfig } from '../../common/types'
+import { NodeChannelAuthorization, NodeChannelMembership, NodeConfig } from '../../common/types'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
 import AddChannelMembershipControl from './AddChannelMembershipControl'
@@ -14,45 +11,28 @@ import EditNodeChannelMembership from './EditNodeChannelMembership'
 
 type Props = {
     node: NodeConfig
+    onAddNodeChannelMembership?: (channelName: string, nodeId: NodeId) => void
     onUpdateNodeChannelMembership?: (a: NodeChannelMembership) => void
+    onDeleteNodeChannelMembership?: (channelName: string, nodeId: NodeId) => void
     onUpdateNodeChannelAuthorization?: (a: NodeChannelAuthorization) => void
 }
 
-const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: string) => {
-    const req: AddNodeChannelMembershipRequest = {
-        nodeId,
-        channelName,
-        auth: {
-            userId: googleSignInClient.userId || undefined,
-            googleIdToken: googleSignInClient.idToken || undefined
-        }
-    }
-    try {
-        await axios.post('/api/addNodeChannelMembership', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
-}
-
-const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization}) => {
-    const googleSignInClient = useGoogleSignInClient()
+const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization, onDeleteNodeChannelMembership, onAddNodeChannelMembership}) => {
     const columns = useMemo(() => ([
         {
             key: 'channel',
-            label: 'Channel'
+            label: "Channel",
+            element: <span style={{fontWeight: 'bold'}}>Channel</span>
         },
         {
             key: 'authorization',
-            label: 'Authorization'
+            label: 'Authorization',
+            element: <span style={{fontWeight: 'bold'}}>Authorization</span>
         },
         {
             key: 'roles',
-            label: 'Roles'
+            label: 'Roles',
+            element: <span style={{fontWeight: 'bold'}}>Roles</span>
         }
     ]), [])
     const rows = useMemo(() => (
@@ -73,31 +53,23 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
     ), [node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization])
     const {visible: addChannelMembershipVisible, show: showAddChannelMembership, hide: hideAddChannelMembership} = useVisible()
     const [addChannelMembershipErrorMessage, setAddChannelMembershipErrorMessage] = useState<string>('')
+
     const handleAddChannelMembership = useCallback((channelName: string) => {
-        // hideAddChannelMembership()
-        setAddChannelMembershipErrorMessage('')
-        if (!googleSignInClient) {
-            setAddChannelMembershipErrorMessage('Not signed in')
-            return
-        }
-        ;(async () => {
-            try {
-                await addNodeChannelMembership(googleSignInClient, node.nodeId, channelName)
-                hideAddChannelMembership()
-            }
-            catch(err) {
-                setAddChannelMembershipErrorMessage(err.message)
-            }
-        })()
-    }, [googleSignInClient, hideAddChannelMembership, node])
+        onAddNodeChannelMembership && onAddNodeChannelMembership(channelName, node.nodeId)
+    }, [onAddNodeChannelMembership, node.nodeId])
+    
     useEffect(() => {
         if (!addChannelMembershipVisible) {
             setAddChannelMembershipErrorMessage('')
         }
     }, [addChannelMembershipVisible])
+    const handleDeleteChannelMembership = useCallback((channelName: string) => {
+        onDeleteNodeChannelMembership && onDeleteNodeChannelMembership(channelName, node.nodeId)
+    }, [onDeleteNodeChannelMembership, node.nodeId])
     return (
         <div>
-            <h4>Channel memberships</h4>
+            <h3>Channel memberships</h3>
+            <p>Configure which channels this node belongs to as well as its roles in those channels. Roles must be authorized by the owner of each channel.</p>
             <IconButton onClick={showAddChannelMembership} title="Add channel membership"><Add /></IconButton>
             {
                 addChannelMembershipVisible && (
@@ -109,10 +81,13 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
                     </span>
                 )
             }
-            <NiceTable
-                columns={columns}
-                rows={rows}
-            />
+            <span className="AlternateRowColors">
+                <NiceTable
+                    columns={columns}
+                    rows={rows}
+                    onDeleteRow={onDeleteNodeChannelMembership ? handleDeleteChannelMembership : undefined}
+                />
+            </span>
         </div>
     )
 }

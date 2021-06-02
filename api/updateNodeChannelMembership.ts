@@ -1,6 +1,5 @@
-import { Firestore } from '@google-cloud/firestore'
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isAddAuthorizedNodeRequest, isAddNodeChannelMembershipRequest, isUpdateNodeChannelAuthorizationRequest, isUpdateNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership } from '../src/common/types'
+import { isUpdateNodeChannelMembershipRequest, NodeChannelMembership } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 

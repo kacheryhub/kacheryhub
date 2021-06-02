@@ -1,11 +1,11 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isUpdateNodeChannelAuthorizationRequest, NodeChannelAuthorization } from '../src/common/types'
+import { isDeleteNodeChannelMembershipRequest, NodeChannelMembership } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
-    if (!isUpdateNodeChannelAuthorizationRequest(request)) {
+    if (!isDeleteNodeChannelMembershipRequest(request)) {
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
@@ -17,25 +17,26 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         const verifiedUserId = await googleVerifyIdToken(auth.userId, auth.googleIdToken)
 
         const db = firestoreDatabase()
-        const channelsCollection = db.collection('channels')
-        const channelResults = await channelsCollection
-            .where('channelName', '==', request.authorization.channelName).get()
-        if (channelResults.docs.length === 0) {
-            throw Error(`Channel with name "${request.authorization.channelName}" does not exist.`)
+        const nodesCollection = db.collection('nodes')
+        const nodeResults = await nodesCollection
+            .where('nodeId', '==', request.nodeId)
+            .where('ownerId', '==', verifiedUserId).get()
+        if (nodeResults.docs.length === 0) {
+            throw Error(`Node with ID "${request.nodeId}" does not exist.`)
         }
-        if (channelResults.docs.length > 1) {
-            throw Error(`Unexpected: more than one channel with name ${request.authorization.channelName}`)
+        if (nodeResults.docs.length > 1) {
+            throw Error(`Unexpected: more than one node with ID ${request.nodeId}`)
         }
-        const doc = channelResults.docs[0]
+        const doc = nodeResults.docs[0]
         if (verifiedUserId !== doc.get('ownerId')) {
             throw Error('Not authorized')
         }
-        const authorizedNodes: NodeChannelAuthorization[] = doc.get('authorizedNodes') || []
-        if (!authorizedNodes.map(x => x.nodeId).includes(request.authorization.nodeId)) {
-            throw Error('Authorized node not found')
+        const memberships: NodeChannelMembership[] = doc.get('channelMemberships') || []
+        if (!memberships.map(x => x.channelName).includes(request.channelName)) {
+            throw Error('Channel membership not found')
         }
         await doc.ref.update({
-            authorizedNodes: authorizedNodes.map(x => (x.nodeId === request.authorization.nodeId ? request.authorization : x))
+            channelMemberships: memberships.filter(x => (x.channelName !== request.channelName))
         })
         return {success: true}
     })().then((result) => {

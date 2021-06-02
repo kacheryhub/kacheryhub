@@ -52,3 +52,7 @@
     padding-left: 5px;
     padding-right: 5px;
 }
+
+.AlternateRowColors > table > tbody > tr:nth-child(odd) > td {
+    background-color: lightgray;
+}

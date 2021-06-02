@@ -1,6 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
+import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { ChannelConfig, NodeChannelAuthorization } from '../../common/types'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
@@ -11,9 +12,10 @@ type Props = {
     channel: ChannelConfig
     onAddAuthorizedNode?: (channelName: string, nodeId: string) => void
     onUpdateAuthorization?: (a: NodeChannelAuthorization) => void
+    onDeleteAuthorization?: (channelName: string, nodeId: NodeId) => void
 }
 
-const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdateAuthorization, onAddAuthorizedNode}) => {
+const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdateAuthorization, onAddAuthorizedNode, onDeleteAuthorization}) => {
     const columns = useMemo(() => ([
         {
             key: 'node',
@@ -27,7 +29,7 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
     const rows = useMemo(() => (
         (channel.authorizedNodes || []).map(x => (
             {
-                key: x.channelName,
+                key: x.nodeId.toString(),
                 columnValues: {
                     node: x.nodeId,
                     authorization: {
@@ -38,6 +40,15 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
         ))
     ), [channel, onUpdateAuthorization])
     const {visible: addAuthorizedNodeVisible, show: showAddAuthorizedNode, hide: hideAddAuthorizedNode} = useVisible()
+
+    const handleDeleteAuthorization = useCallback((nodeId: string) => {
+        if (!isNodeId(nodeId)) {
+            console.warn('Invalid node id', nodeId)
+            return
+        }
+        onDeleteAuthorization && onDeleteAuthorization(channel.channelName, nodeId)
+    }, [channel.channelName, onDeleteAuthorization])
+
     return (
         <div>
             <h4>Authorized nodes</h4>
@@ -48,17 +59,24 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
                         {
                             addAuthorizedNodeVisible && (
                                 <span>
-                                    <AddAuthorizedNodeControl channelName={channel.channelName} onAddAuthorizedNode={(channelName, nodeId) => {hideAddAuthorizedNode(); onAddAuthorizedNode(channelName, nodeId);}} onCancel={hideAddAuthorizedNode} />
+                                    <AddAuthorizedNodeControl
+                                        channelName={channel.channelName}
+                                        onAddAuthorizedNode={(channelName, nodeId) => {hideAddAuthorizedNode(); onAddAuthorizedNode(channelName, nodeId);}}
+                                        onCancel={hideAddAuthorizedNode}
+                                    />
                                 </span>
                             )
                         }
                     </span>
                 )
             }
-            <NiceTable
-                columns={columns}
-                rows={rows}
-            />
+            <span className="AlternateRowColors">
+                <NiceTable
+                    columns={columns}
+                    rows={rows}
+                    onDeleteRow={onDeleteAuthorization ? handleDeleteAuthorization : undefined}
+                />
+            </span>
         </div>
     )
 }

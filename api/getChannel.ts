@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { ChannelConfig, isChannelConfig, isGetChannelRequest, isGetNodeForUserRequest, isGetNodesForUserRequest, isNodeConfig, NodeConfig } from '../src/common/types'
+import { isChannelConfig, isGetChannelRequest } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 import hideChannelSecrets from './common/hideChannelSecrets'
@@ -18,7 +18,6 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         const verifiedUserId = await googleVerifyIdToken(auth.userId, auth.googleIdToken)
 
         const db = firestoreDatabase()
-        const nodesCollection = db.collection('nodes')
         const channelsCollection = db.collection('channels')
         const channelResults = await channelsCollection
             .where('channelName', '==', request.channelName).get()

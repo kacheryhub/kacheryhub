@@ -294,6 +294,20 @@ export const isUpdateNodeChannelAuthorizationRequest = (x: any): x is UpdateNode
     })
 }
 
+export type DeleteNodeChannelAuthorizationRequest = {
+    channelName: string
+    nodeId: NodeId
+    auth: Auth
+}
+
+export const isDeleteNodeChannelAuthorizationRequest = (x: any): x is DeleteNodeChannelAuthorizationRequest => {
+    return _validateObject(x, {
+        channelName: isString,
+        nodeId: isNodeId,
+        auth: isAuth
+    })
+}
+
 export type UpdateNodeChannelMembershipRequest = {
     membership: NodeChannelMembership
     auth: Auth
@@ -302,6 +316,20 @@ export type UpdateNodeChannelMembershipRequest = {
 export const isUpdateNodeChannelMembershipRequest = (x: any): x is UpdateNodeChannelMembershipRequest => {
     return _validateObject(x, {
         membership: isNodeChannelMembership,
+        auth: isAuth
+    })
+}
+
+export type DeleteNodeChannelMembershipRequest = {
+    channelName: string
+    nodeId: NodeId
+    auth: Auth
+}
+
+export const isDeleteNodeChannelMembershipRequest = (x: any): x is DeleteNodeChannelMembershipRequest => {
+    return _validateObject(x, {
+        channelName: isString,
+        nodeId: isNodeId,
         auth: isAuth
     })
 }

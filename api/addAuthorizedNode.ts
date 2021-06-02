@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isAddAuthorizedNodeRequest, isAddNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership } from '../src/common/types'
+import { isAddAuthorizedNodeRequest, NodeChannelAuthorization } from '../src/common/types'
 import firestoreDatabase from './common/firestoreDatabase'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 

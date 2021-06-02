@@ -1,6 +1,7 @@
-import React, { FunctionComponent, useCallback, useState } from 'react'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
-import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
+import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import ChannelListSection from './ChannelListSection'
 import EditChannel from './EditChannel'
@@ -23,21 +24,71 @@ type Page = {
     channelName: string
 }
 
+const usePage = () => {
+    const location = useLocation()
+    const history = useHistory()
+    const page: Page = useMemo(() => {
+        const p = location.pathname.split('/')
+        if (p[1] === 'node') {
+            const nodeId = p[2]
+            if (isNodeId(nodeId)) {
+                return {
+                    page: 'node',
+                    nodeId
+                }
+            }
+        }    
+        else if (p[1] === 'channel') {
+            const channelName = p[2]
+            return {
+                page: 'channel',
+                channelName
+            }
+        }
+        return {
+            page: 'home'
+        }
+    }, [location])
+    const setPage = useCallback((page: Page) => {
+        if (page.page === 'node') {
+            history.push({
+                ...location,
+                pathname: `/node/${page.nodeId}`
+            })
+        }
+        else if (page.page === 'channel') {
+            history.push({
+                ...location,
+                pathname: `/channel/${page.channelName}`
+            })
+        }
+        else {
+            history.push({
+                ...location,
+                pathname: '/home'
+            })
+        }
+    }, [history, location])
+    
+    
+    return useMemo(() => ({page, setPage}), [page, setPage])
+}
+
 const Home: FunctionComponent<Props> = () => {
     const signedIn = useSignedIn()
-    const [page, setPage] = useState<Page>({page: 'home'})
+    const {page, setPage} = usePage()
 
     const handleSelectNode = useCallback((nodeId: NodeId) => {
         setPage({page: 'node', nodeId})
-    }, [])
+    }, [setPage])
 
     const handleSelectChannel = useCallback((channelName: string) => {
         setPage({page: 'channel', channelName})
-    }, [])
+    }, [setPage])
 
     const handleHome = useCallback(() => {
         setPage({page: 'home'})
-    }, [])
+    }, [setPage])
 
     if (page.page === 'home') {
         return (

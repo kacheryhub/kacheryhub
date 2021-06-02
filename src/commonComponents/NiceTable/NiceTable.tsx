@@ -10,6 +10,7 @@ interface Row {
 interface Col {
     key: string
     label: string
+    element?: any
 }
 
 interface Props {
@@ -81,7 +82,9 @@ const NiceTable: FunctionComponent<Props> = ({
                     {
                         columns.map(col => (
                             <TableCell key={col.key}>
-                                <span>{col.label}</span>
+                                {col.element ? col.element : (
+                                    <span>{col.label}</span>
+                                )}                                
                             </TableCell>
                         ))
                     }

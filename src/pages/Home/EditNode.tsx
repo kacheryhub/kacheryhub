@@ -5,12 +5,33 @@ import formatTime from '../../common/formatTime'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { GetNodeForUserRequest, isNodeConfig, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types'
+import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isNodeConfig, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
 import {updateNodeChannelAuthorization} from './EditChannel'
 
 type Props = {
     nodeId: NodeId
+}
+
+const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: string) => {
+    const req: AddNodeChannelMembershipRequest = {
+        nodeId,
+        channelName,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/addNodeChannelMembership', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
 }
 
 const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
@@ -23,6 +44,27 @@ const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
     }
     try {
         await axios.post('/api/updateNodeChannelMembership', req)
+    }
+    catch(err) {
+        if (err.response) {
+            console.log(err.response)
+            throw Error(err.response.data)
+        }
+        else throw err
+    }
+}
+
+const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+    const req: DeleteNodeChannelMembershipRequest = {
+        channelName,
+        nodeId,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    try {
+        await axios.post('/api/deleteNodeChannelMembership', req)
     }
     catch(err) {
         if (err.response) {
@@ -50,6 +92,24 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         return nodeConfig
     }, [nodeId, nodeConfig, userId])
 
+    const handleAddNodeChannelMembership = useCallback((channelName: string, nodeId: NodeId) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await addNodeChannelMembership(googleSignInClient, nodeId, channelName)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
     const handleUpdateNodeChannelMembership = useCallback((a: NodeChannelMembership) => {
         // hideAddChannelMembership()
         setErrorMessage('')
@@ -60,6 +120,24 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         ;(async () => {
             try {
                 await updateNodeChannelMembership(googleSignInClient, a)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
+    const handleDeleteNodeChannelMembership = useCallback((channelName: string, nodeId: NodeId) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await deleteNodeChannelMembership(googleSignInClient, channelName, nodeId)
                 incrementRefreshCode()
             }
             catch(err) {
@@ -151,8 +229,10 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 node && (
                     <EditNodeChannelMemberships
                         node={node}
+                        onAddNodeChannelMembership={handleAddNodeChannelMembership}
                         onUpdateNodeChannelMembership={handleUpdateNodeChannelMembership}
                         onUpdateNodeChannelAuthorization={handleUpdateNodeChannelAuthorization}
+                        onDeleteNodeChannelMembership={handleDeleteNodeChannelMembership}
                     />
                 )
             }
