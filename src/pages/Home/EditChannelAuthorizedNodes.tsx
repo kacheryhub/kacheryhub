@@ -5,8 +5,10 @@ import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { ChannelConfig, NodeChannelAuthorization } from '../../common/types'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
+import AbbreviatedNodeId from './AbbreviatedNodeId'
 import AddAuthorizedNodeControl from './AddAuthorizedNodeControl'
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization'
+import usePage from './usePage'
 
 type Props = {
     channel: ChannelConfig
@@ -16,6 +18,7 @@ type Props = {
 }
 
 const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdateAuthorization, onAddAuthorizedNode, onDeleteAuthorization}) => {
+    const {setPage} = usePage()
     const columns = useMemo(() => ([
         {
             key: 'node',
@@ -26,19 +29,25 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
             label: 'Authorization'
         }
     ]), [])
+    const gotoNodePage = useCallback((nodeId: NodeId) => {
+        setPage({page: 'node', nodeId})
+    }, [setPage])
     const rows = useMemo(() => (
         (channel.authorizedNodes || []).map(x => (
             {
                 key: x.nodeId.toString(),
                 columnValues: {
-                    node: x.nodeId,
+                    node: {
+                        text: x.nodeId,
+                        element: <AbbreviatedNodeId nodeId={x.nodeId} onClick={() => gotoNodePage(x.nodeId)} />
+                    },
                     authorization: {
                         element: <EditNodeChannelAuthorization authorization={x} onUpdateAuthorization={onUpdateAuthorization} />
                     }
                 }
             }
         ))
-    ), [channel, onUpdateAuthorization])
+    ), [channel, onUpdateAuthorization, gotoNodePage])
     const {visible: addAuthorizedNodeVisible, show: showAddAuthorizedNode, hide: hideAddAuthorizedNode} = useVisible()
 
     const handleDeleteAuthorization = useCallback((nodeId: string) => {
@@ -51,7 +60,8 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
 
     return (
         <div>
-            <h4>Authorized nodes</h4>
+            <h2>Authorized nodes</h2>
+            <p>Configure which nodes are authorized to belong to this channel in which roles.</p>
             {
                 onAddAuthorizedNode && (
                     <span>

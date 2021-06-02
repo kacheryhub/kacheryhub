@@ -1,8 +1,11 @@
-import { nowTimestamp } from "../../src/common/kacheryTypes/kacheryTypes"
+import { NodeId, nowTimestamp } from "../../src/common/kacheryTypes/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import { ReportRequestBody } from "./types"
 
-const reportHandler = async (request: ReportRequestBody) => {
+const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId) => {
+    if (request.nodeId !== verifiedNodeId) {
+        throw Error('Mismatch between node ID and verified node ID')
+    }
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
     const nodeResults = await nodesCollection

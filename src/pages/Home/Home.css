@@ -1,8 +1,8 @@
 .HomeSection {
-    background-color: rgb(229, 230, 184);
-    padding: 8px;
-    margin-bottom: 15px;
-    box-shadow: 4px -4px 5px #CCC;
+    /* background-color: rgb(219, 219, 216); */
+    /* padding: 8px; */
+    /* margin-bottom: 15px; */
+    /* box-shadow: 4px -4px 5px #CCC; */
 }
 
 .IntroSection {
@@ -10,7 +10,7 @@
 }
 
 .SignInSection {
-    color: gray
+    /* color: gray */
 }
 
 .BackendProviderSection {
@@ -26,10 +26,10 @@
 }
 
 .EditNode {
-    background-color: rgb(233, 233, 247);
+    /* background-color: rgb(233, 233, 247);
     padding: 8px;
     margin-bottom: 15px;
-    box-shadow: 4px -4px 5px #CCC;
+    box-shadow: 4px -4px 5px #CCC; */
 }
 
 .EditNode .MuiTableCell-root {
@@ -40,10 +40,10 @@
 }
 
 .EditChannel {
-    background-color: rgb(247, 233, 220);
+    /* background-color: rgb(247, 233, 220);
     padding: 8px;
     margin-bottom: 15px;
-    box-shadow: 4px -4px 5px #CCC;
+    box-shadow: 4px -4px 5px #CCC; */
 }
 
 .EditChannel .MuiTableCell-root {

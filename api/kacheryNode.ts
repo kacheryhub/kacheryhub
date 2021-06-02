@@ -1,6 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import { NodeId, PublicKey, PublicKeyHex } from '../src/common/kacheryTypes/kacheryTypes'
 import verifySignature from './common/verifySignature'
+import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
 import reportHandler from './kacheryNodeRequestHandlers/report'
 import { isKacheryNodeRequest } from './kacheryNodeRequestHandlers/types'
 
@@ -12,16 +13,20 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
     }
     const body = request.body
     const signature = request.signature
-    if (!verifySignature(body, signature, nodeIdToPublicKey(body.nodeId))) {
+    if (!verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
         throw Error('Invalid signature')
     }
+    const verifiedNodeId = request.nodeId
 
     ;(async () => {
         if (body.type === 'report') {
-            return await reportHandler(body)
+            return await reportHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'getNodeConfig') {
+            return await getNodeConfigHandler(body, verifiedNodeId)
         }
         else {
-            throw Error(`Unexpected request type: ${body.type}`)
+            throw Error(`Unexpected request type`)
         }
     })().then((result) => {
         res.json(result)

@@ -18,21 +18,52 @@ export const isReportRequestBody = (x: any): x is ReportRequestBody => {
 
 export type ReportRequest = {
     body: ReportRequestBody
+    nodeId: NodeId,
     signature: Signature
 }
 
 export const isReportRequest = (x: any): x is ReportRequest => {
     return _validateObject(x, {
         body: isReportRequestBody,
+        nodeId: isNodeId,
+        signature: isSignature
+    })
+}
+
+export type GetNodeConfigRequestBody = {
+    type: 'getNodeConfig'
+    nodeId: NodeId
+    ownerId: string
+}
+
+export const isGetNodeConfigRequestBody = (x: any): x is GetNodeConfigRequestBody => {
+    return _validateObject(x, {
+        type: isEqualTo('getNodeConfig'),
+        nodeId: isNodeId,
+        ownerId: isString
+    })
+}
+
+export type GetNodeConfigRequest = {
+    body: GetNodeConfigRequestBody
+    nodeId: NodeId
+    signature: Signature
+}
+
+export const isGetNodeConfigRequest = (x: any): x is GetNodeConfigRequest => {
+    return _validateObject(x, {
+        body: isReportRequestBody,
+        nodeId: isNodeId,
         signature: isSignature
     })
 }
 
 export type KacheryNodeRequest =
-    ReportRequest
+    ReportRequest | GetNodeConfigRequest
 
 export const isKacheryNodeRequest = (x: any): x is KacheryNodeRequest => {
     return isOneOf([
-        isReportRequest
+        isReportRequest,
+        isGetNodeConfigRequest
     ])(x)
 }

@@ -4,16 +4,20 @@ import './App.css';
 import GoogleSignInSetup from './common/googleSignIn/GoogleSignInSetup';
 import Home from './pages/Home/Home';
 import { BrowserRouter } from 'react-router-dom';
+import { MuiThemeProvider } from '@material-ui/core';
+import theme from './theme';
 
 function App() {
   return (
-    <BrowserRouter>
-      <GoogleSignInSetup>
-        <div className="App">
-          <Home />
-        </div>
-      </GoogleSignInSetup>
-    </BrowserRouter>
+    <MuiThemeProvider theme={theme}>
+      <BrowserRouter>
+        <GoogleSignInSetup>
+          <div className="App">
+            <Home />
+          </div>
+        </GoogleSignInSetup>
+      </BrowserRouter>
+    </MuiThemeProvider>
   );
 }
 

@@ -1,9 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { FunctionComponent } from "react"
-import GoogleSignIn, { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
-import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
-import hyperlinkStyle from './hyperlinkStyle'
 
 type Props = {
 }
@@ -13,7 +10,6 @@ const SignInSection: FunctionComponent<Props> = () => {
     const googleSignInClient = useGoogleSignInClient()
     const signedIn = useSignedIn()
     const [googleSignInVisible, setGoogleSignInVisible] = useState(false)
-    const toggleGoogleSignInVisible = useCallback(() => {setGoogleSignInVisible(v => (!v))}, [])
     useEffect(() => {
         if ((signedIn) && (googleSignInVisible)) {
             // do this so that if we signed out, the big button will not be visible at first
@@ -28,16 +24,8 @@ const SignInSection: FunctionComponent<Props> = () => {
                 signedIn ? (
                     <p>You are signed in as {googleSignInClient.profile?.getEmail()}</p>
                 ) : (
-                    <p>To get started <Hyperlink style={hyperlinkStyle} onClick={toggleGoogleSignInVisible}>sign in using a Google account</Hyperlink>.</p>
+                    <p>Sign in above to get started.</p>
                 )
-            }                        
-            {
-                // Display sign in button
-                (!signedIn) && (googleSignInVisible) && <GoogleSignIn client={googleSignInClient} />
-            }
-            {
-                // This will actually display a sign out button
-                (signedIn) && <GoogleSignIn client={googleSignInClient} />
             }
         </div>
     )

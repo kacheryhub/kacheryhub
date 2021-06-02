@@ -3,11 +3,13 @@ import { Add } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { NodeChannelAuthorization, NodeChannelMembership, NodeConfig } from '../../common/types'
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
 import AddChannelMembershipControl from './AddChannelMembershipControl'
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization'
 import EditNodeChannelMembership from './EditNodeChannelMembership'
+import usePage from './usePage'
 
 type Props = {
     node: NodeConfig
@@ -18,6 +20,7 @@ type Props = {
 }
 
 const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization, onDeleteNodeChannelMembership, onAddNodeChannelMembership}) => {
+    const {setPage} = usePage()
     const columns = useMemo(() => ([
         {
             key: 'channel',
@@ -35,12 +38,18 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
             element: <span style={{fontWeight: 'bold'}}>Roles</span>
         }
     ]), [])
+    const gotoChannelPage = useCallback((channelName: string) => {
+        setPage({page: 'channel', channelName})
+    }, [setPage])
     const rows = useMemo(() => (
         (node.channelMemberships || []).map(x => (
             {
                 key: x.channelName,
                 columnValues: {
-                    channel: x.channelName,
+                    channel: {
+                        text: x.channelName,
+                        element: <Hyperlink onClick={() => gotoChannelPage(x.channelName)}>{x.channelName}</Hyperlink>
+                    },
                     authorization: {
                         element: <EditNodeChannelAuthorization authorization={x.authorization} onUpdateAuthorization={onUpdateNodeChannelAuthorization} />
                     },
@@ -50,7 +59,7 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
                 }
             }
         ))
-    ), [node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization])
+    ), [node, onUpdateNodeChannelMembership, onUpdateNodeChannelAuthorization, gotoChannelPage])
     const {visible: addChannelMembershipVisible, show: showAddChannelMembership, hide: hideAddChannelMembership} = useVisible()
     const [addChannelMembershipErrorMessage, setAddChannelMembershipErrorMessage] = useState<string>('')
 
@@ -68,7 +77,7 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
     }, [onDeleteNodeChannelMembership, node.nodeId])
     return (
         <div>
-            <h3>Channel memberships</h3>
+            <h2>Channel memberships</h2>
             <p>Configure which channels this node belongs to as well as its roles in those channels. Roles must be authorized by the owner of each channel.</p>
             <IconButton onClick={showAddChannelMembership} title="Add channel membership"><Add /></IconButton>
             {

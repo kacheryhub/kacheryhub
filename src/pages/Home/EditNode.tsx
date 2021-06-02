@@ -188,31 +188,36 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
     return (
         <div className="EditNode">
             <h2>Node configuration</h2>
-            <div style={{maxWidth: 600}}>
-                <Table>
-                    <TableBody>
-                        {
-                            tableRows.map(r => (
-                                <TableRow key={r.key}>
-                                    <TableCell key="label">{r.label}</TableCell>
-                                    <TableCell key="value">{r.value}</TableCell>
-                                </TableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
-            </div>
             {
-                node && (
-                    <EditNodeChannelMemberships
-                        node={node}
-                        onAddNodeChannelMembership={handleAddNodeChannelMembership}
-                        onUpdateNodeChannelMembership={handleUpdateNodeChannelMembership}
-                        onUpdateNodeChannelAuthorization={handleUpdateNodeChannelAuthorization}
-                        onDeleteNodeChannelMembership={handleDeleteNodeChannelMembership}
-                    />
+                node ? (
+                    <span>
+                        <div style={{maxWidth: 600}}>
+                            <Table>
+                                <TableBody>
+                                    {
+                                        tableRows.map(r => (
+                                            <TableRow key={r.key}>
+                                                <TableCell key="label">{r.label}</TableCell>
+                                                <TableCell key="value">{r.value}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </div>
+                        <EditNodeChannelMemberships
+                            node={node}
+                            onAddNodeChannelMembership={handleAddNodeChannelMembership}
+                            onUpdateNodeChannelMembership={handleUpdateNodeChannelMembership}
+                            onUpdateNodeChannelAuthorization={handleUpdateNodeChannelAuthorization}
+                            onDeleteNodeChannelMembership={handleDeleteNodeChannelMembership}
+                        />
+                    </span>
+                ) : (
+                    <span>Loading node: {nodeId}</span>
                 )
             }
+            
             {
                 errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>
             }

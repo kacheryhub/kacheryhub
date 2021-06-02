@@ -142,7 +142,6 @@ export const isNodeConfig = (x: any): x is NodeConfig => {
         lastNodeReportTimestamp: optional(isTimestamp),
         deleted: optional(isBoolean)
     })
-    // }, {callback: x => {console.log('---', x)}})
 }
 
 export type Auth = {

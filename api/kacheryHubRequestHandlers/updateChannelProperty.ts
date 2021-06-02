@@ -1,4 +1,4 @@
-import { NodeChannelAuthorization, UpdateChannelPropertyRequest } from '../../src/common/types'
+import { isGoogleServiceAccountCredentials, NodeChannelAuthorization, UpdateChannelPropertyRequest } from '../../src/common/types'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const updateChannelPropertyHandler = async (request: UpdateChannelPropertyRequest, verifiedUserId: string) => {
@@ -23,6 +23,10 @@ const updateChannelPropertyHandler = async (request: UpdateChannelPropertyReques
         await doc.ref.update({ablyApiKey: request.propertyValue})
     }
     else if (request.propertyName === 'googleServiceAccountCredentials') {
+        const cred = JSON.parse(request.propertyValue)
+        if (!isGoogleServiceAccountCredentials(cred)) {
+            throw Error('Invalid google service account credentials')
+        }
         await doc.ref.update({googleServiceAccountCredentials: request.propertyValue})
     }
     else {

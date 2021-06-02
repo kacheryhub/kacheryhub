@@ -117,7 +117,7 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
 
     return (
         <div>
-            <h4>Your channels</h4>
+            <h2>Your channels</h2>
             <p>
                 These are channels hosted by you; you provide the cloud storage and network communication services.
                 You can configure which nodes are allowed to belong to these channels in various roles.

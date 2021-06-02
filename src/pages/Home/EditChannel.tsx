@@ -220,30 +220,36 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
     return (
         <div className="EditChannel">
             <h2>Channel configuration</h2>
-            <div style={{maxWidth: 600}}>
-                <Table>
-                    <TableBody>
-                        {
-                            tableRows.map(r => (
-                                <TableRow key={r.key}>
-                                    <TableCell key="label">{r.label}</TableCell>
-                                    <TableCell key="value">{r.value}</TableCell>
-                                </TableRow>
-                            ))
-                        }
-                    </TableBody>
-                </Table>
-            </div>
+            <p>The owner of each kachery channel provides the cloud resources for that channel.</p>
             {
-                channel && (
-                    <EditChannelAuthorizedNodes
-                        channel={channel}
-                        onAddAuthorizedNode={handleAddAuthorizedNode}
-                        onUpdateAuthorization={handleUpdateAuthorization}
-                        onDeleteAuthorization={handleDeleteAuthorization}
-                    />
+                channel ? (
+                    <span>
+                    <div style={{maxWidth: 600}}>
+                        <Table>
+                            <TableBody>
+                                {
+                                    tableRows.map(r => (
+                                        <TableRow key={r.key}>
+                                            <TableCell key="label">{r.label}</TableCell>
+                                            <TableCell key="value">{r.value}</TableCell>
+                                        </TableRow>
+                                    ))
+                                }
+                            </TableBody>
+                        </Table>
+                    </div>
+                        <EditChannelAuthorizedNodes
+                            channel={channel}
+                            onAddAuthorizedNode={handleAddAuthorizedNode}
+                            onUpdateAuthorization={handleUpdateAuthorization}
+                            onDeleteAuthorization={handleDeleteAuthorization}
+                        />
+                    </span>
+                ) : (
+                    <span>Loading channel: {channelName}</span>
                 )
             }
+            
             {
                 errorMessage && <div style={{color: 'red'}}>{errorMessage}</div>
             }

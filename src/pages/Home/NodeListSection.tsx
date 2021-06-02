@@ -91,7 +91,7 @@ const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {
 
     return (
         <div>
-            <h4>Your nodes</h4>
+            <h2>Your nodes</h2>
             <p>
                 These are nodes hosted by you; each is represented by a kachery daemon running on a computer.
                 You can configure which channels these nodes belong to in which roles.
