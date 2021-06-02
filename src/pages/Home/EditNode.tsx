@@ -1,13 +1,13 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
-import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import formatTime from '../../common/formatTime'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
+import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isNodeConfig, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types'
+import { updateNodeChannelAuthorization } from './EditChannel'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
-import {updateNodeChannelAuthorization} from './EditChannel'
 
 type Props = {
     nodeId: NodeId
@@ -15,6 +15,7 @@ type Props = {
 
 const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: string) => {
     const req: AddNodeChannelMembershipRequest = {
+        type: 'addNodeChannelMembership',
         nodeId,
         channelName,
         auth: {
@@ -22,40 +23,24 @@ const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, 
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/addNodeChannelMembership', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
     const req: UpdateNodeChannelMembershipRequest = {
+        type: 'updateNodeChannelMembership',
         membership,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/updateNodeChannelMembership', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
     const req: DeleteNodeChannelMembershipRequest = {
+        type: 'deleteNodeChannelMembership',
         channelName,
         nodeId,
         auth: {
@@ -63,16 +48,7 @@ const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/deleteNodeChannelMembership', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const EditNode: FunctionComponent<Props> = ({nodeId}) => {
@@ -168,6 +144,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         if (!userId) return undefined
         ;(async () => {
             const req: GetNodeForUserRequest = {
+                type: 'getNodeForUser',
                 nodeId,
                 userId,
                 auth: {
@@ -175,7 +152,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const x = (await axios.post('/api/getNodeForUser', req)).data
+            const x = await kacheryHubApiRequest(req)
             if (!isNodeConfig(x)) {
                 console.warn('Invalid node', x)
                 return

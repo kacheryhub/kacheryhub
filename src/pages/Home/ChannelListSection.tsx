@@ -1,9 +1,9 @@
 import { IconButton } from '@material-ui/core'
 import { AddCircle, Refresh } from '@material-ui/icons'
-import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
+import { default as kacheryHubApiRequest } from '../../common/kacheryHubApiRequest'
 import { isArrayOf } from '../../common/kacheryTypes/kacheryTypes'
 import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from '../../common/types'
 import useVisible from '../../commonComponents/useVisible'
@@ -27,13 +27,14 @@ const useChannelsForUser = (userId?: string | null) => {
             delete channelsForUser.current[userId]
             incrementUpdateCode()
             const req: GetChannelsForUserRequest = {
+                type: 'getChannelsForUser',
                 userId,
                 auth: {
                     userId: googleSignInClient?.userId || undefined,
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const channels = (await axios.post('/api/getChannelsForUser', req)).data
+            const channels = await kacheryHubApiRequest(req)
             if (!isArrayOf(isChannelConfig)(channels)) {
                 console.warn('Invalid channels', channels)
                 return
@@ -47,42 +48,26 @@ const useChannelsForUser = (userId?: string | null) => {
 
 const addChannel = async (channel: ChannelConfig, googleSignInClient: GoogleSignInClient) => {
     const req: AddChannelRequest = {
+        type: 'addChannel',
         channel,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/addChannel', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const deleteChannel = async (channelName: string, googleSignInClient: GoogleSignInClient) => {
     const req: DeleteChannelRequest = {
+        type: 'deleteChannel',
         channelName,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/deleteChannel', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {

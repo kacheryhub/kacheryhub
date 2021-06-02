@@ -5,8 +5,8 @@ const hideChannelSecrets = (x: ChannelConfig) => {
         channelName: x.channelName,
         ownerId: x.ownerId,
         bucketUri: x.bucketUri,
-        googleServiceAccountCredentials: x.googleServiceAccountCredentials ? 'private' : undefined,
-        ablyApiKey: x.ablyApiKey ? 'private' : undefined,
+        googleServiceAccountCredentials: x.googleServiceAccountCredentials ? '*private*' : undefined,
+        ablyApiKey: x.ablyApiKey ? '*private*' : undefined,
         deleted: x.deleted,
         authorizedNodes: x.authorizedNodes
     }

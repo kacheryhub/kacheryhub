@@ -1,9 +1,9 @@
 import { IconButton } from '@material-ui/core'
 import { AddCircle, Refresh } from '@material-ui/icons'
-import axios from 'axios'
 import React, { FunctionComponent, useCallback, useState } from 'react'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
+import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { AddNodeRequest, DeleteNodeRequest, NodeConfig } from '../../common/types'
 import useVisible from '../../commonComponents/useVisible'
@@ -17,42 +17,26 @@ type Props = {
 
 const addNode = async (node: NodeConfig, googleSignInClient: GoogleSignInClient) => {
     const req: AddNodeRequest = {
+        type: 'addNode',
         node,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/addNode', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const deleteNode = async (nodeId: NodeId, googleSignInClient: GoogleSignInClient) => {
     const req: DeleteNodeRequest = {
+        type: 'deleteNode',
         nodeId,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/deleteNode', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {

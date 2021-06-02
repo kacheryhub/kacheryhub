@@ -1,11 +1,12 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
-import axios from 'axios'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
+import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../common/types'
+import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest } from '../../common/types'
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
+import EditString from './EditString'
 
 type Props = {
     channelName: string
@@ -13,6 +14,7 @@ type Props = {
 
 const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
     const req: AddAuthorizedNodeRequest = {
+        type: 'addAuthorizedNode',
         channelName,
         nodeId,
         auth: {
@@ -20,40 +22,24 @@ const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channel
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/addAuthorizedNode', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, authorization: NodeChannelAuthorization) => {
-    const req: UpdateNodeChannelAuthorizationRequest = {
+    const req: UpdateNodeChannelAuthorizationRequest ={
+        type: 'updateNodeChannelAuthorization',
         authorization,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/updateNodeChannelAuthorization', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
-        }
-        else throw err
-    }
+    await kacheryHubApiRequest(req)
 }
 
 export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
     const req: DeleteNodeChannelAuthorizationRequest = {
+        type: 'deleteNodeChannelAuthorization',
         channelName,
         nodeId,
         auth: {
@@ -61,16 +47,21 @@ export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleS
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    try {
-        await axios.post('/api/deleteNodeChannelAuthorization', req)
-    }
-    catch(err) {
-        if (err.response) {
-            console.log(err.response)
-            throw Error(err.response.data)
+    await kacheryHubApiRequest(req)
+}
+
+export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: string, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
+    const req: UpdateChannelPropertyRequest = {
+        type: 'updateChannelProperty',
+        channelName,
+        propertyName,
+        propertyValue,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
         }
-        else throw err
     }
+    await kacheryHubApiRequest(req)
 }
 
 const EditChannel: FunctionComponent<Props> = ({channelName}) => {
@@ -148,25 +139,51 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
+    const handleChangeChannelProperty = useCallback((x: string, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials') => {
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await updateChannelProperty(googleSignInClient, channelName, propertyName, x)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode, channelName])
+
+    const handleChangeBucketUri = useCallback((x: string) => {
+        handleChangeChannelProperty(x, 'bucketUri')
+    }, [handleChangeChannelProperty])
+
+    const handleChangeAblyApiKey = useCallback((x: string) => {
+        handleChangeChannelProperty(x, 'ablyApiKey')
+    }, [handleChangeChannelProperty])
+
+    const handleChangeGoogleServiceAccountCredentials = useCallback((x: string) => {
+        handleChangeChannelProperty(x, 'googleServiceAccountCredentials')
+    }, [handleChangeChannelProperty])
+
     useEffect(() => {
-        console.log('----- test 1')
         if (!userId) return undefined
         ;(async () => {
-            console.log('----- test 2')
             const req: GetChannelRequest = {
+                type: 'getChannel',
                 channelName,
                 auth: {
                     userId: googleSignInClient?.userId || undefined,
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const x = (await axios.post('/api/getChannel', req)).data
-            console.log('----- test 3')
+            const x = await kacheryHubApiRequest(req)
             if (!isChannelConfig(x)) {
                 console.warn('Invalid channel', x)
                 return
             }
-            console.log('----- test 4', x)
             setChannelConfig(x)
         })()
     }, [channelName, userId, googleSignInClient, refreshCode])
@@ -183,8 +200,23 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             label: 'Owner:',
             value: <span>{channel?.ownerId || ''}</span>
         })
+        ret.push({
+            key: 'googleBucketName',
+            label: 'Bucket URI:',
+            value: <EditString value={channel?.bucketUri || ''} onChange={channel ? handleChangeBucketUri : undefined} />
+        })
+        ret.push({
+            key: 'ablyApiKey',
+            label: 'Ably API key:',
+            value: <EditString value={channel?.ablyApiKey || ''} onChange={channel ? handleChangeAblyApiKey : undefined} />
+        })
+        ret.push({
+            key: 'googleServiceAccountCredentials',
+            label: 'Google service account credentials:',
+            value: <EditString value={channel?.googleServiceAccountCredentials || ''} onChange={channel ? handleChangeGoogleServiceAccountCredentials : undefined} />
+        })
         return ret
-    }, [channelName, channel])
+    }, [channelName, channel, handleChangeBucketUri, handleChangeAblyApiKey, handleChangeGoogleServiceAccountCredentials])
     return (
         <div className="EditChannel">
             <h2>Channel configuration</h2>

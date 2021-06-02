@@ -1,6 +1,6 @@
-import axios from 'axios'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
+import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { isArrayOf } from '../../common/kacheryTypes/kacheryTypes'
 import { GetNodesForUserRequest, isNodeConfig, NodeConfig } from '../../common/types'
 
@@ -17,13 +17,14 @@ const useNodesForUser = (userId?: string | null) => {
             delete nodesForUser.current[userId]
             incrementUpdateCode()
             const req: GetNodesForUserRequest = {
+                type: 'getNodesForUser',
                 userId,
                 auth: {
                     userId: googleSignInClient?.userId || undefined,
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const nodes = (await axios.post('/api/getNodesForUser', req)).data
+            const nodes = await kacheryHubApiRequest(req)
             if (!isArrayOf(isNodeConfig)(nodes)) {
                 console.warn('Invalid nodes', nodes)
                 return
