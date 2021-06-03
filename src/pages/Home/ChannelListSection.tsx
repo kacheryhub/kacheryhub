@@ -6,9 +6,12 @@ import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClie
 import { default as kacheryHubApiRequest } from '../../common/kacheryHubApiRequest'
 import { isArrayOf } from '../../common/kacheryTypes/kacheryTypes'
 import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from '../../common/types'
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
+import MarkdownDialog from '../../commonComponents/Markdown/MarkdownDialog'
 import useVisible from '../../commonComponents/useVisible'
 import AddChannelControl from './AddChannelControl'
 import ChannelsTable from './ChannelsTable'
+import createKacheryChannelMd from './createKacheryChannel.md.gen'
 
 type Props = {
     onSelectChannel: (channel: string) => void
@@ -115,6 +118,8 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
         })
     }, [refreshChannelsForUser, googleSignInClient, status])
 
+    const createKacheryChannelVisible = useVisible()
+
     return (
         <div>
             <h2>Your channels</h2>
@@ -122,11 +127,20 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
                 These are channels hosted by you; you provide the cloud storage and network communication services.
                 You can configure which nodes are allowed to belong to these channels in various roles.
             </p>
+
+            <p><Hyperlink onClick={createKacheryChannelVisible.show}>How to create a kachery channel</Hyperlink></p>
+            <MarkdownDialog
+                visible={createKacheryChannelVisible.visible}
+                onClose={createKacheryChannelVisible.hide}
+                source={createKacheryChannelMd}
+                linkTarget="_blank"
+            />
+
             {
                 (status === 'ready') && (
                     <span>
                         <IconButton onClick={refreshChannelsForUser} title="Refresh channels"><Refresh /></IconButton>
-                        <IconButton onClick={showAddingChannel} title="Add channel"><AddCircle /></IconButton>
+                        <IconButton onClick={showAddingChannel} title="Add kachery channel"><AddCircle /></IconButton>
                     </span>
                 )
             }

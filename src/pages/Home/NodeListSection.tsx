@@ -6,10 +6,13 @@ import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClie
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
 import { AddNodeRequest, DeleteNodeRequest, NodeConfig } from '../../common/types'
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
+import MarkdownDialog from '../../commonComponents/Markdown/MarkdownDialog'
 import useVisible from '../../commonComponents/useVisible'
 import AddNodeControl from './AddNodeControl'
 import NodesTable from './NodesTable'
 import useNodesForUser from './useNodesForUser'
+import hostKacheryNodeMd from './hostKacheryNode.md.gen'
 
 type Props = {
     onSelectNode: (nodeId: NodeId) => void
@@ -88,19 +91,29 @@ const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {
             setStatus('ready')
         })
     }, [onRefreshNodes, googleSignInClient, status, hideAddingNode])
+    const hostKacheryNodeVisible = useVisible()
 
     return (
         <div>
             <h2>Your nodes</h2>
             <p>
-                These are nodes hosted by you; each is represented by a kachery daemon running on a computer.
+                These are nodes hosted by you; each is associated with a kachery daemon running on a computer.
                 You can configure which channels these nodes belong to in which roles.
             </p>
+
+            <p><Hyperlink onClick={hostKacheryNodeVisible.show}>How to host a kachery node</Hyperlink></p>
+            <MarkdownDialog
+                visible={hostKacheryNodeVisible.visible}
+                onClose={hostKacheryNodeVisible.hide}
+                source={hostKacheryNodeMd}
+                linkTarget="_blank"
+            />
+
             {
                 (status === 'ready') && (
                     <span>
                         <IconButton onClick={onRefreshNodes} title="Refresh nodes"><Refresh /></IconButton>
-                        <IconButton onClick={showAddingNode} title="Add node"><AddCircle /></IconButton>
+                        <IconButton onClick={showAddingNode} title="Add kachery node"><AddCircle /></IconButton>
                     </span>
                 )
             }
@@ -127,9 +140,6 @@ const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {
                     <div>Loading...</div>
                 )
             }
-
-
-
         </div>
     )
 }
