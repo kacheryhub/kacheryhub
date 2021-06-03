@@ -1,7 +1,7 @@
-import { NodeId, nowTimestamp } from "../../src/common/kacheryTypes/kacheryTypes"
+import { GetNodeConfigRequestBody } from "../../src/common/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/common/kacheryTypes/kacheryTypes"
 import { isChannelConfig, isNodeConfig } from "../../src/common/types"
 import firestoreDatabase from "../common/firestoreDatabase"
-import { GetNodeConfigRequestBody, ReportRequestBody } from "./types"
 
 const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId) => {
     if (request.nodeId !== verifiedNodeId) {

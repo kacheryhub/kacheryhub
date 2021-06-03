@@ -1,9 +1,9 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import { NodeId, PublicKey, PublicKeyHex } from '../src/common/kacheryTypes/kacheryTypes'
-import verifySignature from './common/verifySignature'
 import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
 import reportHandler from './kacheryNodeRequestHandlers/report'
-import { isKacheryNodeRequest } from './kacheryNodeRequestHandlers/types'
+import {verifySignature} from '../src/common/kacheryTypes/crypto_util'
+import { isKacheryNodeRequest } from '../src/common/kacheryNodeRequestTypes'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req

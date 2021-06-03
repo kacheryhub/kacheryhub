@@ -1,6 +1,6 @@
+import { ReportRequestBody } from "../../src/common/kacheryNodeRequestTypes"
 import { NodeId, nowTimestamp } from "../../src/common/kacheryTypes/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
-import { ReportRequestBody } from "./types"
 
 const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId) => {
     if (request.nodeId !== verifiedNodeId) {

@@ -1,4 +1,4 @@
-import { isEqualTo, isNodeId, isNodeLabel, isOneOf, isSignature, isString, NodeId, NodeLabel, Signature, _validateObject } from "../../src/common/kacheryTypes/kacheryTypes";
+import { isEqualTo, isNodeId, isNodeLabel, isOneOf, isSignature, isString, NodeId, NodeLabel, Signature, _validateObject } from "./kacheryTypes/kacheryTypes"
 
 export type ReportRequestBody = {
     type: 'report'
