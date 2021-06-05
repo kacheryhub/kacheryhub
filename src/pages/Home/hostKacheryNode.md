@@ -19,7 +19,7 @@ conda create --name kachery-env python=3.8 numpy>=1.19.0
 conda activate kachery-env
 
 conda install -c conda-forge nodejs
-pip install --upgrade kachery_p2p
+pip install --upgrade kachery-daemon
 
 # On macOS you may need to use the following to get a recent version of nodejs (>=12):
 # conda install nodejs -c conda-forge --repodata-fn=repodata.json
@@ -27,14 +27,14 @@ pip install --upgrade kachery_p2p
 
 ## Installation without conda
 
-It is also possible to install without conda. Just make sure that the above requirements are met on your system, and then `pip install --upgrade kachery_p2p` as above.
+It is also possible to install without conda. Just make sure that the above requirements are met on your system, and then `pip install --upgrade kachery-daemon` as above.
 
 ## Running the daemon
 
 Ensure you are in the correct conda environment, then:
 
 ```bash
-kachery-p2p-start-daemon --label <name-of-node> --owner <your-google-account-id>
+kachery-daemon-start --label <name-of-node> --owner <your-google-account-id>
 ```
 
 where `<name-of-node>` is a node label for display purposes and `<your-google-account-id>` must match the kachery hub login google account.
@@ -49,7 +49,7 @@ Other more advanced options are available, such as specifying listen ports (see 
 You can obtain the unique ID for your running kachery node by using the following command:
 
 ```bash
-kachery-p2p-node-info
+kachery-daemon-info
 # will print the kachery node ID
 ```
 
@@ -62,11 +62,10 @@ To add your node to kachery hub, make sure you are logged in to kachery hub usin
 Environment variables for the daemon
 
 * `KACHERY_STORAGE_DIR` **(optional)** - Refers to an existing directory on your local computer. This is where kachery stores all of your cached files. If not set, files will be stored in the default location: `$HOME/kachery-storage`.
-* `KACHERY_P2P_API_PORT` **(optional)** - Port that the Python client uses to communicate with the daemon. If not provided, a default port will be used.
-* `KACHERY_P2P_CONFIG_DIR` **(optional)** - Directory where configuration files will be stored, including the public/private keys for your node on the distributed system. The default location is ~/.kachery-p2p
+* `KACHERY_DAEMON_PORT` **(optional)** - Port that the daemon will listen on. If not provided, a default port will be used.
 
 Environment variables for the client
 
-* `KACHERY_P2P_API_PORT` **(optional)** - same as above
-* `KACHERY_P2P_API_HOST` **(optional)** - same as above
+* `KACHERY_DAEMON_PORT` **(optional)** - Port for connecting to the daemon (should match the above)
+* `KACHERY_DAEMON_HOST` **(optional)** - Host for connecting to the daemon
 * `KACHERY_TEMP_DIR` **(optional)** - Existing directory where temporary files are stored - not the same as `KACHERY_STORAGE_DIR`.
