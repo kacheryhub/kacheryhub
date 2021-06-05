@@ -1,4 +1,4 @@
-import { AddChannelRequest } from '../../src/common/types'
+import { AddChannelRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const addChannelHandler = async (request: AddChannelRequest, verifiedUserId: string) => {

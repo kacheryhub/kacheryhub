@@ -1,5 +1,5 @@
 import {Firestore} from '@google-cloud/firestore'
-import {isGoogleServiceAccountCredentials} from '../../src/common/types'
+import {isGoogleServiceAccountCredentials} from '../../src/common/types/kacheryHubTypes'
 
 let db: Firestore | null = null
 

@@ -1,4 +1,4 @@
-import { ChannelConfig } from "../../src/common/types";
+import { ChannelConfig } from "../../src/common/types/kacheryHubTypes";
 
 const hideChannelSecrets = (x: ChannelConfig) => {
     const ret: ChannelConfig = {

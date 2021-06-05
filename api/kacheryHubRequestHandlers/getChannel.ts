@@ -1,4 +1,4 @@
-import { GetChannelRequest, isChannelConfig } from '../../src/common/types'
+import { GetChannelRequest, isChannelConfig } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import hideChannelSecrets from '../common/hideChannelSecrets'
 

@@ -1,4 +1,4 @@
-import { NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../src/common/types'
+import { NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const updateNodeChannelAuthorizationHandler = async (request: UpdateNodeChannelAuthorizationRequest, verifiedUserId: string) => {

@@ -1,4 +1,4 @@
-import { NodeChannelMembership, UpdateNodeChannelMembershipRequest } from '../../src/common/types'
+import { NodeChannelMembership, UpdateNodeChannelMembershipRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const updateNodeChannelMembershipRequestHandler = async (request: UpdateNodeChannelMembershipRequest, verifiedUserId: string) => {

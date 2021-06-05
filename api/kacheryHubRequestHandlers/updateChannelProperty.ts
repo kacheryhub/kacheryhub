@@ -1,4 +1,4 @@
-import { isGoogleServiceAccountCredentials, NodeChannelAuthorization, UpdateChannelPropertyRequest } from '../../src/common/types'
+import { isGoogleServiceAccountCredentials, NodeChannelAuthorization, UpdateChannelPropertyRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const updateChannelPropertyHandler = async (request: UpdateChannelPropertyRequest, verifiedUserId: string) => {

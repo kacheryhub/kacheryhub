@@ -1,5 +1,5 @@
-import { ReportRequestBody } from "../../src/common/kacheryNodeRequestTypes"
-import { NodeId, nowTimestamp } from "../../src/common/kacheryTypes/kacheryTypes"
+import { ReportRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
+import { NodeId, nowTimestamp } from "../../src/common/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
 const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId) => {
@@ -12,7 +12,7 @@ const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId)
             .where('nodeId', '==', request.nodeId)
             .where('ownerId', '==', request.ownerId).get()
     if (nodeResults.docs.length === 0) {
-        throw Error(`Node not found`)
+        throw Error(`Node not found in reportHandler: ${request.nodeId} ${request.ownerId}`)
     }
     if (nodeResults.docs.length > 1) {
         throw Error(`More than one node found`)

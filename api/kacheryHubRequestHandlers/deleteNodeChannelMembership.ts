@@ -1,4 +1,4 @@
-import { DeleteNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/common/types'
+import { DeleteNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 

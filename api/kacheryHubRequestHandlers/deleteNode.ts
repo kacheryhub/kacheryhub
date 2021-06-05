@@ -1,4 +1,4 @@
-import { DeleteNodeRequest } from '../../src/common/types'
+import { DeleteNodeRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const deleteNodeHandler = async (request: DeleteNodeRequest, verifiedUserId: string) => {

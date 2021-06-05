@@ -1,4 +1,4 @@
-import { DeleteNodeChannelAuthorizationRequest, NodeChannelAuthorization } from '../../src/common/types'
+import { DeleteNodeChannelAuthorizationRequest, NodeChannelAuthorization } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const deleteNodeChannelAuthorizationHandler = async (request: DeleteNodeChannelAuthorizationRequest, verifiedUserId: string) => {

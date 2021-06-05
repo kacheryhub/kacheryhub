@@ -263,7 +263,7 @@ export interface UrlString extends String {
 export const isUrlString = (x: any): x is UrlString => {
     if (!isString(x)) return false;
     if ((x.startsWith('http://') || (x.startsWith('https://')))) {
-        if (x.length > 500) return false
+        if (x.length > 10000) return false
         return true
     }
     else {

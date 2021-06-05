@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useMemo } from 'react'
-import { ChannelConfig } from '../../common/types'
+import { ChannelConfig } from '../../common/types/kacheryHubTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 

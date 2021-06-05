@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
+import { isNodeId, NodeId } from '../../common/types/kacheryTypes'
 
 export type Page = {
     page: 'home'

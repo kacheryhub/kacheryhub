@@ -1,4 +1,4 @@
-import { isArrayOf, isBoolean, isEqualTo, isNodeId, isNodeLabel, isNumber, isOneOf, isSignature, isString, isTimestamp, NodeId, NodeLabel, optional, Signature, Timestamp, _validateObject } from "./kacheryTypes/kacheryTypes"
+import { isArrayOf, isBoolean, isEqualTo, isNodeId, isNodeLabel, isNumber, isOneOf, isSignature, isString, isTimestamp, NodeId, NodeLabel, optional, Signature, Timestamp, _validateObject } from "./kacheryTypes"
 
 export type GoogleServiceAccountCredentials = {
     type: 'service_account',
@@ -18,6 +18,34 @@ export const isGoogleServiceAccountCredentials = (x: any): x is GoogleServiceAcc
         client_email: isString,
         client_id: isString,
     }, {allowAdditionalFields: true})
+}
+
+export interface AblyTokenRequest {
+    capability: string
+    clientId?: string
+    keyName: string
+    mac: string
+    nonce: string
+    timestamp: number
+    ttl?: number
+}
+export const isAblyTokenRequest = (x: any): x is AblyTokenRequest => {
+    return _validateObject(x, {
+        capability: isString,
+        keyName: isString,
+        mac: isString,
+        nonce: isString,
+        timestamp: isNumber
+    }, {allowAdditionalFields: true})
+}
+
+export type PubsubAuth = {
+    ablyTokenRequest: AblyTokenRequest
+}
+export const isPubsubAuth = (x: any): x is PubsubAuth => {
+    return _validateObject(x, {
+        ablyTokenRequest: isAblyTokenRequest
+    })
 }
 
 export type NodeChannelAuthorization = {
@@ -101,6 +129,7 @@ export type NodeChannelMembership = {
         provideFeeds?: boolean
         provideTaskResults?: boolean
     }
+    channelBucketUri?: string // obtained by cross-referencing the channels collection
     authorization?: NodeChannelAuthorization // obtained by cross-referencing the channels collection
 }
 
@@ -119,6 +148,7 @@ const isNodeChannelMembership = (x: any): x is NodeChannelMembership => {
             provideFeeds: optional(isBoolean),
             provideTaskResults: optional(isBoolean)
         },
+        channelBucketUri: optional(isString),
         authorization: optional(isNodeChannelAuthorization)
     })
 }

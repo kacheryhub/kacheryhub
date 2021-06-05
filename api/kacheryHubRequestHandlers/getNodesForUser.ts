@@ -1,4 +1,4 @@
-import { GetNodesForUserRequest, isNodeConfig, NodeConfig } from '../../src/common/types'
+import { GetNodesForUserRequest, isNodeConfig, NodeConfig } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const getNodesForUserHandler = async (request: GetNodesForUserRequest, verifiedUserId: string) => {

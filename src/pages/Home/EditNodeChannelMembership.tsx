@@ -1,7 +1,7 @@
 import { Checkbox, IconButton } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
-import { NodeChannelMembership } from '../../common/types'
+import { NodeChannelMembership } from '../../common/types/kacheryHubTypes'
 
 type Props = {
     nodeChannelMembership?: NodeChannelMembership

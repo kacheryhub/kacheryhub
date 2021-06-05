@@ -1,29 +1,39 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { NodeId, PublicKey, PublicKeyHex } from '../src/common/kacheryTypes/kacheryTypes'
+import { NodeId, PublicKey, PublicKeyHex } from '../src/common/types/kacheryTypes'
 import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
 import reportHandler from './kacheryNodeRequestHandlers/report'
-import {verifySignature} from '../src/common/kacheryTypes/crypto_util'
-import { isKacheryNodeRequest } from '../src/common/kacheryNodeRequestTypes'
+import {verifySignature} from '../src/common/types/crypto_util'
+import { isKacheryNodeRequest } from '../src/common/types/kacheryNodeRequestTypes'
+import getPubsubAuthForChannelHandler from './kacheryNodeRequestHandlers/getPubsubAuthForChannel'
+import createSignedUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedUploadUrl'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
     if (!isKacheryNodeRequest(request)) {
+        console.warn('Invalid request', request)
         res.status(400).send(`Invalid request: ${JSON.stringify(request)}`)
         return
     }
-    const body = request.body
-    const signature = request.signature
-    if (!verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
-        throw Error('Invalid signature')
-    }
-    const verifiedNodeId = request.nodeId
 
     ;(async () => {
+        const body = request.body
+        const signature = request.signature
+        if (!verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
+            throw Error('Invalid signature')
+        }
+        const verifiedNodeId = request.nodeId
+
         if (body.type === 'report') {
             return await reportHandler(body, verifiedNodeId)
         }
         else if (body.type === 'getNodeConfig') {
             return await getNodeConfigHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'getPubsubAuthForChannel') {
+            return await getPubsubAuthForChannelHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'createSignedUploadUrl') {
+            return await createSignedUploadUrlHandler(body, verifiedNodeId)
         }
         else {
             throw Error(`Unexpected request type`)

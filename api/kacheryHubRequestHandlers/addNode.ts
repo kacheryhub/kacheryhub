@@ -1,4 +1,4 @@
-import { AddNodeRequest } from '../../src/common/types'
+import { AddNodeRequest } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: string) => {

@@ -1,8 +1,8 @@
 import axios from "axios"
-import { publicKeyToHex, publicKeyHexToNodeId, getSignature } from "../common/kacheryTypes/crypto_util"
-import { KeyPair } from "../common/kacheryTypes/kacheryTypes"
-import {GetNodeConfigRequest, GetNodeConfigRequestBody} from '../common/kacheryNodeRequestTypes'
-import { isNodeConfig, NodeConfig } from "../common/types"
+import { publicKeyToHex, publicKeyHexToNodeId, getSignature } from "../common/types/crypto_util"
+import { KeyPair } from "../common/types/kacheryTypes"
+import {GetNodeConfigRequestBody, KacheryNodeRequest} from '../common/types/kacheryNodeRequestTypes'
+import { isNodeConfig, NodeConfig } from "../common/types/kacheryHubTypes"
 
 class KacheryHubNodeClient {
     #initialized = false
@@ -27,7 +27,7 @@ class KacheryHubNodeClient {
             nodeId: this.nodeId,
             ownerId: this.opts.ownerId
         }
-        const req: GetNodeConfigRequest = {
+        const req: KacheryNodeRequest = {
             body: reqBody,
             nodeId: this.nodeId,
             signature: getSignature(reqBody, this.opts.keyPair)

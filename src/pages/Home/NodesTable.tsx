@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import formatTime from '../../common/formatTime'
-import { isNodeId, NodeId } from '../../common/kacheryTypes/kacheryTypes'
-import { NodeConfig } from '../../common/types'
+import { isNodeId, NodeId } from '../../common/types/kacheryTypes'
+import { NodeConfig } from '../../common/types/kacheryHubTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 

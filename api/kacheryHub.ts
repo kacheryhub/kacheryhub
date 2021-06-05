@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { isKacheryHubRequest } from '../src/common/types'
+import { isKacheryHubRequest } from '../src/common/types/kacheryHubTypes'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 import addAuthorizedNodeHandler from './kacheryHubRequestHandlers/addAuthorizedNode'
 import addChannelHandler from './kacheryHubRequestHandlers/addChannel'

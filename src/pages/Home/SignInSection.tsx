@@ -22,7 +22,7 @@ const SignInSection: FunctionComponent<Props> = () => {
         <div className="SignInSection HomeSection">
             {
                 signedIn ? (
-                    <p>You are signed in as {googleSignInClient.profile?.getEmail()}</p>
+                    <p>You are signed in as <span style={{background: 'rgb(250, 240, 240)'}}>{googleSignInClient.profile?.getEmail()}</span></p>
                 ) : (
                     <p>Sign in above to get started.</p>
                 )

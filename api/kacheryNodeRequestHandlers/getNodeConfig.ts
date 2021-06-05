@@ -1,9 +1,9 @@
-import { GetNodeConfigRequestBody } from "../../src/common/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/common/kacheryTypes/kacheryTypes"
-import { isChannelConfig, isNodeConfig } from "../../src/common/types"
+import { isChannelConfig, isNodeConfig, NodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { GetNodeConfigRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/common/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
-const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId) => {
+const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId): Promise<NodeConfig> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
@@ -14,7 +14,7 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
             .where('nodeId', '==', request.nodeId)
             .where('ownerId', '==', request.ownerId).get()
     if (nodeResults.docs.length === 0) {
-        throw Error(`Node not found`)
+        throw Error(`Node not found: ${request.nodeId} ${request.ownerId}`)
     }
     if (nodeResults.docs.length > 1) {
         throw Error(`More than one node found`)
@@ -35,6 +35,7 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
                         m.authorization = authorizedNode
                     }
                 }
+                m.channelBucketUri = channelConfig.bucketUri
             }
             else {
                 console.warn('Invalid channel config', channelConfig)

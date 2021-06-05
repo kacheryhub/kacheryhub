@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { elapsedSince, FeedId, JSONObject, KeyPair, PrivateKey, PrivateKeyHex, PublicKey, PublicKeyHex, Signature, Timestamp } from './kacheryTypes';
+import { elapsedSince, FeedId, JSONObject, KeyPair, NodeId, PrivateKey, PrivateKeyHex, PublicKey, PublicKeyHex, Signature, Timestamp } from './kacheryTypes';
 import kacheryP2PSerialize from './kacheryP2PSerialize';
 
 const ed25519PubKeyPrefix = "302a300506032b6570032100";

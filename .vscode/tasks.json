@@ -12,6 +12,15 @@
                 "clear": true
             },
             "detail": "Run code generation"
+        },
+        {
+            "label": "check-code-sync",
+            "type": "shell",
+            "command": "bash -ic .vscode/tasks/check-code-sync.sh",
+            "presentation": {
+                "clear": true
+            },
+            "detail": "Check code sync"
         }
     ]
 }
