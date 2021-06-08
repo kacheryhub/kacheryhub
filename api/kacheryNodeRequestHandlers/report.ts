@@ -12,7 +12,7 @@ const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId)
             .where('nodeId', '==', request.nodeId)
             .where('ownerId', '==', request.ownerId).get()
     if (nodeResults.docs.length === 0) {
-        throw Error(`Node not found in reportHandler: ${request.nodeId} ${request.ownerId}`)
+        return {success: true, found: false}
     }
     if (nodeResults.docs.length > 1) {
         throw Error(`More than one node found`)
@@ -21,7 +21,7 @@ const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId)
         lastNodeReport: request,
         lastNodeReportTimestamp: nowTimestamp()
     })
-    return {success: true}
+    return {success: true, found: true}
 }
 
 export default reportHandler

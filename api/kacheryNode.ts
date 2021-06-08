@@ -5,7 +5,8 @@ import reportHandler from './kacheryNodeRequestHandlers/report'
 import {verifySignature} from '../src/common/types/crypto_util'
 import { isKacheryNodeRequest } from '../src/common/types/kacheryNodeRequestTypes'
 import getPubsubAuthForChannelHandler from './kacheryNodeRequestHandlers/getPubsubAuthForChannel'
-import createSignedUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedUploadUrl'
+import createSignedFileUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedFileUploadUrl'
+import createSignedSubfeedMessageUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedSubfeedMessageUploadUrl'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -32,11 +33,14 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         else if (body.type === 'getPubsubAuthForChannel') {
             return await getPubsubAuthForChannelHandler(body, verifiedNodeId)
         }
-        else if (body.type === 'createSignedUploadUrl') {
-            return await createSignedUploadUrlHandler(body, verifiedNodeId)
+        else if (body.type === 'createSignedFileUploadUrl') {
+            return await createSignedFileUploadUrlHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'createSignedSubfeedMessageUploadUrl') {
+            return await createSignedSubfeedMessageUploadUrlHandler(body, verifiedNodeId)
         }
         else {
-            throw Error(`Unexpected request type`)
+            throw Error(`Unexpected request type (kacheryNode): ${body["type"]}`)
         }
     })().then((result) => {
         res.json(result)

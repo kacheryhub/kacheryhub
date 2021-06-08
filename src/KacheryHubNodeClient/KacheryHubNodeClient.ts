@@ -1,7 +1,7 @@
 import axios from "axios"
 import { publicKeyToHex, publicKeyHexToNodeId, getSignature } from "../common/types/crypto_util"
 import { KeyPair } from "../common/types/kacheryTypes"
-import {GetNodeConfigRequestBody, KacheryNodeRequest} from '../common/types/kacheryNodeRequestTypes'
+import {GetNodeConfigRequestBody, isGetNodeConfigResponse, KacheryNodeRequest} from '../common/types/kacheryNodeRequestTypes'
 import { isNodeConfig, NodeConfig } from "../common/types/kacheryHubTypes"
 
 class KacheryHubNodeClient {
@@ -33,11 +33,15 @@ class KacheryHubNodeClient {
             signature: getSignature(reqBody, this.opts.keyPair)
         }
         const x = await axios.post(`${this._kacheryHubUrl()}/api/getNodeConfig`, req)
-        const nodeConfig = x.data
-        if (!isNodeConfig(nodeConfig)) {
-            console.warn(nodeConfig)
-            throw Error('Invalid node config')
+        const resp = x.data
+        if (!isGetNodeConfigResponse(resp)) {
+            throw Error('Invalid response in getNodeConfig')
         }
+        if (!resp.found) {
+            throw Error('Node not found for getNodeConfig')
+        }
+        const nodeConfig = resp.nodeConfig
+        if (!nodeConfig) throw Error('Unexpected, no nodeConfig')
         this.#nodeConfig = nodeConfig
 
         this.#initialized = true

@@ -1,7 +1,7 @@
-import { GetNodeForUserRequest, isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { GetNodeForUserRequest, GetNodeForUserResponse, isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: string) => {
+const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: string): Promise<GetNodeForUserResponse> => {
     if (verifiedUserId !== request.userId) {
         throw Error('Not authorized')
     }
@@ -13,7 +13,9 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
         .where('ownerId', '==', request.userId)
         .where('nodeId', '==', request.nodeId.toString()).get()
     if (nodeResults.docs.length === 0) {
-        throw Error(`Node not found: ${request.nodeId} ${request.userId}`)
+        return {
+            found: false
+        }
     }
     if (nodeResults.docs.length > 1) {
         throw Error('More than one node with this id for this owner found')
@@ -23,7 +25,7 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
         console.warn(nodeConfig)
         throw Error('Not a valid node config')
     }
-    for (let i = 0; i < nodeConfig.channelMemberships.length; i++) {
+    for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
         const m = nodeConfig.channelMemberships[i]
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
@@ -41,7 +43,10 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
             }
         }
     }
-    return nodeConfig
+    return {
+        found: true,
+        nodeConfig
+    }
 }
 
 export default getNodeForUserHandler

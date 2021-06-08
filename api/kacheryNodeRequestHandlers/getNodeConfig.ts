@@ -1,9 +1,9 @@
-import { isChannelConfig, isNodeConfig, NodeConfig } from '../../src/common/types/kacheryHubTypes'
-import { GetNodeConfigRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
+import { isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { GetNodeConfigRequestBody, GetNodeConfigResponse } from "../../src/common/types/kacheryNodeRequestTypes"
 import { NodeId } from "../../src/common/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
-const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId): Promise<NodeConfig> => {
+const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId): Promise<GetNodeConfigResponse> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
@@ -14,7 +14,9 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
             .where('nodeId', '==', request.nodeId)
             .where('ownerId', '==', request.ownerId).get()
     if (nodeResults.docs.length === 0) {
-        throw Error(`Node not found: ${request.nodeId} ${request.ownerId}`)
+        return {
+            found: false
+        }
     }
     if (nodeResults.docs.length > 1) {
         throw Error(`More than one node found`)
@@ -24,7 +26,7 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
         console.warn(nodeConfig)
         throw Error('Not a valid node config')
     }
-    for (let i = 0; i < nodeConfig.channelMemberships.length; i++) {
+    for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
         const m = nodeConfig.channelMemberships[i]
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
@@ -42,7 +44,10 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
             }
         }
     }
-    return nodeConfig
+    return {
+        found: true,
+        nodeConfig
+    }
 }
 
 export default getNodeConfigHandler

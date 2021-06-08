@@ -4,8 +4,8 @@ import formatTime from '../../common/formatTime'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
+import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isGetNodeForUserResponse, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types/kacheryHubTypes'
 import { NodeId } from '../../common/types/kacheryTypes'
-import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isNodeConfig, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types/kacheryHubTypes'
 import { updateNodeChannelAuthorization } from './EditChannel'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
 
@@ -153,11 +153,13 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 }
             }
             const x = await kacheryHubApiRequest(req)
-            if (!isNodeConfig(x)) {
-                console.warn('Invalid node', x)
+            if (!isGetNodeForUserResponse(x)) {
+                console.warn('Invalid response for getNodeForUser', x)
                 return
             }
-            setNodeConfig(x)
+            if ((x.found) && (x.nodeConfig)) {
+                setNodeConfig(x.nodeConfig)
+            }
         })()
     }, [nodeId, userId, googleSignInClient, refreshCode])
 
