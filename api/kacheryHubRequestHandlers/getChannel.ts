@@ -1,12 +1,14 @@
-import { GetChannelRequest, isChannelConfig } from '../../src/common/types/kacheryHubTypes'
+import { GetChannelRequest, isChannelConfig, isNodeConfig, NodeConfig } from '../../src/common/types/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import hideChannelSecrets from '../common/hideChannelSecrets'
 
 const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: string) => {
     const db = firestoreDatabase()
+    const { channelName } = request
+    const nodesCollection = db.collection('nodes')
     const channelsCollection = db.collection('channels')
     const channelResults = await channelsCollection
-        .where('channelName', '==', request.channelName).get()
+        .where('channelName', '==', channelName).get()
     if (channelResults.docs.length === 0) {
         throw Error('Channel not found')
     }
@@ -15,23 +17,36 @@ const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: str
     }
     const channelConfig = channelResults.docs[0].data()
     if (!isChannelConfig(channelConfig)) throw Error('Not a valid channel config')
-    // for (let i = 0; i < nodeConfig.channelMemberships.length; i++) {
-    //     const m = nodeConfig.channelMemberships[i]
-    //     const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
-    //     if (channelResults.docs.length === 1) {
-    //         const channelConfig = channelResults.docs[0].data()
-    //         if (isChannelConfig(channelConfig)) {
-    //             for (let authorizedNode of (channelConfig.authorizedNodes || [])) {
-    //                 if (authorizedNode.nodeId === request.nodeId) {
-    //                     m.authorization = authorizedNode
-    //                 }
-    //             }
-    //         }
-    //         else {
-    //             console.warn('Invalid channel config', channelConfig)
-    //         }
-    //     }
-    // }
+    for (let authorizedNode of channelConfig.authorizedNodes) {
+        const nodeResults = await nodesCollection
+            .where('nodeId', '==', authorizedNode.nodeId).get()
+        const nodeConfigs = nodeResults.docs.map(doc => {
+            const docData = doc.data()
+            if (!isNodeConfig(docData)) {
+                console.warn(docData)
+                throw Error('Invalid node config for node in channel')
+            }
+            return docData as NodeConfig
+        }).sort((a, b) => {
+            if ((a.lastNodeReportTimestamp) && (!b.lastNodeReportTimestamp)) {
+                return 1
+            }
+            else if ((!a.lastNodeReportTimestamp) && (b.lastNodeReportTimestamp)) {
+                return -1
+            }
+            else if ((a.lastNodeReportTimestamp) && (b.lastNodeReportTimestamp)) {
+                return Number(b.lastNodeReportTimestamp) - Number(a.lastNodeReportTimestamp)
+            }
+            else return 0
+        })
+        if (nodeConfigs.length > 0) {
+            const nodeConfig = nodeConfigs[0]
+            const channelMembership = nodeConfig.channelMemberships.filter(cm => (cm.channelName === channelName))[0]
+            if (channelMembership) {
+                authorizedNode.roles = channelMembership.roles
+            }
+        }
+    }
     return hideChannelSecrets(channelConfig)
 }
 

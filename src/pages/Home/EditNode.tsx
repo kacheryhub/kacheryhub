@@ -58,6 +58,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
     const [refreshCode, setRefreshCode] = useState<number>(0)
     const incrementRefreshCode = useCallback(() => setRefreshCode(c => (c + 1)), [])
     const [errorMessage, setErrorMessage] = useState<string>('')
+    const [nodeConfigStatusMessage, setNodeConfigStatusMessage] = useState<string>('')
     const node = useMemo(() => {
         if (!userId) return undefined
         if (!nodeConfig) return undefined
@@ -143,6 +144,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
     useEffect(() => {
         if (!userId) return undefined
         ;(async () => {
+            setNodeConfigStatusMessage(`Loading config for node: ${nodeId}`)
             const req: GetNodeForUserRequest = {
                 type: 'getNodeForUser',
                 nodeId,
@@ -157,10 +159,16 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 console.warn('Invalid response for getNodeForUser', x)
                 return
             }
-            if ((x.found) && (x.nodeConfig)) {
+            if (x.found) {
+                if (!x.nodeConfig) throw Error('Unexpected: no nodeConfig')
                 setNodeConfig(x.nodeConfig)
             }
-        })()
+            else {
+                setNodeConfigStatusMessage(`Node not found for user ${userId}: ${nodeId}`)
+            }
+        })().catch((err) => {
+            setNodeConfigStatusMessage(err.message)
+        })
     }, [nodeId, userId, googleSignInClient, refreshCode])
 
     const tableRows = useMemo(() => {
@@ -216,7 +224,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                         />
                     </span>
                 ) : (
-                    <span>Loading node: {nodeId}</span>
+                    <span>{nodeConfigStatusMessage}</span>
                 )
             }
             

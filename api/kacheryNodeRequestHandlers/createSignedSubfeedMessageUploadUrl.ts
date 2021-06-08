@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage'
 import { isChannelConfig, isGoogleServiceAccountCredentials } from '../../src/common/types/kacheryHubTypes'
 import { CreateSignedSubfeedMessageUploadUrlRequestBody, CreateSignedSubfeedMessageUploadUrlResponse } from '../../src/common/types/kacheryNodeRequestTypes'
-import { FeedId, NodeId, SubfeedHash } from "../../src/common/types/kacheryTypes"
+import { FeedId, NodeId, SubfeedHash, UrlPath, UrlString, urlString } from "../../src/common/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
 
@@ -56,12 +56,19 @@ const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedS
         }
     })
     const subfeedPath = getSubfeedPath(request.feedId, request.subfeedHash)
-    if ((!request.subfeedJson) && (request.messageNumber === undefined)) {
-        throw Error('No messageNumber')
+    const signedUrls: {[key: string]: UrlString} = {}
+    for (let i = request.messageNumberRange[0]; i < request.messageNumberRange[1]; i++) {
+        const fileName = `${subfeedPath}/${i}`
+        const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, null)
+        signedUrls[i + ''] = signedUrl
     }
-    const fileName = request.subfeedJson ? `${subfeedPath}/subfeed.json` : `${subfeedPath}/${request.messageNumber}`
-    const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, null)
-    return {signedUrl}
+    {
+        const fileName = `${subfeedPath}/subfeed.json`
+        const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, null)
+        signedUrls['subfeedJson'] = signedUrl
+    }
+    
+    return {signedUrls}
 }
 
 const bucketNameFromUri = (bucketUri: string) => {
