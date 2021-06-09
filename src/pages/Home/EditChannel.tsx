@@ -3,16 +3,16 @@ import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } f
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
-import { isNodeId, NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, isNodeId, NodeId } from '../../common/types/kacheryTypes'
 import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest } from '../../common/types/kacheryHubTypes'
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 import EditString from './EditString'
 
 type Props = {
-    channelName: string
+    channelName: ChannelName
 }
 
-const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, nodeId: NodeId) => {
     const req: AddAuthorizedNodeRequest = {
         type: 'addAuthorizedNode',
         channelName,
@@ -37,7 +37,7 @@ export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleS
     await kacheryHubApiRequest(req)
 }
 
-export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, nodeId: NodeId) => {
     const req: DeleteNodeChannelAuthorizationRequest = {
         type: 'deleteNodeChannelAuthorization',
         channelName,
@@ -50,7 +50,7 @@ export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleS
     await kacheryHubApiRequest(req)
 }
 
-export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: string, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
+export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
     const req: UpdateChannelPropertyRequest = {
         type: 'updateChannelProperty',
         channelName,
@@ -81,7 +81,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         return channelConfig
     }, [channelName, channelConfig, userId])
     
-    const handleAddAuthorizedNode = useCallback((channelName: string, nodeId: string) => {
+    const handleAddAuthorizedNode = useCallback((channelName: ChannelName, nodeId: string) => {
         // hideAddChannelMembership()
         setErrorMessage('')
         if (!isNodeId(nodeId)) {
@@ -121,7 +121,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
-    const handleDeleteAuthorization = useCallback((channelName: string, nodeId: NodeId) => {
+    const handleDeleteAuthorization = useCallback((channelName: ChannelName, nodeId: NodeId) => {
         // hideAddChannelMembership()
         setErrorMessage('')
         if (!googleSignInClient) {

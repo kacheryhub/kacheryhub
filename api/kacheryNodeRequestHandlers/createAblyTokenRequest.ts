@@ -21,7 +21,9 @@ const createAblyTokenRequest = async (channelConfig: ChannelConfig, authorizatio
         [`${cn}-requestFiles`]: [],
         [`${cn}-provideFiles`]: [],
         [`${cn}-requestFeeds`]: [],
-        [`${cn}-provideFeeds`]: []
+        [`${cn}-provideFeeds`]: [],
+        [`${cn}-requestTaskResults`]: [],
+        [`${cn}-provideTaskResults`]: []
     }}
     if (authorization.permissions.requestFiles) {
         params.capability[`${cn}-requestFiles`].push('publish')
@@ -38,6 +40,14 @@ const createAblyTokenRequest = async (channelConfig: ChannelConfig, authorizatio
     if (authorization.permissions.provideFeeds) {
         params.capability[`${cn}-requestFeeds`].push('subscribe')
         params.capability[`${cn}-provideFeeds`].push('publish')
+    }
+    if (authorization.permissions.requestTaskResults) {
+        params.capability[`${cn}-requestTaskResults`].push('publish')
+        params.capability[`${cn}-provideTaskResults`].push('subscribe')
+    }
+    if (authorization.permissions.provideTaskResults) {
+        params.capability[`${cn}-requestTaskResults`].push('subscribe')
+        params.capability[`${cn}-provideTaskResults`].push('publish')
     }
     const tokenRequest = await createTokenRequestAsync(ably, params)
     if (!isAblyTokenRequest(tokenRequest)) {

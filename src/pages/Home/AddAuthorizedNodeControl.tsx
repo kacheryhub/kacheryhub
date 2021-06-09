@@ -1,8 +1,9 @@
 import React, { FunctionComponent, useCallback, useState } from 'react'
+import { ChannelName } from '../../common/types/kacheryTypes'
 
 type Props = {
-    channelName: string
-    onAddAuthorizedNode: (channelName: string, nodeId: string) => void
+    channelName: ChannelName
+    onAddAuthorizedNode: (channelName: ChannelName, nodeId: string) => void
     onCancel: () => void
 }
 

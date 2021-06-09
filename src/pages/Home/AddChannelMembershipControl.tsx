@@ -1,7 +1,8 @@
-import React, { FunctionComponent, useCallback, useState } from 'react'
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
+import { ChannelName, isChannelName } from '../../common/types/kacheryTypes'
 
 type Props = {
-    onAddChannelMembership: (channelName: string) => void
+    onAddChannelMembership: (channelName: ChannelName) => void
     onCancel: () => void
 }
 
@@ -12,14 +13,18 @@ const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMemb
     }, [])
     const handleAdd = useCallback(() => {
         setEditChannelName('')
+        if (!isChannelName(editChannelName)) throw Error('Unexpected')
         onAddChannelMembership(editChannelName)
     }, [editChannelName, onAddChannelMembership])
+    const okayToAdd = useMemo(() => {
+        return isChannelName(editChannelName)
+    }, [editChannelName])
     return (
         <div>
             <span>
                 <span>Channel name:</span>
                 <input type="text" value={editChannelName} onChange={handleChange} />
-                <button onClick={handleAdd}>Add</button>
+                <button onClick={okayToAdd ? handleAdd : undefined} disabled={!okayToAdd}>Add</button>
                 <button onClick={onCancel}>Cancel</button>
             </span>
         </div>

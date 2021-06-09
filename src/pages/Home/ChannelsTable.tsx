@@ -1,12 +1,13 @@
-import React, { FunctionComponent, useMemo } from 'react'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import { ChannelConfig } from '../../common/types/kacheryHubTypes'
+import { ChannelName, isChannelName } from '../../common/types/kacheryTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 
 type Props = {
     channels: ChannelConfig[]
-    onClickChannel?: (channelName: string) => void
-    onDeleteChannel?: (channelName: string) => void
+    onClickChannel?: (channelName: ChannelName) => void
+    onDeleteChannel?: (channelName: ChannelName) => void
 }
 
 const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDeleteChannel}) => {
@@ -18,20 +19,24 @@ const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDe
     ]), [])
     const rows = useMemo(() => (
         channels.map(channel => ({
-            key: channel.channelName,
+            key: channel.channelName.toString(),
             columnValues: {
                 channelName: {
-                    text: channel.channelName,
+                    text: channel.channelName.toString(),
                     element: <Hyperlink onClick={() => {onClickChannel && onClickChannel(channel.channelName)}}>{channel.channelName}</Hyperlink>
                 }
             }
         }))
     ), [channels, onClickChannel])
+    const handleDeleteChannel = useCallback((key: string) => {
+        if (!isChannelName(key)) throw Error('Unexpected')
+        onDeleteChannel && onDeleteChannel(key)
+    }, [onDeleteChannel])
     return (
         <NiceTable
             rows={rows}
             columns={columns}
-            onDeleteRow={onDeleteChannel}
+            onDeleteRow={onDeleteChannel && handleDeleteChannel}
         
         />
     )

@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
-import { NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, isChannelName, NodeId } from '../../common/types/kacheryTypes'
 import { NodeChannelAuthorization, NodeChannelMembership, NodeConfig } from '../../common/types/kacheryHubTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
@@ -13,9 +13,9 @@ import usePage from './usePage'
 
 type Props = {
     node: NodeConfig
-    onAddNodeChannelMembership?: (channelName: string, nodeId: NodeId) => void
+    onAddNodeChannelMembership?: (channelName: ChannelName, nodeId: NodeId) => void
     onUpdateNodeChannelMembership?: (a: NodeChannelMembership) => void
-    onDeleteNodeChannelMembership?: (channelName: string, nodeId: NodeId) => void
+    onDeleteNodeChannelMembership?: (channelName: ChannelName, nodeId: NodeId) => void
     onUpdateNodeChannelAuthorization?: (a: NodeChannelAuthorization) => void
 }
 
@@ -38,16 +38,16 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
             element: <span style={{fontWeight: 'bold'}}>Roles</span>
         }
     ]), [])
-    const gotoChannelPage = useCallback((channelName: string) => {
+    const gotoChannelPage = useCallback((channelName: ChannelName) => {
         setPage({page: 'channel', channelName})
     }, [setPage])
     const rows = useMemo(() => (
         (node.channelMemberships || []).map(x => (
             {
-                key: x.channelName,
+                key: x.channelName.toString(),
                 columnValues: {
                     channel: {
-                        text: x.channelName,
+                        text: x.channelName.toString(),
                         element: <Hyperlink onClick={() => gotoChannelPage(x.channelName)}>{x.channelName}</Hyperlink>
                     },
                     authorization: {
@@ -63,7 +63,7 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
     const {visible: addChannelMembershipVisible, show: showAddChannelMembership, hide: hideAddChannelMembership} = useVisible()
     const [addChannelMembershipErrorMessage, setAddChannelMembershipErrorMessage] = useState<string>('')
 
-    const handleAddChannelMembership = useCallback((channelName: string) => {
+    const handleAddChannelMembership = useCallback((channelName: ChannelName) => {
         onAddNodeChannelMembership && onAddNodeChannelMembership(channelName, node.nodeId)
     }, [onAddNodeChannelMembership, node.nodeId])
     
@@ -73,6 +73,7 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
         }
     }, [addChannelMembershipVisible])
     const handleDeleteChannelMembership = useCallback((channelName: string) => {
+        if (!isChannelName(channelName)) throw Error('Unexpected')
         onDeleteNodeChannelMembership && onDeleteNodeChannelMembership(channelName, node.nodeId)
     }, [onDeleteNodeChannelMembership, node.nodeId])
     return (

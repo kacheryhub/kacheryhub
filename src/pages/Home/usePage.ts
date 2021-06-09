@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import { isNodeId, NodeId } from '../../common/types/kacheryTypes'
+import { channelName, ChannelName, isNodeId, NodeId } from '../../common/types/kacheryTypes'
 
 export type Page = {
     page: 'home'
@@ -9,7 +9,7 @@ export type Page = {
     nodeId: NodeId
 } | {
     page: 'channel'
-    channelName: string
+    channelName: ChannelName
 }
 
 const usePage = () => {
@@ -27,10 +27,10 @@ const usePage = () => {
             }
         }    
         else if (p[1] === 'channel') {
-            const channelName = p[2]
+            const cn = channelName(p[2])
             return {
                 page: 'channel',
-                channelName
+                channelName: cn
             }
         }
         return {

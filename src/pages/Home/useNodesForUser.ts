@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
-import { isArrayOf } from '../../common/types/kacheryTypes'
+import { isArrayOf, UserId } from '../../common/types/kacheryTypes'
 import { GetNodesForUserRequest, isNodeConfig, NodeConfig } from '../../common/types/kacheryHubTypes'
 
-const useNodesForUser = (userId?: string | null) => {
+const useNodesForUser = (userId?: UserId | null) => {
     const nodesForUser = useRef<{[key: string]: NodeConfig[]}>({})
     const googleSignInClient = useGoogleSignInClient()
     const [refreshCode, setRefreshCode] = useState<number>(0)
@@ -14,7 +14,7 @@ const useNodesForUser = (userId?: string | null) => {
     useEffect(() => {
         if (!userId) return
         ;(async () => {
-            delete nodesForUser.current[userId]
+            delete nodesForUser.current[userId.toString()]
             incrementUpdateCode()
             const req: GetNodesForUserRequest = {
                 type: 'getNodesForUser',
@@ -29,11 +29,11 @@ const useNodesForUser = (userId?: string | null) => {
                 console.warn('Invalid nodes', nodes)
                 return
             }
-            nodesForUser.current[userId] = nodes
+            nodesForUser.current[userId.toString()] = nodes
             incrementUpdateCode()
         })()
     }, [userId, googleSignInClient, refreshCode, incrementUpdateCode])
-    return {nodesForUser: userId ? nodesForUser.current[userId] || undefined : undefined, refreshNodesForUser: incrementRefreshCode}
+    return {nodesForUser: userId ? nodesForUser.current[userId.toString()] || undefined : undefined, refreshNodesForUser: incrementRefreshCode}
 }
 
 export default useNodesForUser

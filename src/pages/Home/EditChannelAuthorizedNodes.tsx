@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useMemo } from 'react'
-import { isNodeId, NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, isNodeId, NodeId } from '../../common/types/kacheryTypes'
 import { ChannelConfig, NodeChannelAuthorization, NodeChannelMembership } from '../../common/types/kacheryHubTypes'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
@@ -13,9 +13,9 @@ import EditNodeChannelMembership from './EditNodeChannelMembership'
 
 type Props = {
     channel: ChannelConfig
-    onAddAuthorizedNode?: (channelName: string, nodeId: string) => void
+    onAddAuthorizedNode?: (channelName: ChannelName, nodeId: string) => void
     onUpdateAuthorization?: (a: NodeChannelAuthorization) => void
-    onDeleteAuthorization?: (channelName: string, nodeId: NodeId) => void
+    onDeleteAuthorization?: (channelName: ChannelName, nodeId: NodeId) => void
 }
 
 const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdateAuthorization, onAddAuthorizedNode, onDeleteAuthorization}) => {

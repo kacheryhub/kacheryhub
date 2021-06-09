@@ -1,6 +1,6 @@
 import axios from "axios"
 import { publicKeyToHex, publicKeyHexToNodeId, getSignature } from "../common/types/crypto_util"
-import { KeyPair } from "../common/types/kacheryTypes"
+import { KeyPair, UserId } from "../common/types/kacheryTypes"
 import {GetNodeConfigRequestBody, isGetNodeConfigResponse, KacheryNodeRequest} from '../common/types/kacheryNodeRequestTypes'
 import { isNodeConfig, NodeConfig } from "../common/types/kacheryHubTypes"
 
@@ -9,7 +9,7 @@ class KacheryHubNodeClient {
     #initializing = false
     #onInitializedCallbacks: (() => void)[] = []
     #nodeConfig: NodeConfig | undefined = undefined
-    constructor(private opts: {keyPair: KeyPair, ownerId: string, kacheryHubUrl?: string}) {
+    constructor(private opts: {keyPair: KeyPair, ownerId: UserId, kacheryHubUrl?: string}) {
     }
     async initialize() {
         if (this.#initialized) return

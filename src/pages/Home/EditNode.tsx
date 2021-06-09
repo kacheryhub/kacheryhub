@@ -5,7 +5,7 @@ import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isGetNodeForUserResponse, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from '../../common/types/kacheryHubTypes'
-import { NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, NodeId } from '../../common/types/kacheryTypes'
 import { updateNodeChannelAuthorization } from './EditChannel'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
 
@@ -13,7 +13,7 @@ type Props = {
     nodeId: NodeId
 }
 
-const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: string) => {
+const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: ChannelName) => {
     const req: AddNodeChannelMembershipRequest = {
         type: 'addNodeChannelMembership',
         nodeId,
@@ -38,7 +38,7 @@ const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
     await kacheryHubApiRequest(req)
 }
 
-const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, channelName: string, nodeId: NodeId) => {
+const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, nodeId: NodeId) => {
     const req: DeleteNodeChannelMembershipRequest = {
         type: 'deleteNodeChannelMembership',
         channelName,
@@ -69,7 +69,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         return nodeConfig
     }, [nodeId, nodeConfig, userId])
 
-    const handleAddNodeChannelMembership = useCallback((channelName: string, nodeId: NodeId) => {
+    const handleAddNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
         // hideAddChannelMembership()
         setErrorMessage('')
         if (!googleSignInClient) {
@@ -105,7 +105,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
-    const handleDeleteNodeChannelMembership = useCallback((channelName: string, nodeId: NodeId) => {
+    const handleDeleteNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
         // hideAddChannelMembership()
         setErrorMessage('')
         if (!googleSignInClient) {

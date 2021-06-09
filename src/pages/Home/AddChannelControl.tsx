@@ -1,25 +1,30 @@
-import React, { FunctionComponent, useCallback, useState } from 'react'
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
+import { ChannelName, isChannelName } from '../../common/types/kacheryTypes'
 
 type Props = {
-    onAddChannel: (channelName: string) => void
+    onAddChannel: (channelName: ChannelName) => void
     onCancel: () => void
 }
 
 const AddChannelControl: FunctionComponent<Props> = ({onAddChannel, onCancel}) => {
-    const [editChannelName, setEditChannelName] = useState<string>('')
+    const [editChannelName, setEditChannelName] = useState<string | undefined>(undefined)
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setEditChannelName(e.target.value)
     }, [])
     const handleAdd = useCallback(() => {
-        setEditChannelName('')
-        onAddChannel(editChannelName)
+        setEditChannelName(undefined)
+        if (!isChannelName(editChannelName)) throw Error('Unexpected')
+        if (editChannelName) onAddChannel(editChannelName)
     }, [editChannelName, onAddChannel])
+    const okayToAdd = useMemo(() => {
+        return isChannelName(editChannelName)
+    }, [editChannelName])
     return (
         <div>
             <span>
                 <span>Channel name:</span>
-                <input type="text" value={editChannelName} onChange={handleChange} />
-                <button onClick={handleAdd}>Add</button>
+                <input type="text" value={(editChannelName || '').toString()} onChange={handleChange} />
+                <button onClick={okayToAdd ? handleAdd : undefined} disabled={!okayToAdd}>Add</button>
                 <button onClick={onCancel}>Cancel</button>
             </span>
         </div>

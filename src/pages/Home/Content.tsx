@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react'
 import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
-import { NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, NodeId } from '../../common/types/kacheryTypes'
 import ChannelListSection from './ChannelListSection'
 import EditChannel from './EditChannel'
 import EditNode from './EditNode'
@@ -21,7 +21,7 @@ const Content: FunctionComponent<Props> = () => {
         setPage({page: 'node', nodeId})
     }, [setPage])
 
-    const handleSelectChannel = useCallback((channelName: string) => {
+    const handleSelectChannel = useCallback((channelName: ChannelName) => {
         setPage({page: 'channel', channelName})
     }, [setPage])
 

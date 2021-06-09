@@ -4,7 +4,7 @@ import React, { FunctionComponent, useCallback, useEffect, useRef, useState } fr
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { default as kacheryHubApiRequest } from '../../common/kacheryHubApiRequest'
-import { isArrayOf } from '../../common/types/kacheryTypes'
+import { ChannelName, isArrayOf, UserId } from '../../common/types/kacheryTypes'
 import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from '../../common/types/kacheryHubTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import MarkdownDialog from '../../commonComponents/Markdown/MarkdownDialog'
@@ -14,10 +14,10 @@ import ChannelsTable from './ChannelsTable'
 import createKacheryChannelMd from './createKacheryChannel.md.gen'
 
 type Props = {
-    onSelectChannel: (channel: string) => void
+    onSelectChannel: (channel: ChannelName) => void
 }
 
-const useChannelsForUser = (userId?: string | null) => {
+const useChannelsForUser = (userId?: UserId | null) => {
     const channelsForUser = useRef<{[key: string]: ChannelConfig[]}>({})
     const googleSignInClient = useGoogleSignInClient()
     const [refreshCode, setRefreshCode] = useState<number>(0)
@@ -27,7 +27,7 @@ const useChannelsForUser = (userId?: string | null) => {
     useEffect(() => {
         if (!userId) return
         ;(async () => {
-            delete channelsForUser.current[userId]
+            delete channelsForUser.current[userId.toString()]
             incrementUpdateCode()
             const req: GetChannelsForUserRequest = {
                 type: 'getChannelsForUser',
@@ -42,11 +42,11 @@ const useChannelsForUser = (userId?: string | null) => {
                 console.warn('Invalid channels', channels)
                 return
             }
-            channelsForUser.current[userId] = channels
+            channelsForUser.current[userId.toString()] = channels
             incrementUpdateCode()
         })()
     }, [userId, googleSignInClient, refreshCode, incrementUpdateCode])
-    return {channelsForUser: userId ? channelsForUser.current[userId] || undefined : undefined, refreshChannelsForUser: incrementRefreshCode}
+    return {channelsForUser: userId ? channelsForUser.current[userId.toString()] || undefined : undefined, refreshChannelsForUser: incrementRefreshCode}
 }
 
 const addChannel = async (channel: ChannelConfig, googleSignInClient: GoogleSignInClient) => {
@@ -61,7 +61,7 @@ const addChannel = async (channel: ChannelConfig, googleSignInClient: GoogleSign
     await kacheryHubApiRequest(req)
 }
 
-const deleteChannel = async (channelName: string, googleSignInClient: GoogleSignInClient) => {
+const deleteChannel = async (channelName: ChannelName, googleSignInClient: GoogleSignInClient) => {
     const req: DeleteChannelRequest = {
         type: 'deleteChannel',
         channelName,
@@ -81,7 +81,7 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
 
     const {visible: addingChannelVisible, show: showAddingChannel, hide: hideAddingChannel} = useVisible()
 
-    const handleAddChannel = useCallback((channelName: string) => {
+    const handleAddChannel = useCallback((channelName: ChannelName) => {
         if (!googleSignInClient) return
         const userId = googleSignInClient.userId
         if (!userId) return
@@ -102,7 +102,7 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
         })
     }, [refreshChannelsForUser, googleSignInClient, status, hideAddingChannel])
 
-    const handleDeleteChannel = useCallback((channelName: string) => {
+    const handleDeleteChannel = useCallback((channelName: ChannelName) => {
         if (!googleSignInClient) return
         const userId = googleSignInClient.userId
         if (!userId) return
