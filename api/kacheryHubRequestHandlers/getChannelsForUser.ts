@@ -1,8 +1,9 @@
 import { ChannelConfig, GetChannelsForUserRequest, isChannelConfig } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import hideChannelSecrets from '../common/hideChannelSecrets'
 
-const getChannelsForUserHandler = async (request: GetChannelsForUserRequest, verifiedUserId: string) => {
+const getChannelsForUserHandler = async (request: GetChannelsForUserRequest, verifiedUserId: UserId) => {
     if (verifiedUserId !== request.userId) {
         throw Error('Not authorized')
     }

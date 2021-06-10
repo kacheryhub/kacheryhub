@@ -7,6 +7,7 @@ import { isKacheryNodeRequest } from '../src/common/types/kacheryNodeRequestType
 import getPubsubAuthForChannelHandler from './kacheryNodeRequestHandlers/getPubsubAuthForChannel'
 import createSignedFileUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedFileUploadUrl'
 import createSignedSubfeedMessageUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedSubfeedMessageUploadUrl'
+import createSignedTaskResultUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedTaskResultUploadUrl'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -38,6 +39,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (body.type === 'createSignedSubfeedMessageUploadUrl') {
             return await createSignedSubfeedMessageUploadUrlHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'createSignedTaskResultUploadUrl') {
+            return await createSignedTaskResultUploadUrlHandler(body, verifiedNodeId)
         }
         else {
             throw Error(`Unexpected request type (kacheryNode): ${body["type"]}`)

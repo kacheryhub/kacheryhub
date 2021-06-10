@@ -1,18 +1,19 @@
 import { Storage } from '@google-cloud/storage'
 import { isGoogleServiceAccountCredentials } from '../../src/common/types/kacheryHubTypes'
-import { CreateSignedSubfeedMessageUploadUrlRequestBody, CreateSignedSubfeedMessageUploadUrlResponse } from '../../src/common/types/kacheryNodeRequestTypes'
-import { FeedId, NodeId, SubfeedHash, UrlString } from "../../src/common/types/kacheryTypes"
+import { CreateSignedFileUploadUrlResponse, CreateSignedTaskResultUploadUrlRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
+import { NodeId, pathifyHash } from "../../src/common/types/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
 import loadChannelConfig from '../common/loadChannelConfig'
 
-const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedSubfeedMessageUploadUrlRequestBody, verifiedNodeId: NodeId): Promise<CreateSignedSubfeedMessageUploadUrlResponse> => {
+const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskResultUploadUrlRequestBody, verifiedNodeId: NodeId): Promise<CreateSignedFileUploadUrlResponse> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
 
     const { channelName } = request
     const channelConfig = await loadChannelConfig({channelName})
+
     const bucketUri = channelConfig.bucketUri
     if (!bucketUri) {
         throw Error('No bucket uri for channel')
@@ -22,8 +23,8 @@ const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedS
     if (!authorizedNode) {
         throw Error('Not authorized on this channel')
     }
-    if (!authorizedNode.permissions.provideFeeds) {
-        throw Error('Not authorized to upload feeds on this channel')
+    if (!authorizedNode.permissions.provideTaskResults) {
+        throw Error('Not authorized to upload task results on this channel')
     }
     const googleServiceAccountCredentials = channelConfig.googleServiceAccountCredentials
     if (!googleServiceAccountCredentials) {
@@ -40,27 +41,11 @@ const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedS
             private_key: googleCredentials.private_key
         }
     })
-    const subfeedPath = getSubfeedPath(request.feedId, request.subfeedHash)
-    const signedUrls: {[key: string]: UrlString} = {}
-    for (let i = request.messageNumberRange[0]; i < request.messageNumberRange[1]; i++) {
-        const fileName = `${subfeedPath}/${i}`
-        const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, null)
-        signedUrls[i + ''] = signedUrl
-    }
-    {
-        const fileName = `${subfeedPath}/subfeed.json`
-        const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, null)
-        signedUrls['subfeedJson'] = signedUrl
-    }
-    
-    return {signedUrls}
+    const size = request.size
+    const taskHash = request.taskHash
+    const fileName = `task_results/${pathifyHash(taskHash)}`
+    const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, size)
+    return {signedUrl}
 }
 
-const getSubfeedPath = (feedId: FeedId, subfeedHash: SubfeedHash) => {
-    const f = feedId.toString()
-    const s = subfeedHash.toString()
-    const subfeedPath = `feeds/${f[0]}${f[1]}/${f[2]}${f[3]}/${f[4]}${f[5]}/${f}/subfeeds/${s[0]}${s[1]}/${s[2]}${s[3]}/${s[4]}${s[5]}/${s}`
-    return subfeedPath
-}
-
-export default createSignedSubfeedMessageUploadUrlHandler
+export default createSignedTaskResultUploadUrlHandler

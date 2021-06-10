@@ -1,22 +1,15 @@
-import { GetChannelRequest, isChannelConfig, isNodeConfig, NodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { GetChannelRequest, isChannelConfig, isNodeConfig, NodeChannelMembership, NodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import hideChannelSecrets from '../common/hideChannelSecrets'
+import loadChannelConfig from '../common/loadChannelConfig'
 
-const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: string) => {
-    const db = firestoreDatabase()
+const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: UserId) => {
     const { channelName } = request
-    const nodesCollection = db.collection('nodes')
-    const channelsCollection = db.collection('channels')
-    const channelResults = await channelsCollection
-        .where('channelName', '==', channelName).get()
-    if (channelResults.docs.length === 0) {
-        throw Error('Channel not found')
-    }
-    if (channelResults.docs.length > 1) {
-        throw Error('More than one channel with this name found')
-    }
-    const channelConfig = channelResults.docs[0].data()
+    const channelConfig = await loadChannelConfig({channelName})
     if (!isChannelConfig(channelConfig)) throw Error('Not a valid channel config')
+    const db = firestoreDatabase()
+    const nodesCollection = db.collection('nodes')
     for (let authorizedNode of channelConfig.authorizedNodes) {
         const nodeResults = await nodesCollection
             .where('nodeId', '==', authorizedNode.nodeId).get()
@@ -41,7 +34,7 @@ const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: str
         })
         if (nodeConfigs.length > 0) {
             const nodeConfig = nodeConfigs[0]
-            const channelMembership = nodeConfig.channelMemberships.filter(cm => (cm.channelName === channelName))[0]
+            const channelMembership = nodeConfig.channelMemberships.filter((cm: NodeChannelMembership) => (cm.channelName === channelName))[0]
             if (channelMembership) {
                 authorizedNode.roles = channelMembership.roles
             }

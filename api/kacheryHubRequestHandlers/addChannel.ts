@@ -1,7 +1,8 @@
 import { AddChannelRequest } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const addChannelHandler = async (request: AddChannelRequest, verifiedUserId: string) => {
+const addChannelHandler = async (request: AddChannelRequest, verifiedUserId: UserId) => {
     if (verifiedUserId !== request.channel.ownerId) {
         throw Error('Not authorized')
     }

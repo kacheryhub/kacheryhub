@@ -1,7 +1,8 @@
 import { NodeChannelAuthorization, UpdateNodeChannelAuthorizationRequest } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const updateNodeChannelAuthorizationHandler = async (request: UpdateNodeChannelAuthorizationRequest, verifiedUserId: string) => {
+const updateNodeChannelAuthorizationHandler = async (request: UpdateNodeChannelAuthorizationRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const channelsCollection = db.collection('channels')
     const channelResults = await channelsCollection

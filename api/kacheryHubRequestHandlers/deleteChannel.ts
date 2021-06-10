@@ -1,7 +1,8 @@
 import { DeleteChannelRequest } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const deleteChannelHandler = async (request: DeleteChannelRequest, verifiedUserId: string) => {
+const deleteChannelHandler = async (request: DeleteChannelRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const channelsCollection = db.collection('channels')
     const channelResults = await channelsCollection.where('channelName', '==', request.channelName).get()

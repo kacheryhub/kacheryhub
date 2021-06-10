@@ -1,7 +1,8 @@
 import { DeleteNodeChannelAuthorizationRequest, NodeChannelAuthorization } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const deleteNodeChannelAuthorizationHandler = async (request: DeleteNodeChannelAuthorizationRequest, verifiedUserId: string) => {
+const deleteNodeChannelAuthorizationHandler = async (request: DeleteNodeChannelAuthorizationRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const channelsCollection = db.collection('channels')
     const channelResults = await channelsCollection

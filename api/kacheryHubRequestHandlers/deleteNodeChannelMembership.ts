@@ -1,8 +1,9 @@
 import { DeleteNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 
-const deleteNodeChannelMembershipHandler = async (request: DeleteNodeChannelMembershipRequest, verifiedUserId: string) => {
+const deleteNodeChannelMembershipHandler = async (request: DeleteNodeChannelMembershipRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
     const nodeResults = await nodesCollection

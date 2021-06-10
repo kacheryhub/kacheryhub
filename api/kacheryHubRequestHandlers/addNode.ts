@@ -1,7 +1,8 @@
 import { AddNodeRequest } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: string) => {
+const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: UserId) => {
     if (verifiedUserId !== request.node.ownerId) {
         throw Error('Not authorized')
     }

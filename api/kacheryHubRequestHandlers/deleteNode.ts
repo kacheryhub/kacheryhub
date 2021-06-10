@@ -1,7 +1,8 @@
 import { DeleteNodeRequest } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const deleteNodeHandler = async (request: DeleteNodeRequest, verifiedUserId: string) => {
+const deleteNodeHandler = async (request: DeleteNodeRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
     const nodeResults = await nodesCollection

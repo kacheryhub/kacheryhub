@@ -1,7 +1,8 @@
 import { GetNodeForUserRequest, GetNodeForUserResponse, isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: string): Promise<GetNodeForUserResponse> => {
+const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: UserId): Promise<GetNodeForUserResponse> => {
     if (verifiedUserId !== request.userId) {
         throw Error('Not authorized')
     }

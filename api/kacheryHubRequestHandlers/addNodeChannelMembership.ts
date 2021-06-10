@@ -1,7 +1,8 @@
 import { AddNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/common/types/kacheryHubTypes'
+import { UserId } from '../../src/common/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
-const addNodeChannelMembershipHandler = async (request: AddNodeChannelMembershipRequest, verifiedUserId: string) => {
+const addNodeChannelMembershipHandler = async (request: AddNodeChannelMembershipRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
     const nodeResults = await nodesCollection
