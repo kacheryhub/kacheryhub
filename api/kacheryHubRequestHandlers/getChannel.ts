@@ -7,7 +7,6 @@ import loadChannelConfig from '../common/loadChannelConfig'
 const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: UserId) => {
     const { channelName } = request
     const channelConfig = await loadChannelConfig({channelName})
-    if (!isChannelConfig(channelConfig)) throw Error('Not a valid channel config')
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
     for (let authorizedNode of channelConfig.authorizedNodes) {

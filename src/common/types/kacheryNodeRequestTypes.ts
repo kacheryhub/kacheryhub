@@ -1,5 +1,5 @@
-import { isNodeConfig, NodeConfig } from "./kacheryHubTypes"
-import { ByteCount, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isString, isSubfeedHash, isTaskHash, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskHash, UrlString, UserId, _validateObject } from "./kacheryTypes"
+import { ChannelConfig, isChannelConfig, isNodeConfig, NodeConfig } from "./kacheryHubTypes"
+import { ByteCount, channelName, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isString, isSubfeedHash, isTaskHash, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskHash, UrlString, UserId, _validateObject } from "./kacheryTypes"
 
 export type ReportRequestBody = {
     type: 'report'
@@ -40,6 +40,30 @@ export const isGetNodeConfigResponse = (x: any): x is GetNodeConfigResponse => {
     return _validateObject(x, {
         found: isBoolean,
         nodeConfig: optional(isNodeConfig)
+    })
+}
+
+export type GetChannelConfigRequestBody = {
+    type: 'getChannelConfig'
+    channelName: ChannelName
+}
+
+export const isGetChannelConfigRequestBody = (x: any): x is GetNodeConfigRequestBody => {
+    return _validateObject(x, {
+        type: isEqualTo('getChannelConfig'),
+        channelName: isChannelName
+    })
+}
+
+export type GetChannelConfigResponse = {
+    found: boolean,
+    channelConfig?: ChannelConfig
+}
+
+export const isGetChannelConfigResponse = (x: any): x is GetChannelConfigResponse => {
+    return _validateObject(x, {
+        found: isBoolean,
+        channelConfig: optional(isChannelConfig)
     })
 }
 
@@ -152,11 +176,11 @@ export const isCreateSignedTaskResultUploadUrlResponse = (x: any): x is CreateSi
 }
 
 export type KacheryNodeRequestBody =
-    ReportRequestBody | GetNodeConfigRequestBody | GetPubsubAuthForChannelRequestBody | CreateSignedFileUploadUrlRequestBody | CreateSignedSubfeedMessageUploadUrlRequestBody | CreateSignedTaskResultUploadUrlRequestBody
+    ReportRequestBody | GetNodeConfigRequestBody | GetPubsubAuthForChannelRequestBody | CreateSignedFileUploadUrlRequestBody | CreateSignedSubfeedMessageUploadUrlRequestBody | CreateSignedTaskResultUploadUrlRequestBody | GetChannelConfigRequestBody
 
 export const isKacheryNodeRequestBody = (x: any): x is KacheryNodeRequestBody => {
     return isOneOf([
-        isReportRequestBody, isGetNodeConfigRequestBody, isGetPubsubAuthForChannelRequestBody, isCreateSignedFileUploadUrlRequestBody, isCreateSignedSubfeedMessageUploadUrlRequestBody, isCreateSignedTaskResultUploadUrlRequestBody
+        isReportRequestBody, isGetNodeConfigRequestBody, isGetPubsubAuthForChannelRequestBody, isCreateSignedFileUploadUrlRequestBody, isCreateSignedSubfeedMessageUploadUrlRequestBody, isCreateSignedTaskResultUploadUrlRequestBody, isGetChannelConfigRequestBody
     ])(x)
 }
 

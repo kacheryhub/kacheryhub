@@ -1,6 +1,7 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import { NodeId, PublicKey, PublicKeyHex } from '../src/common/types/kacheryTypes'
 import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
+import getChannelConfigHandler from './kacheryNodeRequestHandlers/getChannelConfig'
 import reportHandler from './kacheryNodeRequestHandlers/report'
 import {verifySignature} from '../src/common/types/crypto_util'
 import { isKacheryNodeRequest } from '../src/common/types/kacheryNodeRequestTypes'
@@ -30,6 +31,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (body.type === 'getNodeConfig') {
             return await getNodeConfigHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'getChannelConfig') {
+            return await getChannelConfigHandler(body, verifiedNodeId)
         }
         else if (body.type === 'getPubsubAuthForChannel') {
             return await getPubsubAuthForChannelHandler(body, verifiedNodeId)
