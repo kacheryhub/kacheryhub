@@ -1,5 +1,5 @@
-import { ChannelConfig, isChannelConfig, isNodeConfig, NodeConfig } from "./kacheryHubTypes"
-import { ByteCount, channelName, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isString, isSubfeedHash, isTaskHash, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskHash, UrlString, UserId, _validateObject } from "./kacheryTypes"
+import { AblyTokenRequest, ChannelConfig, isAblyTokenRequest, isChannelConfig, isNodeConfig, NodeConfig } from "./kacheryHubTypes"
+import { ByteCount, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isSubfeedHash, isTaskHash, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskHash, UrlString, UserId, _validateObject } from "./kacheryTypes"
 
 export type ReportRequestBody = {
     type: 'report'
@@ -70,7 +70,7 @@ export const isGetChannelConfigResponse = (x: any): x is GetChannelConfigRespons
 export type GetPubsubAuthForChannelRequestBody = {
     type: 'getPubsubAuthForChannel'
     nodeId: NodeId
-    ownerId: UserId,
+    ownerId?: UserId, // not needed
     channelName: ChannelName
 }
 
@@ -78,10 +78,21 @@ export const isGetPubsubAuthForChannelRequestBody = (x: any): x is GetPubsubAuth
     return _validateObject(x, {
         type: isEqualTo('getPubsubAuthForChannel'),
         nodeId: isNodeId,
-        ownerId: isUserId,
+        ownerId: optional(isUserId), // not needed
         channelName: isChannelName
     })
 }
+
+export type GetPubsubAuthForChannelResponse = {
+    ablyTokenRequest: AblyTokenRequest
+}
+
+export const isGetPubsubAuthForChannelResponse = (x: any): x is GetPubsubAuthForChannelResponse => {
+    return _validateObject(x, {
+        ablyTokenRequest: isAblyTokenRequest
+    })
+}
+
 
 export type CreateSignedFileUploadUrlRequestBody = {
     type: 'createSignedFileUploadUrl'

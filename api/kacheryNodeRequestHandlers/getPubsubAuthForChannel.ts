@@ -1,5 +1,5 @@
 import { isChannelConfig, PubsubAuth } from '../../src/common/types/kacheryHubTypes'
-import { GetPubsubAuthForChannelRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
+import { GetPubsubAuthForChannelRequestBody, GetPubsubAuthForChannelResponse } from "../../src/common/types/kacheryNodeRequestTypes"
 import { NodeId } from "../../src/common/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import createAblyTokenRequest from './createAblyTokenRequest'
@@ -28,7 +28,10 @@ const getPubsubAuthForChannelHandler = async (request: GetPubsubAuthForChannelRe
         throw Error('Node not authorized on this channel')
     }
     const ablyTokenRequest = await createAblyTokenRequest(channelConfig, authorizedNode)
-    return {ablyTokenRequest}
+    const response: GetPubsubAuthForChannelResponse = {
+        ablyTokenRequest
+    }
+    return response
 }
 
 export default getPubsubAuthForChannelHandler
