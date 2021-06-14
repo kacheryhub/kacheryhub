@@ -17,38 +17,44 @@ const createAblyTokenRequest = async (channelConfig: ChannelConfig, authorizatio
     const ably = new Ably.Rest({ key: ablyApiKey });
 
     const cn = channelConfig.channelName
-    const params: Ably.Types.TokenParams = {capability: {
+    const capability: {[key: string]: any[]} = {
         [`${cn}-requestFiles`]: [],
         [`${cn}-provideFiles`]: [],
         [`${cn}-requestFeeds`]: [],
         [`${cn}-provideFeeds`]: [],
-        [`${cn}-requestTaskResults`]: [],
-        [`${cn}-provideTaskResults`]: []
-    }}
+        [`${cn}-requestTasks`]: [],
+        [`${cn}-provideTasks`]: []
+    }
     if (authorization.permissions.requestFiles) {
-        params.capability[`${cn}-requestFiles`].push('publish')
-        params.capability[`${cn}-provideFiles`].push('subscribe')
+        capability[`${cn}-requestFiles`].push('publish')
+        capability[`${cn}-provideFiles`].push('subscribe')
     }
     if (authorization.permissions.provideFiles) {
-        params.capability[`${cn}-requestFiles`].push('subscribe')
-        params.capability[`${cn}-provideFiles`].push('publish')
+        capability[`${cn}-requestFiles`].push('subscribe')
+        capability[`${cn}-provideFiles`].push('publish')
     }
     if (authorization.permissions.requestFeeds) {
-        params.capability[`${cn}-requestFeeds`].push('publish')
-        params.capability[`${cn}-provideFeeds`].push('subscribe')
+        capability[`${cn}-requestFeeds`].push('publish')
+        capability[`${cn}-provideFeeds`].push('subscribe')
     }
     if (authorization.permissions.provideFeeds) {
-        params.capability[`${cn}-requestFeeds`].push('subscribe')
-        params.capability[`${cn}-provideFeeds`].push('publish')
+        capability[`${cn}-requestFeeds`].push('subscribe')
+        capability[`${cn}-provideFeeds`].push('publish')
     }
-    if (authorization.permissions.requestTaskResults) {
-        params.capability[`${cn}-requestTaskResults`].push('publish')
-        params.capability[`${cn}-provideTaskResults`].push('subscribe')
+    if (authorization.permissions.requestTasks) {
+        capability[`${cn}-requestTasks`].push('publish')
+        capability[`${cn}-provideTasks`].push('subscribe')
     }
-    if (authorization.permissions.provideTaskResults) {
-        params.capability[`${cn}-requestTaskResults`].push('subscribe')
-        params.capability[`${cn}-provideTaskResults`].push('publish')
+    if (authorization.permissions.provideTasks) {
+        capability[`${cn}-requestTasks`].push('subscribe')
+        capability[`${cn}-provideTasks`].push('publish')
     }
+    for (let k in capability) {
+        if (capability[k].length === 0) {
+            delete capability[k]
+        }
+    }
+    const params: Ably.Types.TokenParams = {capability}
     const tokenRequest = await createTokenRequestAsync(ably, params)
     if (!isAblyTokenRequest(tokenRequest)) {
         throw Error('Invalid ably token request')

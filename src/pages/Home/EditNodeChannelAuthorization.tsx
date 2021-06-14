@@ -12,12 +12,12 @@ const permissions = [
     [
         {key: 'requestFiles', label: 'Request files'},
         {key: 'requestFeeds', label: 'Request feeds'},
-        {key: 'requestTaskResults', label: 'Request task results'},
+        {key: 'requestTasks', label: 'Request tasks'},
     ],
     [
         {key: 'provideFiles', label: 'Provide files'},
         {key: 'provideFeeds', label: 'Provide feeds'},
-        {key: 'provideTaskResults', label: 'Provide task results', requiresAuth: true}
+        {key: 'provideTasks', label: 'Provide tasks', requiresAuth: true}
     ]
 ]
 

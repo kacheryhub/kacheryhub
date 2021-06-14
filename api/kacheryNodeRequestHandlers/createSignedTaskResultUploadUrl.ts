@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage'
 import { isGoogleServiceAccountCredentials } from '../../src/common/types/kacheryHubTypes'
 import { CreateSignedFileUploadUrlResponse, CreateSignedTaskResultUploadUrlRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
-import { NodeId, pathifyHash } from "../../src/common/types/kacheryTypes"
+import { isSha1Hash, NodeId, pathifyHash } from "../../src/common/types/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
 import loadChannelConfig from '../common/loadChannelConfig'
@@ -23,7 +23,7 @@ const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskR
     if (!authorizedNode) {
         throw Error('Not authorized on this channel')
     }
-    if (!authorizedNode.permissions.provideTaskResults) {
+    if (!authorizedNode.permissions.provideTasks) {
         throw Error('Not authorized to upload task results on this channel')
     }
     const googleServiceAccountCredentials = channelConfig.googleServiceAccountCredentials
@@ -42,8 +42,11 @@ const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskR
         }
     })
     const size = request.size
-    const taskHash = request.taskHash
-    const fileName = `task_results/${pathifyHash(taskHash)}`
+    const taskId = request.taskId
+    if (!isSha1Hash(taskId)) {
+        throw Error('Task ID is not a sha1 hash')
+    }
+    const fileName = `task_results/${pathifyHash(taskId)}`
     const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, size)
     return {signedUrl}
 }

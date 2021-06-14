@@ -13,17 +13,17 @@ const roles = [
     [
         {key: 'downloadFiles', label: 'Download files', requiresAuth: false},
         {key: 'downloadFeeds', label: 'Download feeds', requiresAuth: false},
-        {key: 'downloadTaskResults', label: 'Download task results', requiresAuth: false}
+        {key: 'downloadTasks', label: 'Download tasks', requiresAuth: false}
     ],
     [
         {key: 'requestFiles', label: 'Request files', requiresAuth: true},
         {key: 'requestFeeds', label: 'Request feeds', requiresAuth: true},
-        {key: 'requestTaskResults', label: 'Request task results', requiresAuth: true},
+        {key: 'requestTasks', label: 'Request tasks', requiresAuth: true},
     ],
     [
         {key: 'provideFiles', label: 'Provide files', requiresAuth: true},
         {key: 'provideFeeds', label: 'Provide feeds', requiresAuth: true},
-        {key: 'provideTaskResults', label: 'Provide task results', requiresAuth: true}
+        {key: 'provideTasks', label: 'Provide tasks', requiresAuth: true}
     ]
 ]
 

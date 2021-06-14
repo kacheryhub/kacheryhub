@@ -1,5 +1,5 @@
 import { AblyTokenRequest, ChannelConfig, isAblyTokenRequest, isChannelConfig, isNodeConfig, NodeConfig } from "./kacheryHubTypes"
-import { ByteCount, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isSubfeedHash, isTaskHash, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskHash, UrlString, UserId, _validateObject } from "./kacheryTypes"
+import { ByteCount, ChannelName, FeedId, isArrayOf, isBoolean, isByteCount, isChannelName, isEqualTo, isFeedId, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isSubfeedHash, isTaskId, isUrlString, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, SubfeedHash, TaskId, UrlString, UserId, _validateObject } from "./kacheryTypes"
 
 export type ReportRequestBody = {
     type: 'report'
@@ -161,7 +161,7 @@ export type CreateSignedTaskResultUploadUrlRequestBody = {
     nodeId: NodeId
     ownerId: UserId
     channelName: ChannelName
-    taskHash: TaskHash
+    taskId: TaskId
     size: ByteCount
 }
 
@@ -171,7 +171,7 @@ export const isCreateSignedTaskResultUploadUrlRequestBody = (x: any): x is Creat
         nodeId: isNodeId,
         ownerId: isUserId,
         channelName: isChannelName,
-        taskHash: isTaskHash,
+        taskId: isTaskId,
         size: isByteCount
     })
 }
