@@ -1,6 +1,6 @@
-import { isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
-import { GetNodeConfigRequestBody, GetNodeConfigResponse } from "../../src/common/types/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/common/types/kacheryTypes"
+import { isChannelConfig, isNodeConfig } from '../../src/kachery-js/types/kacheryHubTypes'
+import { GetNodeConfigRequestBody, GetNodeConfigResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
 const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedNodeId: NodeId): Promise<GetNodeConfigResponse> => {

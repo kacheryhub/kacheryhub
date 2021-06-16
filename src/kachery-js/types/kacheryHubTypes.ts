@@ -1,4 +1,5 @@
-import { ChannelName, isArrayOf, isBoolean, isChannelName, isEqualTo, isNodeId, isNodeLabel, isNumber, isOneOf, isSignature, isString, isTimestamp, isUserId, NodeId, NodeLabel, optional, Signature, Timestamp, UserId, _validateObject } from "./kacheryTypes"
+import { ChannelName, isArrayOf, isBoolean, isChannelName, isEqualTo, isNodeId, isNodeLabel, isNumber, isOneOf, isSignature, isString, isTaskFunctionId, isTaskId, isTaskKwargs, isTimestamp, isUserId, NodeId, NodeLabel, optional, Signature, TaskFunctionId, TaskId, TaskKwargs, Timestamp, UserId, _validateObject } from "./kacheryTypes"
+import { isTaskFunctionType, TaskFunctionType } from "./pubsubMessages"
 
 export type GoogleServiceAccountCredentials = {
     type: 'service_account',
@@ -140,13 +141,13 @@ export type NodeChannelMembership = {
     roles: {
         downloadFiles?: boolean
         downloadFeeds?: boolean
+        downloadTaskResults?: boolean
         requestFiles?: boolean
         requestFeeds?: boolean
         requestTasks?: boolean
         provideFiles?: boolean
         provideFeeds?: boolean
         provideTasks?: boolean
-        provideTaskResults?: boolean // historic, obsolete
     }
     channelBucketUri?: string // obtained by cross-referencing the channels collection
     authorization?: NodeChannelAuthorization // obtained by cross-referencing the channels collection
@@ -504,4 +505,36 @@ export const isKacheryHubRequest = (x: any): x is KacheryHubRequest => {
         isUpdateNodeChannelMembershipRequest,
         isUpdateNodeChannelAuthorizationRequest
     ])(x)
+}
+
+export type RegisteredTaskFunction = {
+    channelName: string
+    taskFunctionId: TaskFunctionId
+    taskFunctionType: TaskFunctionType
+}
+
+export const isRegisteredTaskFunction = (x: any): x is RegisteredTaskFunction => {
+    return _validateObject(x, {
+        channelName: isChannelName,
+        taskFunctionId: isTaskFunctionId,
+        taskFunctionType: isTaskFunctionType
+    })
+}
+
+export type RequestedTask = {
+    channelName: ChannelName
+    taskId: TaskId
+    taskFunctionId: TaskFunctionId
+    kwargs: TaskKwargs
+    taskFunctionType: TaskFunctionType
+}
+
+export const isRequestedTask = (x: any): x is RequestedTask => {
+    return _validateObject(x, {
+        channelName: isChannelName,
+        taskId: isTaskId,
+        taskFunctionId: isTaskFunctionId,
+        kwargs: isTaskKwargs,
+        taskFunctionType: isTaskFunctionType
+    })
 }

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useState } from 'react'
-import { ChannelName } from '../../common/types/kacheryTypes'
+import { ChannelName } from '../../kachery-js/types/kacheryTypes'
 
 type Props = {
     channelName: ChannelName

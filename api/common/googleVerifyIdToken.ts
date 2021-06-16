@@ -1,5 +1,5 @@
 import {OAuth2Client} from 'google-auth-library'
-import { isUserId, UserId } from '../../src/common/types/kacheryTypes';
+import { isUserId, UserId } from '../../src/kachery-js/types/kacheryTypes';
 
 const client = new OAuth2Client(process.env.REACT_APP_CLIENT_ID);
 const googleVerifyIdToken = async (userId: UserId, token: string) => {

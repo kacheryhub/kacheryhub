@@ -1,5 +1,5 @@
 import Ably from 'ably';
-import { AblyTokenRequest, ChannelConfig, isAblyTokenRequest, NodeChannelAuthorization } from "../../src/common/types/kacheryHubTypes";
+import { AblyTokenRequest, ChannelConfig, isAblyTokenRequest, NodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes";
 
 const createTokenRequestAsync = async (ably: Ably.Rest, tokenParams: Ably.Types.TokenParams): Promise<Ably.Types.TokenRequest> => {
     return new Promise((resolve, reject) => {

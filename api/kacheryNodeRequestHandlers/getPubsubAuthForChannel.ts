@@ -1,6 +1,6 @@
-import { isChannelConfig, PubsubAuth } from '../../src/common/types/kacheryHubTypes'
-import { GetPubsubAuthForChannelRequestBody, GetPubsubAuthForChannelResponse } from "../../src/common/types/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/common/types/kacheryTypes"
+import { isChannelConfig, PubsubAuth } from '../../src/kachery-js/types/kacheryHubTypes'
+import { GetPubsubAuthForChannelRequestBody, GetPubsubAuthForChannelResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import createAblyTokenRequest from './createAblyTokenRequest'
 

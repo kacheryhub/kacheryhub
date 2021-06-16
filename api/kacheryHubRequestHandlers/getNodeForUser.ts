@@ -1,5 +1,5 @@
-import { GetNodeForUserRequest, GetNodeForUserResponse, isChannelConfig, isNodeConfig } from '../../src/common/types/kacheryHubTypes'
-import { UserId } from '../../src/common/types/kacheryTypes'
+import { GetNodeForUserRequest, GetNodeForUserResponse, isChannelConfig, isNodeConfig } from '../../src/kachery-js/types/kacheryHubTypes'
+import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: UserId): Promise<GetNodeForUserResponse> => {

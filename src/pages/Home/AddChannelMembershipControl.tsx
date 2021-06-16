@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
-import { ChannelName, isChannelName } from '../../common/types/kacheryTypes'
+import { ChannelName, isChannelName } from '../../kachery-js/types/kacheryTypes'
 
 type Props = {
     onAddChannelMembership: (channelName: ChannelName) => void

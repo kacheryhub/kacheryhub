@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback } from 'react'
 import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
-import { ChannelName, NodeId } from '../../common/types/kacheryTypes'
+import { ChannelName, NodeId } from '../../kachery-js/types/kacheryTypes'
 import ChannelListSection from './ChannelListSection'
 import EditChannel from './EditChannel'
 import EditNode from './EditNode'

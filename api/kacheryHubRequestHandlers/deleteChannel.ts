@@ -1,5 +1,5 @@
-import { DeleteChannelRequest } from '../../src/common/types/kacheryHubTypes'
-import { UserId } from '../../src/common/types/kacheryTypes'
+import { DeleteChannelRequest } from '../../src/kachery-js/types/kacheryHubTypes'
+import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const deleteChannelHandler = async (request: DeleteChannelRequest, verifiedUserId: UserId) => {

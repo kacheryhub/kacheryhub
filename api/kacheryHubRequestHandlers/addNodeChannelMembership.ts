@@ -1,5 +1,5 @@
-import { AddNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/common/types/kacheryHubTypes'
-import { UserId } from '../../src/common/types/kacheryTypes'
+import { AddNodeChannelMembershipRequest, NodeChannelMembership } from '../../src/kachery-js/types/kacheryHubTypes'
+import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const addNodeChannelMembershipHandler = async (request: AddNodeChannelMembershipRequest, verifiedUserId: UserId) => {

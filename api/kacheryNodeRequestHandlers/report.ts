@@ -1,5 +1,5 @@
-import { ReportRequestBody } from "../../src/common/types/kacheryNodeRequestTypes"
-import { NodeId, nowTimestamp } from "../../src/common/types/kacheryTypes"
+import { ReportRequestBody } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
+import { NodeId, nowTimestamp } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
 const reportHandler = async (request: ReportRequestBody, verifiedNodeId: NodeId) => {

@@ -1,5 +1,5 @@
-import { isChannelConfig } from "../../src/common/types/kacheryHubTypes"
-import { ChannelName } from "../../src/common/types/kacheryTypes"
+import { isChannelConfig } from "../../src/kachery-js/types/kacheryHubTypes"
+import { ChannelName } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "./firestoreDatabase"
 
 const loadChannelConfig = async (args: {channelName: ChannelName}) => {

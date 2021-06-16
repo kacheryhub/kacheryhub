@@ -1,5 +1,5 @@
-import { AddAuthorizedNodeRequest, NodeChannelAuthorization } from "../../src/common/types/kacheryHubTypes"
-import { UserId } from "../../src/common/types/kacheryTypes"
+import { AddAuthorizedNodeRequest, NodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes"
+import { UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 
 const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId) => {
