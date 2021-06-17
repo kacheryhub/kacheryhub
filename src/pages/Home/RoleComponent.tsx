@@ -1,6 +1,6 @@
 import { Checkbox } from "@material-ui/core"
 import { FunctionComponent, useCallback } from "react"
-import { NodeChannelMembership } from "../../kachery-js/types/kacheryHubTypes"
+import { NodeChannelMembership } from "kachery-js/types/kacheryHubTypes"
 
 type RoleComponentProps = {
     roleKey: string,

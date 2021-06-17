@@ -21,7 +21,7 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
     ;(async () => {
         const body = request.body
         const signature = request.signature
-        if (!verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
+        if (!await verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
             throw Error('Invalid signature')
         }
         const verifiedNodeId = request.nodeId

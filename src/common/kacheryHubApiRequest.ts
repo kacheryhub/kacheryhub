@@ -1,5 +1,5 @@
 import axios from "axios"
-import { KacheryHubRequest } from "../kachery-js/types/kacheryHubTypes"
+import { KacheryHubRequest } from "kachery-js/types/kacheryHubTypes"
 
 const kacheryHubApiRequest = async (request: KacheryHubRequest) => {
     try {

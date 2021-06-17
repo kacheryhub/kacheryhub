@@ -1,8 +1,8 @@
 import axios from "axios"
-import { publicKeyToHex, publicKeyHexToNodeId, getSignature } from "../kachery-js/types/crypto_util"
-import { KeyPair, UserId } from "../kachery-js/types/kacheryTypes"
-import {GetNodeConfigRequestBody, isGetNodeConfigResponse, KacheryNodeRequest} from '../kachery-js/types/kacheryNodeRequestTypes'
-import { isNodeConfig, NodeConfig } from "../kachery-js/types/kacheryHubTypes"
+import { publicKeyHexToNodeId, publicKeyToHex, signMessageNew } from "kachery-js/types/crypto_util"
+import { NodeConfig } from "kachery-js/types/kacheryHubTypes"
+import { GetNodeConfigRequestBody, isGetNodeConfigResponse, KacheryNodeRequest } from 'kachery-js/types/kacheryNodeRequestTypes'
+import { JSONValue, KeyPair, UserId } from "kachery-js/types/kacheryTypes"
 
 class KacheryHubNodeClient {
     #initialized = false
@@ -30,7 +30,7 @@ class KacheryHubNodeClient {
         const req: KacheryNodeRequest = {
             body: reqBody,
             nodeId: this.nodeId,
-            signature: getSignature(reqBody, this.opts.keyPair)
+            signature: await signMessageNew(reqBody as any as JSONValue, this.opts.keyPair)
         }
         const x = await axios.post(`${this._kacheryHubUrl()}/api/getNodeConfig`, req)
         const resp = x.data

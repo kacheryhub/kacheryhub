@@ -1,5 +1,5 @@
 import React from 'react'
-import { UserId } from '../../kachery-js/types/kacheryTypes'
+import { UserId } from 'kachery-js/types/kacheryTypes'
 import GoogleSignIn from './GoogleSignIn'
 
 export type GoogleSignInClientOpts = {

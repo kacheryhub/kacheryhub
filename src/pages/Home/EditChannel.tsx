@@ -3,8 +3,8 @@ import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } f
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
-import { ChannelName, isNodeId, NodeId } from '../../kachery-js/types/kacheryTypes'
-import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest } from '../../kachery-js/types/kacheryHubTypes'
+import { ChannelName, isNodeId, NodeId } from 'kachery-js/types/kacheryTypes'
+import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest } from 'kachery-js/types/kacheryHubTypes'
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 import EditString from './EditString'
 
