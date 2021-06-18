@@ -1,14 +1,15 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
-import { NodeId, PublicKey, PublicKeyHex } from '../src/kachery-js/types/kacheryTypes'
-import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
-import getChannelConfigHandler from './kacheryNodeRequestHandlers/getChannelConfig'
-import reportHandler from './kacheryNodeRequestHandlers/report'
-import {verifySignature} from '../src/kachery-js/types/crypto_util'
+import { JSONValue } from '../../surfaceview3/src/kachery-js/types/kacheryTypes'
+import { hexToPublicKey, verifySignature } from '../src/kachery-js/crypto/signatures'
 import { isKacheryNodeRequest } from '../src/kachery-js/types/kacheryNodeRequestTypes'
-import getPubsubAuthForChannelHandler from './kacheryNodeRequestHandlers/getPubsubAuthForChannel'
+import { nodeIdToPublicKeyHex } from '../src/kachery-js/types/kacheryTypes'
 import createSignedFileUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedFileUploadUrl'
 import createSignedSubfeedMessageUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedSubfeedMessageUploadUrl'
 import createSignedTaskResultUploadUrlHandler from './kacheryNodeRequestHandlers/createSignedTaskResultUploadUrl'
+import getChannelConfigHandler from './kacheryNodeRequestHandlers/getChannelConfig'
+import getNodeConfigHandler from './kacheryNodeRequestHandlers/getNodeConfig'
+import getPubsubAuthForChannelHandler from './kacheryNodeRequestHandlers/getPubsubAuthForChannel'
+import reportHandler from './kacheryNodeRequestHandlers/report'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -21,7 +22,7 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
     ;(async () => {
         const body = request.body
         const signature = request.signature
-        if (!await verifySignature(body, signature, nodeIdToPublicKey(request.nodeId))) {
+        if (!await verifySignature(body as any as JSONValue, hexToPublicKey(nodeIdToPublicKeyHex(request.nodeId)), signature)) {
             throw Error('Invalid signature')
         }
         const verifiedNodeId = request.nodeId
@@ -56,16 +57,4 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         console.warn(error.message)
         res.status(404).send(`Error: ${error.message}`)
     })
-}
-
-const ed25519PubKeyPrefix = "302a300506032b6570032100";
-export const hexToPublicKey = (x: PublicKeyHex): PublicKey => {
-    /* istanbul ignore next */
-    if (!x) {
-        throw Error('Error in hexToPublicKey. Input is empty.');
-    }
-    return `-----BEGIN PUBLIC KEY-----\n${Buffer.from(ed25519PubKeyPrefix + x, 'hex').toString('base64')}\n-----END PUBLIC KEY-----\n` as any as PublicKey;
-}
-export const nodeIdToPublicKey = (nodeId: NodeId): PublicKey => {
-    return hexToPublicKey(nodeId.toString() as any as PublicKeyHex);
 }
