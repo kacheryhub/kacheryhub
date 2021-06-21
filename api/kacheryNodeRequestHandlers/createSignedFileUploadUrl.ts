@@ -19,7 +19,7 @@ const createSignedFileUploadUrlHandler = async (request: CreateSignedFileUploadU
         throw Error('No bucket uri for channel')
     }
     const bucketName = bucketNameFromUri(bucketUri)
-    const authorizedNode = channelConfig.authorizedNodes.filter(n => (n.nodeId === request.nodeId))[0]
+    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
     if (!authorizedNode) {
         throw Error('Not authorized on this channel')
     }

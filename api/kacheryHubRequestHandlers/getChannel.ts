@@ -9,7 +9,7 @@ const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: Use
     const channelConfig = await loadChannelConfig({channelName})
     const db = firestoreDatabase()
     const nodesCollection = db.collection('nodes')
-    for (let authorizedNode of channelConfig.authorizedNodes) {
+    for (let authorizedNode of (channelConfig.authorizedNodes || [])) {
         const nodeResults = await nodesCollection
             .where('nodeId', '==', authorizedNode.nodeId).get()
         const nodeConfigs = nodeResults.docs.map(doc => {

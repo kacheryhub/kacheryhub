@@ -23,7 +23,7 @@ const getPubsubAuthForChannelHandler = async (request: GetPubsubAuthForChannelRe
         console.warn(channelConfig)
         throw Error('Not a valid channel config')
     }
-    const authorizedNode = channelConfig.authorizedNodes.filter(n => (n.nodeId === request.nodeId))[0]
+    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
     if (!authorizedNode) {
         throw Error('Node not authorized on this channel')
     }
