@@ -12,7 +12,7 @@ see the [instructions on running a kachery node](./node-howto.md).*
 
 The kachery network is designed as a mediated peer-to-peer information sharing tool
 with a centralized communication channel structure.
-It is *peer to peer* in the sense that there is no permanent central repository
+It is *peer to peer* in the sense that there is no central repository
 of data which acts as the sole provider of files: any node with permission can
 offer new files to the collective, without requiring centralized approval on
 a per-file basis. However, it is *mediated* in that nodes do not communicate directly
@@ -21,20 +21,20 @@ file transfer is accomplished through a cloud storage cache that acts as a set o
 organized cubbies for information drops, while node-to-node coordinating communications
 take place over a
 [publish-subscribe system](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
-(currently built on [Ably](https://ably.com/pub-sub-messaging)).
+(currently built on [Ably](https://ably.com/pub-sub-messaging)). TODO: mention how channels play a role in communication.
 
 ### Data transfer
 
 Nodes in the kachery network do not communicate directly with each other. Instead, nodes
-transfer information (files or feeds) between one another through the cloud storage cache.
+transfer information (files or feeds) between one another through cloud storage caches that are provided by kachery channels.
 If a node requests information that is not already present in the cloud storage cache,
-a node which has the information can transfer it by copying it into the cache and using
+a node on the same channel which has the information can transfer it by copying it into the cache and using
 the pub-sub system to inform the requester that it is now available in the cache. (Of
 course, if the information is already in the cache, the requester can find it without
 any interaction with other nodes whatsoever.)
 
-Write access to the cloud storage cache is tightly controlled: in order to write,
-a node needs authorization to write a file with a particular name and size. This
+Write access to the cloud storage cache is tightly controlled by the channel that owns the cache: in order to write,
+a node needs authorization from the channel to write a file with a particular name and size. This
 process is described in greater detail, including some limitations, in the
 [security model documentation on uploads](./security.md#Uploads).
 
@@ -42,8 +42,8 @@ process is described in greater detail, including some limitations, in the
 
 The node-to-node communication channels correspond to the six types of
 [channel permissions](./security.md#Permissions): each node can be granted
-permission to *request* or *provide* data of the three different types,
-*files*, *feeds*, and *tasks*. Thus, for each named channel on kachery hub,
+permission on a channel to *request* or *provide* data of the three different types:
+*files*, *feeds*, and *tasks*. Thus, for each named channel on kacheryhub,
 there are six pub-sub channels:
 
 * Request File
@@ -54,18 +54,18 @@ there are six pub-sub channels:
 * Provide Task
 
 Each of these channels can have both a "publish" and a "subscribe" permission.
-Publish permission allows the node to write new messages to the channel,
+Publish permission allows the node to write new messages to the pub-sub channel,
 while an active subscription causes the node to be notified whenever new
-messages are added to the channel.
+messages are published to the pub-sub channel.
 
 Granting a node permissions for a particular action on a named kachery
 channel automatically grants permissions on the corresponding pub-sub
 channel that will allow it to fulfill that role. These permissions
 have a complementary distribution: to request a type of information,
-a node needs to be able to write to the request channel and be subscribed
+a node needs to be able to publish to the request channel and be subscribed
 to updates from the provide channel; by contrast, to provide information,
 a node must be notified of new messages on the request channel, and able
-to write out updates to the "providing files" channel.
+to publish updates to the "providing files" channel.
 
 The following table illustrates the pub-sub channel permissions corresponding
 to the "Request File" and "Provide File" permissions:
@@ -78,18 +78,18 @@ to the "Request File" and "Provide File" permissions:
 Permissions to request or provide feeds or tasks are similar.
 
 When a node *requests* information, it publishes the request to the
-corresponding "Request" channel. All nodes with the corresponding
+corresponding "Request" pub-sub channel. All nodes in the kachery channel with the corresponding
 *provide* permission for that information are then notified of the new
 request by their subscription. A node which can satisfy the request
-will write a response to the "Provide" channel; the requesting node
+will publish a response to the "Provide" pub-sub channel; the requesting node
 sees this notification and knows that its request will be satisfied.
-The provider node continues to write updates during the retrieval
-process, and will write a "completion" notification after all data
+The provider node continues to publish updates during the retrieval
+process, and will publish a "completion" notification after all data
 is available in the cloud storage cache. The requesting node is
 notified by subscription that the data transfer to the cache is complete,
-and will begin downloading the requested data from the cloud storage cache.
+and then begins downloading the requested data from the cloud storage cache.
 
 Feeds are somewhat unique, because feeds are owned by a particular node:
 nodes that do not own the feed will not upload feed data to the cloud
-storage, even if they possess feed data which is more recen than what is
+storage, even if they possess feed data which is more recent than what is
 in the cloud cache. This may be changed in a future version.

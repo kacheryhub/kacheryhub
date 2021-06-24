@@ -14,12 +14,12 @@ resources provided by the channel.
 In order to create a channel, two technical resources are needed:
 
 * A *cloud storage space* such as a Google Cloud Storage Bucket; and
-* A *publist-subscribe service API key*.
+* A *publish-subscribe service API key*.
 
 In addition, each channel needs to have a unique name.
 
 The cloud storage space provides a central location which all nodes on the channel
-can make requests to. Outbound requests avoid most firewall issues, and also ensure
+can make HTTP requests to. Outbound requests avoid most firewall issues, and also ensure
 that individual nodes do not need to keep track of how to contact a large swarm
 of other nodes. To minimize the expense of hosting large files permanently on
 the cloud, this storage space is conceived of as a cache--it need not store most
@@ -38,16 +38,15 @@ with the pub-sub provider will need to be provisioned adequately for the traffic
 expected on the channel: a small channel with few peer nodes is unlikely to need
 more than a basic account, while users using kachery to distribute large numbers
 of files with a large conference or the public at large may require somewhat
-more requests per minute.
+more requests per minute. TODO: maybe a better example of when you would REALLY need a large number of pubsub messages.
 
 ## Channel Permissions
 
 Channels, along with their membership and permissions, are managed via the
-[kachery hub](https://www.kacheryhub.org/home) website. You can
-[read more about kachery hub here](./hub.md).
+[kacheryhub](https://www.kacheryhub.org/home) website. You can
+[read more about kacheryhub here](./hub.md).
 
-## Running a Channel
+## Managing a Channel
 
-For the most up-to-date instructions on running a channel, see the
-[instructions on kachery hub](https://www.kacheryhub.org/home). No action
-is needed aside from on the kachery hub website.
+For the most up-to-date instructions on creating and managing a channel, see the
+[instructions on kacheryhub](https://www.kacheryhub.org/home).
