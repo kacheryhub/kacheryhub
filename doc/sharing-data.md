@@ -37,7 +37,7 @@ X_npy = kc.load_npy(uri_npy)
 X_pkl = kc.load_pkl(uri_pkl)
 ```
 
-Those URIs can also be used to retrieve the data on a remote computer, provided that the remote machine is also running a kachery daemon, the local and remote nodes belong to a [common channel](./doc/channel.md), and the local and remote nodes are configured on that channel to provide and request files, respectively.
+Those URIs can also be used to retrieve the data on a remote computer, provided that the remote machine is also running a kachery daemon, the local and remote nodes belong to a [common channel](./channel.md), and the local and remote nodes are configured on that channel to provide and request files, respectively.
 
 ```python
 import kachery_client as kc

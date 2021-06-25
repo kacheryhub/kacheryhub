@@ -4,7 +4,7 @@
 
 To learn more, select one of the following topics:
 
-* [Content URIs](./doc/content-uris.md)
+* [Content-addressable storage and content URIs](./doc/content-uris.md)
 * [Kachery feeds](./doc/feeds.md)
 * [Hosting a kachery node](./doc/node-howto.md)
 * [Sharing data between nodes](./doc/sharing-data.md)
@@ -12,7 +12,7 @@ To learn more, select one of the following topics:
 * [Software components](./doc/software-components.md)
 * [About kachery channels](./doc/channel.md)
 * [Kachery security model](./doc/security.md)
-* [Hosting a task backend](./doc/taks.md)
+* [Hosting a task backend](./doc/tasks.md)
 * [Web apps powered by kachery](./doc/web-apps.md)
 
 ## Authors

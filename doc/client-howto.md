@@ -49,7 +49,7 @@ prints its contents to the terminal.
   > `kachery-client cat-file sha1://f728d5bf1118a8c6e2dfee7c99efb0256246d1d3/studysets.json`
   
   will (assuming the client is connected to a node which belongs to a channel sharing
-[spikeforest](spikeforest.flatironinstitute.org/) data) display a JSON file describing the
+[spikeforest](https://spikeforest.flatironinstitute.org) data) display a JSON file describing the
 set of recordings in that project.
 
 * `load-file SHA1-URI`: As with `cat-file`, this prompts the node to obtain a copy of the file. However,

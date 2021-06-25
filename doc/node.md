@@ -20,7 +20,7 @@ with each other, and are not required to track how to find other individual node
 file transfer is accomplished through a cloud storage cache that acts as a set of
 organized cubbies for information drops, while node-to-node coordinating communications
 take place over a
-[publish-subscribe system](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
+[publish-subscribe system](https://en.wikipedia.org/wiki/Publish-subscribe_pattern)
 (currently built on [Ably](https://ably.com/pub-sub-messaging)). TODO: mention how channels play a role in communication.
 
 ### Data transfer
