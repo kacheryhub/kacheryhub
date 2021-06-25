@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# kachery
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Kachery is a *mediated peer-to-peer* information-transfer network for sharing scientific data files, live feeds, and calculation results between remote workstations and between lab computers and a browser-based user interfaces in the cloud.
 
-## Available Scripts
+## Sharing data between remote workstations using Python
 
-In the project directory, you can run:
+The easiest way to share scientific data using kachery is via the [kachery-client](https://github.com/kacheryhub/kachery-client) Python package. After starting a [kachery daemon](https://github.com/kacheryhub/kachery-daemon) on your local computer, you can store data to the kachery network in the following manner:
 
-### `yarn start`
+```python
+import kachery_client as kc
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# You need to be running a kachery daemon.
+# If you want to share these data with remote
+# computers, then your kachery node must be
+# configured to provide files on some channel,
+# and the remote computers must be configured
+# to request files on that channel.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+# Share some text
+uri = kc.store_text('some-random-text')
+print(uri)
+# Output: sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt
 
-### `yarn test`
+# Later on retrieve the text by its content URI
+txt = kc.load_text('sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt')
+print(txt)
+# Output: some-random-text
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# Similarly, you can store/share json-able Python dicts,
+# numpy arrays, or pickle-able Python objects
+import numpy as np
+uri_dict = kc.store_json({'a': [1, 2, {'b': 3}]})
+uri_npy = kc.store_npy(np.ones((10, 20)))
+uri_pkl = kc.store_pkl({'x': np.zeros((30, 40))})
 
-### `yarn build`
+# And retrieve then at a later time
+X_dict = kc.load_json(uri_dict)
+X_npy = kc.load_npy(uri_npy)
+X_pkl = kc.load_pkl(uri_pkl)
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Those URIs can be used to retrieve the text on a remote computer, provided that the remote computer is also running a kachery daemon, the local and remote nodes belong to a [common channel](./doc/channel.md), the local node is configured to provide files on that channel, and the remote node is configured to request files on that channel.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```python
+import kachery_client as kc
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Run this on a remote machine.
 
-### `yarn eject`
+# You need to be running a kachery daemon,
+# and your kachery node must be configured
+# to request files on the channel containing
+# the file.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+txt = kc.load_text('sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt')
+print(txt)
+# Output: some-random-text
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
