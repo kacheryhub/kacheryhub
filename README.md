@@ -8,6 +8,8 @@ To learn more, select one of the following topics:
 * [Kachery feeds](./doc/feeds.md)
 * [Hosting a kachery node](./doc/node-howto.md)
 * [Sharing data between nodes](./doc/sharing-data.md)
+* [Overview of the kachery network](./doc/network.md)
+* [Software components](./doc/software-components.md)
 * [About kachery channels](./doc/channel.md)
 * [Kachery security model](./doc/security.md)
 * [Hosting a task backend](./doc/taks.md)
