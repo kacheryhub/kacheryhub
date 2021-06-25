@@ -16,7 +16,7 @@ kachery-cat sha1://943a702d06f34599aee1f8da8ef9f7296031d699
 or from Python:
 
 ```python
-import kachery-client as kc
+import kachery_client as kc
 
 txt = kc.load_text('sha1://943a702d06f34599aee1f8da8ef9f7296031d699')
 print(txt)

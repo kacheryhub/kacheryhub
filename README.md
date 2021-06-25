@@ -9,6 +9,7 @@ To learn more, select one of the following topics:
 * [Hosting a kachery node](./doc/node-howto.md)
 * [Sharing data between nodes](./doc/sharing-data.md)
 * [Overview of the kachery network](./doc/network.md)
+* [Local node storage](./doc/local-node-storage.md)
 * [Software components](./doc/software-components.md)
 * [About kachery channels](./doc/channel.md)
 * [Kachery security model](./doc/security.md)
