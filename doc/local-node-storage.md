@@ -27,5 +27,5 @@ Similarly, any feeds we create locally will first be stored in a local SQLite da
 $KACHERY_STORAGE_DIR/feeds.db
 ```
 
-amd will only be uploaded to the cloud if another authorized node requests the feed on a channel, and we are configured to provide feeds on that channel.
+and will only be uploaded to the cloud if another authorized node requests the feed on a channel, and we are configured to provide feeds on that channel.
 
