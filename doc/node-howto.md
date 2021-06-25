@@ -14,7 +14,7 @@ to exchange information with other nodes on the channel.
 ## Running a Node
 
 *For the most up-to-date information on configuring a node, see
-the [kachery hub website](https://www.kacheryhub.org/home).*
+the [kacheryhub website](https://www.kacheryhub.org/home).*
 
 A kachery node can be hosted on anything from a modest user machine
 (such as a laptop) to a large shared lab resource with abundant
