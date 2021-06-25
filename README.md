@@ -1,58 +1,18 @@
 # kachery
 
-Kachery is a *mediated peer-to-peer* information-transfer network for sharing scientific data files, live feeds, and calculation results between remote workstations and between lab computers and a browser-based user interfaces in the cloud.
+*kachery* is a mediated peer-to-peer information-transfer network for sharing scientific data files, live feeds, and calculation results between remote workstations and between lab computers and browser-based user interfaces in the cloud. The network is organized into nodes and channels, with channels mediating communication and managing access permissions between the nodes. Anyone can create and host a node by running a kachery daemon on their computer, and nodes and channels may be configured at [kacheryhub.org](https://kacheryhub.org).
 
-## Sharing data between remote workstations using Python
+To learn more, select one of the following topics:
 
-The easiest way to share scientific data using kachery is via the [kachery-client](https://github.com/kacheryhub/kachery-client) Python package. After starting a [kachery daemon](https://github.com/kacheryhub/kachery-daemon) on your local computer, you can store data to the kachery network in the following manner:
+* [Content URIs](./doc/content-uris.md)
+* [Kachery feeds](./doc/feeds.md)
+* [Hosting a kachery node](./doc/node-howto.md)
+* [Sharing data between nodes](./doc/sharing-data.md)
+* [About kachery channels](./doc/channel.md)
+* [Kachery security model](./doc/security.md)
+* [Hosting a task backend](./doc/taks.md)
+* [Web apps powered by kachery](./doc/web-apps.md)
 
-```python
-import kachery_client as kc
+## Authors
 
-# You need to be running a kachery daemon.
-# If you want to share these data with remote
-# computers, then your kachery node must be
-# configured to provide files on some channel,
-# and the remote computers must be configured
-# to request files on that channel.
-
-# Share some text
-uri = kc.store_text('some-random-text')
-print(uri)
-# Output: sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt
-
-# Later on retrieve the text by its content URI
-txt = kc.load_text('sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt')
-print(txt)
-# Output: some-random-text
-
-# Similarly, you can store/share json-able Python dicts,
-# numpy arrays, or pickle-able Python objects
-import numpy as np
-uri_dict = kc.store_json({'a': [1, 2, {'b': 3}]})
-uri_npy = kc.store_npy(np.ones((10, 20)))
-uri_pkl = kc.store_pkl({'x': np.zeros((30, 40))})
-
-# And retrieve then at a later time
-X_dict = kc.load_json(uri_dict)
-X_npy = kc.load_npy(uri_npy)
-X_pkl = kc.load_pkl(uri_pkl)
-```
-
-Those URIs can be used to retrieve the text on a remote computer, provided that the remote computer is also running a kachery daemon, the local and remote nodes belong to a [common channel](./doc/channel.md), the local node is configured to provide files on that channel, and the remote node is configured to request files on that channel.
-
-```python
-import kachery_client as kc
-
-# Run this on a remote machine.
-
-# You need to be running a kachery daemon,
-# and your kachery node must be configured
-# to request files on the channel containing
-# the file.
-
-txt = kc.load_text('sha1://6af826b3d648ccba6b4bbe58e93e22add640d728/file.txt')
-print(txt)
-# Output: some-random-text
-```
-
+Jeremy Magland and Jeff Soules, Center for Computational Mathematics, Flatiron Institute, Simons Foundation

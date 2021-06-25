@@ -1,6 +1,6 @@
 # How to host a kachery node
 
-You can host a kachery node by running a kachery daemon on your computer. Once the daemon is running, you can register the node on kachery hub and configure the node using the web interface.
+You can host a kachery node by running a kachery daemon on your computer. Once the daemon is running, you can register the node on kacheryhub and configure the node using the web interface.
 
 ## Requirements
 
@@ -37,7 +37,7 @@ Ensure you are in the correct conda environment, then:
 kachery-daemon-start --label <name-of-node> --owner <your-google-account-id>
 ```
 
-where `<name-of-node>` is a node label for display purposes and `<your-google-account-id>` must match the kachery hub login google account.
+where `<name-of-node>` is a node label for display purposes and `<your-google-account-id>` must match the kacheryhub login google account.
 
 
 Keep this daemon running in a terminal. You may want to use [tmux](https://github.com/tmux/tmux/wiki) or a similar tool to keep this daemon running even if the terminal is closed.
@@ -53,9 +53,9 @@ kachery-daemon-info
 # will print the kachery node ID
 ```
 
-## Adding the node on kachery hub
+## Adding the node on kacheryhub
 
-To add your node to kachery hub, make sure you are logged in to kachery hub using the same google account as specified in the --owner flag when running the daemon. Then click the `add kachery node` button and enter the node ID obtained above.
+To add your node to kacheryhub, make sure you are logged in to kacheryhub using the same google account as specified in the --owner flag when running the daemon. Then click the `add kachery node` button and enter the node ID obtained above.
 
 ## Advanced configuration
 

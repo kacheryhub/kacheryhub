@@ -7,22 +7,21 @@ may also optionally be the owners of [feeds](./feeds.md) or provide
 [task execution resources](tasks.md).
 
 To get started working with the kachery network, simply set up your
-own node, register it with kachery hub, and join a channel. Once the
-channel owner has granted your access permissions, you will be able
+own node, register it with [kacheryhub](./hub.md), and join a [channel](./channel.md). Once the
+channel owner has granted your node access permissions, you will be able
 to exchange information with other nodes on the channel.
 
 ## Running a Node
 
-*For the most up-to-date information on configuring a node, see
-the [kachery hub website](https://www.kacheryhub.org/home).*
+*For the most up-to-date information on creating and managing a node, see
+the [kacheryhub website](https://www.kacheryhub.org/home).*
 
 A kachery node can be hosted on anything from a modest user machine
 (such as a laptop) to a large shared lab resource with abundant
 network-attached storage. A very straightforward model is to run
-a node on your individual workstation or laptop. to do this, you will
-need a POSIX-compliant environment capable of running Python >= 3.8, as
-well as access to a network connection, and a free Google account for
-authentication with kachery hub.
+a node on your individual workstation or laptop. To do this, you will
+need a POSIX-compliant environment capable of running Python >= 3.8. If you want to join one or more kachery channels, you will also need access to a network connection and a free Google account for
+authentication with kacheryhub.
 
 We highly recommend using Conda or another virtual-environment provider
 when setting up your node, for ease of updates and to avoid potential
@@ -40,8 +39,8 @@ conda install -c conda-forge nodejs
 pip install --upgrade numpy kachery-daemon
 # You may also choose to pip install --upgrade kachery-client, if you intend
 # to use the same virtual environment for all kachery interactions.
-kachery-daemon-start --label <WHATEVER YOU CHOOSE> --owner <YOUR GOOGLE ACCOUNT>
-# The label flag can have any value: it will be visible on kachery hub, so it should be
+kachery-daemon-start --label <WHATEVER YOU CHOOSE> --owner <YOUR GOOGLE ACCOUNT ID>
+# The label flag can have any value: it will be visible on kacheryhub, so it should be
 # appropriate for public use, but it need not be unique.
 # The owner flag should be passed a full Google account address, e.g.:
 # --owner sergey.brin@google.com
@@ -55,9 +54,7 @@ You may find it convenient to use [tmux](https://github.com/tmux/tmux/wiki)
 for terminal session management, instead of opening additional terminal
 windows.
 
-**QUESTION: DID WE DOUBLE-CHECK THAT REPODATA.JSON THING?**
-
-Log in to kachery hub with the same google account you passed for the
+Log in to kacheryhub with the same google account you passed for the
 `--owner` flag when starting
 the daemon, then click the `add kachery node` button and follow the
 instructions on screen to register your node.
@@ -69,6 +66,8 @@ you can start using the client commands discussed in the
 [kachery-client documentation](./client-howto.md).
 
 ## Advanced Configuration
+
+TODO
 
 **QUERY:** ARE THERE COMMAND-LINE OPTIONS FOR CONFIGURING PORTS ETC.
 THAT WE SHOULD DISCUSS HERE?
@@ -97,3 +96,5 @@ kachery network; those communications happen via outbound requests on standard
 HTTPS ports. This variable is only used to set the port over which you will
 allow instances of the `kachery-client` application to communicate with your
 node, in the event you are providing services as a remote node.
+
+TODO: document other env variables

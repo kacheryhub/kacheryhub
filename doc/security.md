@@ -1,24 +1,19 @@
 # Security Model for kachery
 
-The kachery network is designed to ensure that access is provided
-only to trusted parties. While it is not currently suitable for
-high-security data (such as data requiring HIPAA compliance or
-financial data), the system intends that information
-is only provided by, and accessible to, appropriately trusted parties,
-while still allowing for anonymous public access when appropriate.
+The primary objective of kachery is to make scientific data available. Therefore, while there are mechanisms for restricting access to kachery data, the security model for kachery is generally aimed at preventing abuse rather than keeping data private. Nevertheless, nobody can ever access any data on the kachery network unless they have access to the appropriate URI strings (content hashes or feed IDs). So the most reliable way to keep data files private is to simply keep the content hashes private. Conversely, making data public is largely a matter of making content URIs and feed IDs public.
 
 ## Permissions
 
-Permissions are assigned through kachery hub, on a per-channel
+Permissions are assigned through kacheryhub, on a per-channel
 basis. The owner of each named kachery channel assigns permissions to
 individual [nodes](./node.md). The possible permissions are:
 
-* Request File
-* Provide File
-* Request Feed
-* Provide Feed
-* Request Task
-* Provide Task
+* Request Files
+* Provide Files
+* Request Feeds
+* Provide Feeds
+* Request Tasks
+* Provide Tasks
 
 A node which lacks "request" permissions for a given information
 type *cannot* solicit other nodes to provide missing data; it is
@@ -48,8 +43,6 @@ authentication acccount provider, e.g. a Google account). Thus, even in a
 situation where multiple users share logins to the same machine and run
 a node with the same key, permissions are specific to the user named by
 the `--owner` parameter with which the kachery daemon was invoked.
-**TODO: How do I prevent someone from impersonating my node if they have
-a login on my box?**
 
 ## Uploads
 
@@ -60,30 +53,30 @@ other parties--to write to cloud storage. This is accomplished by means of
 *[signed upload URLs](https://cloud.google.com/storage/docs/access-control/signed-urls)*
 which act something like a prepaid mailing label for files. When a node wishes to
 upload a file to the cloud storage cache, it requests a pre-signed URL
-from kachery hub. This is a URL for a specified file name and size which
+from kacheryhub. This is a URL for a specified file name and size which
 allows upload to a specific cloud storage location. An entity that knows this
 URL can make an HTTP PUT request to it in order to upload a file to the cloud.
 
 ## Channel owner stored credentials
 
-kachery hub manages access to the various resources owned by the channel
+kacheryhub manages access to the various resources owned by the channel
 owner: specifically, the cloud storage cache and the Ably pub-sub channels.
-In order to provide nodes with access, kachery hub needs to store
+In order to provide nodes with access, kacheryhub needs to store
 these credentials and provide limited-access tokens upon
 appropriately validated request.
 
-In order to create upload URLs, kachery hub needs to use the
+In order to create upload URLs, kacheryhub needs to use the
 *channel owner's cloud storage provider access credentials*. These should
 have been registered at the time the channel was created.
 
-kachery hub also requires the Ably API key to provide pub-sub channel
+kacheryhub also requires the Ably API key to provide pub-sub channel
 access tokens to nodes. To interact with other nodes, a node requests
-the appropriate subscribe and publish permissions from kachery hub.
-The kachery hub server acts as an authentication/authorization server;
+the appropriate subscribe and publish permissions from kacheryhub.
+The kacheryhub server acts as an authentication/authorization server;
 it verifies the identify of the node-owner pair (using signature verification)
 and, if the node checks out, it uses the Ably API key of the channel owner
 to provide the node with temporary access tokens to the pub-sub channels.
-(These expire after around 30 minutes and must be renewed at that time.)
+(These expire after around 30 minutes and must be renewed at that time. This is managed internally by the kachery libraries.)
 
 ## Feeds
 
@@ -97,8 +90,6 @@ Each feed ID is a public key, whose private counterpart is kept by the node
 which owns the feed. Each message appended to the feed must be signed
 by the feed owner's private key. This signature is checked by any
 requesting node when the feed's data is downloaded.
-[NOTE, however, that there is no defined response at present in
-the event of a signature mismatch.]
 
 Having a unique owner node also makes feeds different from other
 types of information shared over the kachery network. Any node that
@@ -113,7 +104,7 @@ owning node.
 
 * Permissions are assigned on a per-node basis, not a per-file basis.
 The assumption is that all files (/feeds/tasks) shared on a channel
-are of the same sensitivity and should have the same access rights.
+are of the same sensitivity and should have the same access rights. Nevertheless, nobody can access files without knowing the corresponding URI strings. Therefore, access can be managed to some extend by restricting access to these URIs.
 
 * In particular, there is no distinction in the
 permission system between a node being allowed to upload files that were
@@ -138,18 +129,17 @@ their nodes appropriately.
 is configured to share its cloud storage cache with channel B,
 then a node with access to channel A could conceivably retrieve files associated
 with channel B in certain limited circumstances. To avoid this issue, channel
-owners are discouraged from sharing one cloud storage space between multiple channels.
+owners should be careful about sharing one cloud storage space between multiple channels.
 
-* The pre-signed URL for file upload includes the name and size of the file to
-be uploaded. [DOUBLE-CHECK THAT] Since kachery is a content-addressable
-storage system, the name of the file should correspond to the hash of its contents.
+* The pre-signed URL for file upload includes the name of the storage object and size of the file to
+be uploaded. Since kachery is a content-addressable
+storage system, the name of the storage object will contain the hash of its contents.
 Files can be verified by confirming that the file hashes out to the value indicated
 by its name.
 However, because the cloud storage cache has no attached processing, there is no
 mechanism for verifying this property at upload time in the cache itself: the cloud
 storage cache cannot provide any guarantees about file contents.
-Files downloaded from the cloud storage cache
-must be treated as unverified, and re-checked by the downloading node before use.
+Files downloaded from the cloud storage cache using the kachery client libraries are always hash-verified (an exception is thrown if the hash is not as expected).
 A malicious actor could potentially upload invalid or mislabeled data
 to the cloud cache; this would not be caught until the data was downloaded
 by other nodes. To mitigate this possibility, again, ensure that permissions
