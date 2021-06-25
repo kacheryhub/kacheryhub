@@ -92,7 +92,7 @@ a file will send a message to the corresponding channel,
 and nodes with file-uploading permissions listen for requests and respond by uploading
 the file to the cloud storage space. For more details, [see node.md](./node.md).
 * **Federated authentication provider**: kacheryhub recognizes each node as being owned
-by a particular user, who is declared when the daemon service for the node is started. That user can configure permissions for the node on kacheryhub. For more information, see the [documentation on the kachery hub security model](./security.md).
+by a particular user, who is declared when the daemon service for the node is started. That user can configure permissions for the node on kacheryhub. For more information, see the [documentation on the kacheryhub security model](./security.md).
 
 ## Software provided by kachery
 

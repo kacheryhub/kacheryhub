@@ -23,7 +23,7 @@ print(txt)
 # Output: Hello, world!
 ```
 
-If the kachery network (or at least the channels our node belongs to) does not contain this string, we can add it via:
+If the kachery channels that our node belongs to do not contain this string, we can add it via:
 
 ```python
 uri = kc.store_text('Hello, world!')
@@ -31,7 +31,7 @@ print(uri)
 # Output: sha1://943a702d06f34599aee1f8da8ef9f7296031d699
 ```
 
-This small string is not very interesting, but the advantages of this scheme start to become evident when we consider larger files. For example, the following is a reference to the plain-text e-book version of *Treasure Island* from Project Gutenberg:
+This small string is not very interesting, but the advantages of the content URI scheme start to become evident when we consider larger files. For example, the following is a reference to the plain-text e-book version of *Treasure Island* from Project Gutenberg:
 
 ```
 sha1://ab42927dabd81c0d7993e369a6a2a1551305aaac/treasure-island.txt
@@ -56,7 +56,7 @@ print(f'The word "captain" occurs {ct} times in the e-book version of Treasure I
 # Output: The word "captain" occurs 102 times in the e-book version of Treasure Island.
 ```
 
-Now we have a reproducible and portable script that will always output the same correct result no matter where it is run, assuming that is has access to the file referred to by this URI. In this way we have separated the issue of locating data from the process of specifying a well-defined processing pipeline.
+Now we have a portable script that will always output the same correct result no matter where it is run, assuming that we have access to the file referred to by this URI. In this way we have separated the issue of locating data from the process of specifying a well-defined processing pipeline.
 
 ## Pure calculations
 
