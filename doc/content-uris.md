@@ -1,6 +1,6 @@
 # Content URIs
 
-Content URIs are at the heart of the kachery system. Files in kachery are never referred to by a local file path (e.g., `/path/to/file.dat`) or by a web URL (e.g., `http://example.com/file.dat`), but are instead referenced by content URIs of the form
+Content URIs are at the heart of the kachery system. Files in kachery are never referred to by local file path (e.g., `/path/to/file.dat`) or by web URL (e.g., `http://example.com/file.dat`), but are instead referenced by content URIs of the form
 
 ```
 sha1://943a702d06f34599aee1f8da8ef9f7296031d699

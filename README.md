@@ -6,7 +6,7 @@ To learn more, select one of the following topics:
 
 * [Content-addressable storage and content URIs](./doc/content-uris.md)
 * [Kachery feeds](./doc/feeds.md)
-* [Hosting a kachery node](./doc/node-howto.md)
+* [Getting started: hosting a kachery node](./doc/node-howto.md)
 * [Sharing data between nodes](./doc/sharing-data.md)
 * [Overview of the kachery network](./doc/network.md)
 * [Local node storage](./doc/local-node-storage.md)
@@ -15,6 +15,9 @@ To learn more, select one of the following topics:
 * [Kachery security model](./doc/security.md)
 * [Hosting a task backend](./doc/tasks.md)
 * [Web apps powered by kachery](./doc/web-apps.md)
+
+<!-- Kachery network -->
+[<image src="https://docs.google.com/drawings/d/e/2PACX-1vQUnokzwrFHdIO-LjloBjHGbOHE7uaLEh9frzx-WrJbn_z0lIScFhyNWCBYZfj6ofjNHRoJbzjJbFlS/pub?w=960&h=720" width="200px" title="Kachery network" />](./doc/network.md)
 
 ## Authors
 
