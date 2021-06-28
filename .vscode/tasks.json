@@ -21,15 +21,6 @@
                 "clear": true
             },
             "detail": "Check code sync"
-        },
-        {
-            "label": "check-md-links",
-            "type": "shell",
-            "command": "bash -ic .vscode/tasks/check-md-links.sh",
-            "presentation": {
-                "clear": true
-            },
-            "detail": "Check markdown links"
         }
     ]
 }
