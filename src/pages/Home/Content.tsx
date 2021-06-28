@@ -28,7 +28,7 @@ const Content: FunctionComponent<Props> = () => {
     if (page.page === 'home') {
         return (
             <div>
-                <h2>Welcome to kachery hub.</h2>
+                <h2>Welcome to kacheryhub.</h2>
                 <p>Here you can manage your kachery nodes and channels.</p>
                 <SignInSection />
                 {

@@ -11,7 +11,7 @@ import MarkdownDialog from '../../commonComponents/Markdown/MarkdownDialog'
 import useVisible from '../../commonComponents/useVisible'
 import AddChannelControl from './AddChannelControl'
 import ChannelsTable from './ChannelsTable'
-import createKacheryChannelMd from './createKacheryChannel.md.gen'
+import createKacheryChannelMd from '../../markdown/createKacheryChannel.md.gen'
 
 type Props = {
     onSelectChannel: (channel: ChannelName) => void

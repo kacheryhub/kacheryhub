@@ -1,22 +1,22 @@
 # How to create a kachery channel
 
-You can create a kachery channel by allocating the necessary cloud resources and then configuring your channel on kachery hub to use those resources. A channel allows authorized kachery nodes to communicate with one another, share data, and execute tasks.
+You can create a kachery channel by allocating the necessary cloud resources and then configuring your channel on kacheryhub to use those resources. A channel allows authorized kachery nodes to communicate with one another, share data, and execute tasks.
 
 ## Creating a Google storage bucket
 
 Each channel must be associated with a Google storage bucket where cached files, feed messages, and task results are stored. It is fine for multiple channels to share the same bucket.
 
-If you are creating the bucket yourself, follow the detailed instructions below. Otherwise, the person setting up the bucket should provide you with the name of the bucket along with secret credentials in a .json file. You will need these two pieces of information when configuring your channel on kachery hub.
+If you are creating the bucket yourself, follow the detailed instructions below. Otherwise, the person setting up the bucket should provide you with the name of the bucket along with secret credentials in a .json file. You will need these two pieces of information when configuring your channel on kacheryhub.
 
 ## Creating an Ably project for pub/sub communication
 
 Each channel must be associated with an Ably project to facilitate real-time (pub/sub) communication between kachery nodes within the channel. It is fine for multiple channels to share the same Ably project.
 
-If you are creating the Ably project yourself, follow the detailed instructions below. Otherwise, the person setting up the project should provide you with an Ably API key. You will need this key when configuring your channel on kachery hub.
+If you are creating the Ably project yourself, follow the detailed instructions below. Otherwise, the person setting up the project should provide you with an Ably API key. You will need this key when configuring your channel on kacheryhub.
 
-## Adding the channel on kachery hub
+## Adding the channel on kacheryhub
 
-Once you have set up a Google bucket and an Ably project for your channel, you can add and configure the channel on kachery hub. Click the button to `add kachery channel` and provide a name of the channel. You should choose a unique name without spaces. Then click to configure the channel and provide the appropriate credentials for the bucket and the pub/sub project. After that, you can authorize nodes to belong to your channel with various roles.
+Once you have set up a Google bucket and an Ably project for your channel, you can add and configure the channel on kacheryhub. Click the button to `add kachery channel` and provide a name of the channel. You should choose a unique name without spaces. Then click to configure the channel and provide the appropriate credentials for the bucket and the pub/sub project. After that, you can authorize nodes to belong to your channel with various roles.
 
 ## Google Storage Bucket creation and configuration
 

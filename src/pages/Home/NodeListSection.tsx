@@ -12,7 +12,7 @@ import useVisible from '../../commonComponents/useVisible'
 import AddNodeControl from './AddNodeControl'
 import NodesTable from './NodesTable'
 import useNodesForUser from './useNodesForUser'
-import hostKacheryNodeMd from './hostKacheryNode.md.gen'
+import hostKacheryNodeMd from '../../markdown/hostKacheryNode.md.gen'
 
 type Props = {
     onSelectNode: (nodeId: NodeId) => void

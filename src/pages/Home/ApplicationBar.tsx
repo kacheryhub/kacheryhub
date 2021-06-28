@@ -47,7 +47,7 @@ const ApplicationBar: FunctionComponent<Props> = () => {
         <AppBar position="fixed">
             <Toolbar>
                 <Typography variant="h6" className={classes.title} style={{cursor: 'pointer'}} onClick={handleHome}>
-                    Kachery hub
+                    kacheryhub
                 </Typography>
                 {
                     client && (
