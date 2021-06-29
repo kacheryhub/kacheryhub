@@ -1,6 +1,7 @@
 import { GetNodeForUserRequest, GetNodeForUserResponse, isChannelConfig, isNodeConfig } from '../../src/kachery-js/types/kacheryHubTypes'
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
+import { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 
 const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUserId: UserId): Promise<GetNodeForUserResponse> => {
     if (verifiedUserId !== request.userId) {
@@ -28,15 +29,13 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
     }
     for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
         const m = (nodeConfig.channelMemberships || [])[i]
+        const {authorization, validPasscodes} = await loadNodeChannelAuthorization({channelName: m.channelName, nodeId: request.nodeId, nodeOwnerId: verifiedUserId})
+        m.authorization = authorization
+        m.validChannelPasscodes = validPasscodes
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
             const channelConfig = channelResults.docs[0].data()
             if (isChannelConfig(channelConfig)) {
-                for (let authorizedNode of (channelConfig.authorizedNodes || [])) {
-                    if (authorizedNode.nodeId === request.nodeId) {
-                        m.authorization = authorizedNode
-                    }
-                }
                 m.channelBucketUri = channelConfig.bucketUri
             }
             else {

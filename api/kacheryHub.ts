@@ -3,6 +3,7 @@ import axios from 'axios'
 import { isKacheryHubRequest } from '../src/kachery-js/types/kacheryHubTypes'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 import addAuthorizedNodeHandler from './kacheryHubRequestHandlers/addAuthorizedNode'
+import addAuthorizedPasscodeHandler from './kacheryHubRequestHandlers/addAuthorizedPasscode'
 import addChannelHandler from './kacheryHubRequestHandlers/addChannel'
 import addNodeHandler from './kacheryHubRequestHandlers/addNode'
 import addNodeChannelMembershipHandler from './kacheryHubRequestHandlers/addNodeChannelMembership'
@@ -10,6 +11,7 @@ import deleteChannelHandler from './kacheryHubRequestHandlers/deleteChannel'
 import deleteNodeHandler from './kacheryHubRequestHandlers/deleteNode'
 import deleteNodeChannelAuthorizationHandler from './kacheryHubRequestHandlers/deleteNodeChannelAuthorization'
 import deleteNodeChannelMembershipHandler from './kacheryHubRequestHandlers/deleteNodeChannelMembership'
+import deletePasscodeChannelAuthorizationHandler from './kacheryHubRequestHandlers/deletePasscodeChannelAuthorization'
 import getChannelHandler from './kacheryHubRequestHandlers/getChannel'
 import getChannelsForUserHandler from './kacheryHubRequestHandlers/getChannelsForUser'
 import getNodeForUserHandler from './kacheryHubRequestHandlers/getNodeForUser'
@@ -17,6 +19,7 @@ import getNodesForUserHandler from './kacheryHubRequestHandlers/getNodesForUser'
 import updateChannelPropertyHandler from './kacheryHubRequestHandlers/updateChannelProperty'
 import updateNodeChannelAuthorizationHandler from './kacheryHubRequestHandlers/updateNodeChannelAuthorization'
 import updateNodeChannelMembershipRequestHandler from './kacheryHubRequestHandlers/updateNodeChannelMembership'
+import updatePasscodeChannelAuthorizationHandler from './kacheryHubRequestHandlers/updatePasscodeChannelAuthorization'
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
 
@@ -62,6 +65,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         if (request.type === 'addAuthorizedNode') {
             return await addAuthorizedNodeHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
+        else if (request.type === 'addAuthorizedPasscode') {
+            return await addAuthorizedPasscodeHandler(request, verifiedUserId, verifiedReCaptchaInfo)
+        }
         else if (request.type === 'addChannel') {
             return await addChannelHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
@@ -79,6 +85,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (request.type === 'deleteNodeChannelAuthorization') {
             return await deleteNodeChannelAuthorizationHandler(request, verifiedUserId)
+        }
+        else if (request.type === 'deletePasscodeChannelAuthorization') {
+            return await deletePasscodeChannelAuthorizationHandler(request, verifiedUserId)
         }
         else if (request.type === 'deleteNodeChannelMembership') {
             return await deleteNodeChannelMembershipHandler(request, verifiedUserId)
@@ -100,6 +109,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (request.type === 'updateNodeChannelAuthorization') {
             return await updateNodeChannelAuthorizationHandler(request, verifiedUserId)
+        }
+        else if (request.type === 'updatePasscodeChannelAuthorization') {
+            return await updatePasscodeChannelAuthorizationHandler(request, verifiedUserId)
         }
         else if (request.type === 'updateNodeChannelMembership') {
             return await updateNodeChannelMembershipRequestHandler(request, verifiedUserId)

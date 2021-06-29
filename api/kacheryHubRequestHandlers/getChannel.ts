@@ -39,7 +39,7 @@ const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: Use
             }
         }
     }
-    return hideChannelSecrets(channelConfig)
+    return hideChannelSecrets(channelConfig, {hidePasscodes: channelConfig.ownerId === verifiedUserId ? false : true})
 }
 
 export default getChannelHandler

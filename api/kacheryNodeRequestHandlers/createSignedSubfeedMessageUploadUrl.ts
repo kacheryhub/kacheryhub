@@ -4,25 +4,25 @@ import { CreateSignedSubfeedMessageUploadUrlRequestBody, CreateSignedSubfeedMess
 import { FeedId, NodeId, SubfeedHash, UrlString } from "../../src/kachery-js/types/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
-import loadChannelConfig from '../common/loadChannelConfig'
+import loadChannelConfig, { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 
 const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedSubfeedMessageUploadUrlRequestBody, verifiedNodeId: NodeId): Promise<CreateSignedSubfeedMessageUploadUrlResponse> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
 
-    const { channelName } = request
+    const { channelName, ownerId } = request
     const channelConfig = await loadChannelConfig({channelName})
     const bucketUri = channelConfig.bucketUri
     if (!bucketUri) {
         throw Error('No bucket uri for channel')
     }
     const bucketName = bucketNameFromUri(bucketUri)
-    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
-    if (!authorizedNode) {
+    const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})
+    if (!authorization) {
         throw Error('Not authorized on this channel')
     }
-    if (!authorizedNode.permissions.provideFeeds) {
+    if (!authorization.permissions.provideFeeds) {
         throw Error('Not authorized to upload feeds on this channel')
     }
     const googleServiceAccountCredentials = channelConfig.googleServiceAccountCredentials

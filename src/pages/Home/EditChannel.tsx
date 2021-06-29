@@ -4,9 +4,10 @@ import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
 import { ChannelName, isNodeId, NodeId } from 'kachery-js/types/kacheryTypes'
-import { AddAuthorizedNodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, NodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest } from 'kachery-js/types/kacheryHubTypes'
+import { AddAuthorizedNodeRequest, AddAuthorizedPasscodeRequest, ChannelConfig, DeleteNodeChannelAuthorizationRequest, DeletePasscodeChannelAuthorizationRequest, GetChannelRequest, isChannelConfig, isPasscode, NodeChannelAuthorization, Passcode, PasscodeChannelAuthorization, UpdateChannelPropertyRequest, UpdateNodeChannelAuthorizationRequest, UpdatePasscodeChannelAuthorizationRequest } from 'kachery-js/types/kacheryHubTypes'
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 import EditString from './EditString'
+import EditChannelAuthorizedPasscodes from './EditChannelAuthorizedPasscodes'
 
 type Props = {
     channelName: ChannelName
@@ -25,9 +26,35 @@ const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channel
     await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
+const addAuthorizedPasscode = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, passcode: Passcode) => {
+    const req: AddAuthorizedPasscodeRequest = {
+        type: 'addAuthorizedPasscode',
+        channelName,
+        passcode,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    await kacheryHubApiRequest(req, {reCaptcha: true})
+}
+
+
 export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, authorization: NodeChannelAuthorization) => {
     const req: UpdateNodeChannelAuthorizationRequest ={
         type: 'updateNodeChannelAuthorization',
+        authorization,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    await kacheryHubApiRequest(req, {reCaptcha: false})
+}
+
+export const updatePasscodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, authorization: PasscodeChannelAuthorization) => {
+    const req: UpdatePasscodeChannelAuthorizationRequest ={
+        type: 'updatePasscodeChannelAuthorization',
         authorization,
         auth: {
             userId: googleSignInClient.userId || undefined,
@@ -42,6 +69,19 @@ export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleS
         type: 'deleteNodeChannelAuthorization',
         channelName,
         nodeId,
+        auth: {
+            userId: googleSignInClient.userId || undefined,
+            googleIdToken: googleSignInClient.idToken || undefined
+        }
+    }
+    await kacheryHubApiRequest(req, {reCaptcha: false})
+}
+
+export const deletePasscodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, passcode: Passcode) => {
+    const req: DeletePasscodeChannelAuthorizationRequest = {
+        type: 'deletePasscodeChannelAuthorization',
+        channelName,
+        passcode,
         auth: {
             userId: googleSignInClient.userId || undefined,
             googleIdToken: googleSignInClient.idToken || undefined
@@ -103,6 +143,27 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
+    const handleAddAuthorizedPasscode = useCallback((channelName: ChannelName, passcode: string) => {
+        setErrorMessage('')
+        if (!isPasscode(passcode)) {
+            setErrorMessage('Invalid passcode')
+            return
+        }
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await addAuthorizedPasscode(googleSignInClient, channelName, passcode)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
     const handleUpdateAuthorization = useCallback((a: NodeChannelAuthorization) => {
         // hideAddChannelMembership()
         setErrorMessage('')
@@ -121,6 +182,24 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
+    const handleUpdatePasscodeAuthorization = useCallback((a: PasscodeChannelAuthorization) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await updatePasscodeChannelAuthorization(googleSignInClient, a)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
     const handleDeleteAuthorization = useCallback((channelName: ChannelName, nodeId: NodeId) => {
         // hideAddChannelMembership()
         setErrorMessage('')
@@ -131,6 +210,24 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         ;(async () => {
             try {
                 await deleteNodeChannelAuthorization(googleSignInClient, channelName, nodeId)
+                incrementRefreshCode()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, incrementRefreshCode])
+
+    const handleDeletePasscodeAuthorization = useCallback((channelName: ChannelName, passcode: Passcode) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await deletePasscodeChannelAuthorization(googleSignInClient, channelName, passcode)
                 incrementRefreshCode()
             }
             catch(err) {
@@ -224,25 +321,31 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             {
                 channel ? (
                     <span>
-                    <div style={{maxWidth: 600}}>
-                        <Table>
-                            <TableBody>
-                                {
-                                    tableRows.map(r => (
-                                        <TableRow key={r.key}>
-                                            <TableCell key="label">{r.label}</TableCell>
-                                            <TableCell key="value">{r.value}</TableCell>
-                                        </TableRow>
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </div>
+                        <div style={{maxWidth: 600}}>
+                            <Table>
+                                <TableBody>
+                                    {
+                                        tableRows.map(r => (
+                                            <TableRow key={r.key}>
+                                                <TableCell key="label">{r.label}</TableCell>
+                                                <TableCell key="value">{r.value}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </div>
                         <EditChannelAuthorizedNodes
                             channel={channel}
                             onAddAuthorizedNode={handleAddAuthorizedNode}
                             onUpdateAuthorization={handleUpdateAuthorization}
                             onDeleteAuthorization={handleDeleteAuthorization}
+                        />
+                        <EditChannelAuthorizedPasscodes
+                            channel={channel}
+                            onAddAuthorizedPasscode={handleAddAuthorizedPasscode}
+                            onUpdateAuthorization={handleUpdatePasscodeAuthorization}
+                            onDeleteAuthorization={handleDeletePasscodeAuthorization}
                         />
                     </span>
                 ) : (

@@ -16,7 +16,7 @@ const getChannelsForUserHandler = async (request: GetChannelsForUserRequest, ver
         const x = doc.data()
         if (isChannelConfig(x)) {
             if (!x.deleted) {
-                ret.push(hideChannelSecrets(x))
+                ret.push(hideChannelSecrets(x, {hidePasscodes: false}))
             }
         }
         else {

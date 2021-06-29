@@ -1,17 +1,17 @@
 import { Storage } from '@google-cloud/storage'
 import { isGoogleServiceAccountCredentials } from '../../src/kachery-js/types/kacheryHubTypes'
 import { CreateSignedFileUploadUrlRequestBody, CreateSignedFileUploadUrlResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
+import { NodeId, UserId } from "../../src/kachery-js/types/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
-import loadChannelConfig from '../common/loadChannelConfig'
+import loadChannelConfig, { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 
 const createSignedFileUploadUrlHandler = async (request: CreateSignedFileUploadUrlRequestBody, verifiedNodeId: NodeId): Promise<CreateSignedFileUploadUrlResponse> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
 
-    const { channelName } = request
+    const { channelName, ownerId } = request
     const channelConfig = await loadChannelConfig({channelName})
 
     const bucketUri = channelConfig.bucketUri
@@ -19,11 +19,11 @@ const createSignedFileUploadUrlHandler = async (request: CreateSignedFileUploadU
         throw Error('No bucket uri for channel')
     }
     const bucketName = bucketNameFromUri(bucketUri)
-    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
-    if (!authorizedNode) {
+    const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})
+    if (!authorization) {
         throw Error('Not authorized on this channel')
     }
-    if (!authorizedNode.permissions.provideFiles) {
+    if (!authorization.permissions.provideFiles) {
         throw Error('Not authorized to upload files on this channel')
     }
     const googleServiceAccountCredentials = channelConfig.googleServiceAccountCredentials

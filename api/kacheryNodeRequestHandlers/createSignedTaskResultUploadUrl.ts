@@ -4,14 +4,14 @@ import { CreateSignedFileUploadUrlResponse, CreateSignedTaskResultUploadUrlReque
 import { isSha1Hash, NodeId, pathifyHash } from "../../src/kachery-js/types/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
-import loadChannelConfig from '../common/loadChannelConfig'
+import loadChannelConfig, { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 
 const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskResultUploadUrlRequestBody, verifiedNodeId: NodeId): Promise<CreateSignedFileUploadUrlResponse> => {
     if (request.nodeId !== verifiedNodeId) {
         throw Error('Mismatch between node ID and verified node ID')
     }
 
-    const { channelName } = request
+    const { channelName, ownerId } = request
     const channelConfig = await loadChannelConfig({channelName})
 
     const bucketUri = channelConfig.bucketUri
@@ -19,11 +19,11 @@ const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskR
         throw Error('No bucket uri for channel')
     }
     const bucketName = bucketNameFromUri(bucketUri)
-    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
-    if (!authorizedNode) {
+    const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})
+    if (!authorization) {
         throw Error('Not authorized on this channel')
     }
-    if (!authorizedNode.permissions.provideTasks) {
+    if (!authorization.permissions.provideTasks) {
         throw Error('Not authorized to upload task results on this channel')
     }
     const googleServiceAccountCredentials = channelConfig.googleServiceAccountCredentials

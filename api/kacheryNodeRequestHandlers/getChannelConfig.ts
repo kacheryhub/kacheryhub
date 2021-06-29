@@ -8,7 +8,7 @@ const getChannelConfigHandler = async (request: GetChannelConfigRequestBody, ver
     const channelConfig = await loadChannelConfig({channelName})
     return {
         found: true,
-        channelConfig: hideChannelSecrets(channelConfig)
+        channelConfig: hideChannelSecrets(channelConfig, {hidePasscodes: true})
     }
 }
 

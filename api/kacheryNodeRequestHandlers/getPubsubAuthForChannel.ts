@@ -2,6 +2,7 @@ import { isChannelConfig, PubsubAuth } from '../../src/kachery-js/types/kacheryH
 import { GetPubsubAuthForChannelRequestBody, GetPubsubAuthForChannelResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
 import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
+import { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 import createAblyTokenRequest from './createAblyTokenRequest'
 
 const getPubsubAuthForChannelHandler = async (request: GetPubsubAuthForChannelRequestBody, verifiedNodeId: NodeId): Promise<PubsubAuth> => {
@@ -23,11 +24,12 @@ const getPubsubAuthForChannelHandler = async (request: GetPubsubAuthForChannelRe
         console.warn(channelConfig)
         throw Error('Not a valid channel config')
     }
-    const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
-    if (!authorizedNode) {
+    const {authorization} = await loadNodeChannelAuthorization({channelName: request.channelName, nodeId: request.nodeId, nodeOwnerId: request.ownerId})
+    // const authorizedNode = (channelConfig.authorizedNodes || []).filter(n => (n.nodeId === request.nodeId))[0]
+    if (!authorization) {
         throw Error('Node not authorized on this channel')
     }
-    const ablyTokenRequest = await createAblyTokenRequest(channelConfig, authorizedNode)
+    const ablyTokenRequest = await createAblyTokenRequest(channelConfig, authorization)
     const response: GetPubsubAuthForChannelResponse = {
         ablyTokenRequest
     }

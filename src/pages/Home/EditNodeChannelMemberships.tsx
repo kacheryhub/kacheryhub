@@ -10,6 +10,7 @@ import AddChannelMembershipControl from './AddChannelMembershipControl'
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization'
 import EditNodeChannelMembership from './EditNodeChannelMembership'
 import usePage from './usePage'
+import EditNodeChannelPasscodes from './EditNodeChannelPasscodes'
 
 type Props = {
     node: NodeConfig
@@ -26,6 +27,11 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
             key: 'channel',
             label: "Channel",
             element: <span style={{fontWeight: 'bold'}}>Channel</span>
+        },
+        {
+            key: 'passcodes',
+            label: 'Passcodes',
+            element: <span style={{fontWeight: 'bold'}}>Passcodes</span>
         },
         {
             key: 'authorization',
@@ -49,6 +55,10 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
                     channel: {
                         text: x.channelName.toString(),
                         element: <Hyperlink onClick={() => gotoChannelPage(x.channelName)}>{x.channelName}</Hyperlink>
+                    },
+                    passcodes: {
+                        text: (x.channelPasscodes || []).join(', '),
+                        element: <EditNodeChannelPasscodes nodeChannelMembership={x} onUpdateNodeChannelMembership={onUpdateNodeChannelMembership} />
                     },
                     authorization: {
                         element: <EditNodeChannelAuthorization authorization={x.authorization} onUpdateAuthorization={onUpdateNodeChannelAuthorization} />

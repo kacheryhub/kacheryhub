@@ -1,6 +1,6 @@
 import { ChannelConfig } from "../../src/kachery-js/types/kacheryHubTypes";
 
-const hideChannelSecrets = (x: ChannelConfig) => {
+const hideChannelSecrets = (x: ChannelConfig, opts: {hidePasscodes: boolean}) => {
     const ret: ChannelConfig = {
         channelName: x.channelName,
         ownerId: x.ownerId,
@@ -8,7 +8,8 @@ const hideChannelSecrets = (x: ChannelConfig) => {
         googleServiceAccountCredentials: x.googleServiceAccountCredentials ? '*private*' : undefined,
         ablyApiKey: x.ablyApiKey ? '*private*' : undefined,
         deleted: x.deleted,
-        authorizedNodes: x.authorizedNodes
+        authorizedNodes: x.authorizedNodes,
+        authorizedPasscodes: opts.hidePasscodes ? undefined : x.authorizedPasscodes
     }
     return ret
 }
