@@ -34,7 +34,7 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
             m.authorization = authorization
         }
         catch(err) {
-            console.warn('Problem loading node channel authorization', m.channelName, request.nodeId, verifiedUserId, err)
+            console.warn('Problem loading node channel authorization', m.channelName, request.nodeId, verifiedNodeId, err)
         }
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
