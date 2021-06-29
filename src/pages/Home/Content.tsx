@@ -29,6 +29,7 @@ const Content: FunctionComponent<Props> = () => {
         return (
             <div>
                 <h2>Welcome to kacheryhub.</h2>
+                <p><a href="https://github.com/kacheryhub/kachery-doc/blob/main/README.md" rel="noreferrer" target="_blank">Read about kachery</a></p>
                 <p>Here you can manage your kachery nodes and channels.</p>
                 <SignInSection />
                 {

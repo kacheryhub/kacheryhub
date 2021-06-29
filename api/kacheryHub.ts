@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
+import axios from 'axios'
 import { isKacheryHubRequest } from '../src/kachery-js/types/kacheryHubTypes'
-import { isUserId } from '../src/kachery-js/types/kacheryTypes'
 import googleVerifyIdToken from './common/googleVerifyIdToken'
 import addAuthorizedNodeHandler from './kacheryHubRequestHandlers/addAuthorizedNode'
 import addChannelHandler from './kacheryHubRequestHandlers/addChannel'
@@ -18,6 +18,26 @@ import updateChannelPropertyHandler from './kacheryHubRequestHandlers/updateChan
 import updateNodeChannelAuthorizationHandler from './kacheryHubRequestHandlers/updateNodeChannelAuthorization'
 import updateNodeChannelMembershipRequestHandler from './kacheryHubRequestHandlers/updateNodeChannelMembership'
 
+const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
+
+const verifyReCaptcha = async (token: string | undefined) => {
+    if (!RECAPTCHA_SECRET_KEY) return undefined
+    if (!token) return undefined
+
+    const url = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
+    console.info(url)
+    const x = await axios.post(url)
+    return x.data
+}
+
+export type VerifiedReCaptchaInfo = {
+    success: boolean,
+    challenge_ts: string,
+    hostname: string,
+    score: number,
+    action: string
+}
+
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
     if (!isKacheryHubRequest(request)) {
@@ -30,17 +50,26 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
 
     ;(async () => {
         const verifiedUserId = await googleVerifyIdToken(auth.userId, auth.googleIdToken)
+        const verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined = await verifyReCaptcha(auth.reCaptchaToken)
+        if (verifiedReCaptchaInfo) {
+            if (!verifiedReCaptchaInfo.success) {
+                throw Error('Error verifying reCaptcha token')
+            }
+            if (verifiedReCaptchaInfo.score < 0.4) {
+                throw Error(`reCaptcha score is too low: ${verifiedReCaptchaInfo.score}`)
+            }
+        }
         if (request.type === 'addAuthorizedNode') {
-            return await addAuthorizedNodeHandler(request, verifiedUserId)
+            return await addAuthorizedNodeHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
         else if (request.type === 'addChannel') {
-            return await addChannelHandler(request, verifiedUserId)
+            return await addChannelHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
         else if (request.type === 'addNode') {
-            return await addNodeHandler(request, verifiedUserId)
+            return await addNodeHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
         else if (request.type === 'addNodeChannelMembership') {
-            return await addNodeChannelMembershipHandler(request, verifiedUserId)
+            return await addNodeChannelMembershipHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
         else if (request.type === 'deleteChannel') {
             return await deleteChannelHandler(request, verifiedUserId)

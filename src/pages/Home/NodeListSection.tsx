@@ -27,7 +27,7 @@ const addNode = async (node: NodeConfig, googleSignInClient: GoogleSignInClient)
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
 const deleteNode = async (nodeId: NodeId, googleSignInClient: GoogleSignInClient) => {
@@ -39,7 +39,7 @@ const deleteNode = async (nodeId: NodeId, googleSignInClient: GoogleSignInClient
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {

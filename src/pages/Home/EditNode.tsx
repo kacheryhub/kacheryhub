@@ -23,7 +23,7 @@ const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, 
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
 const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
@@ -35,7 +35,7 @@ const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, nodeId: NodeId) => {
@@ -48,7 +48,7 @@ const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 const EditNode: FunctionComponent<Props> = ({nodeId}) => {
@@ -154,7 +154,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const x = await kacheryHubApiRequest(req)
+            const x = await kacheryHubApiRequest(req, {reCaptcha: false})
             if (!isGetNodeForUserResponse(x)) {
                 console.warn('Invalid response for getNodeForUser', x)
                 return

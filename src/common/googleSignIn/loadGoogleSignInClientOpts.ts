@@ -1,9 +1,19 @@
 import { GoogleSignInClientOpts } from "./GoogleSignInClient"
 
+const REACT_APP_GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID
+if (!REACT_APP_GOOGLE_CLIENT_ID) {
+    throw Error('Environment variable not set: REACT_APP_GOOGLE_CLIENT_ID')
+}
+
+const REACT_APP_GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY
+if (!REACT_APP_GOOGLE_API_KEY) {
+    throw Error('Environment variable not set: REACT_APP_GOOGLE_API_KEY')
+}
+
 const loadGoogleSignInClientOpts = (): GoogleSignInClientOpts | null => {
     // Client ID and API key from the Developer Console
-    const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID
-    const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY
+    const GOOGLE_CLIENT_ID = REACT_APP_GOOGLE_CLIENT_ID
+    const GOOGLE_API_KEY = REACT_APP_GOOGLE_API_KEY
     if (!GOOGLE_CLIENT_ID) {
         console.warn(`Environment variable not set: REACT_APP_GOOGLE_CLIENT_ID`)
     }

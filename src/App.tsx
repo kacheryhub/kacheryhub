@@ -15,9 +15,11 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <GoogleSignInSetup>
-          <div className="App">
-            <Home />
-          </div>
+          {/* <ReCaptchaSetup> */}
+            <div className="App">
+              <Home />
+            </div>
+          {/* </ReCaptchaSetup> */}
         </GoogleSignInSetup>
       </BrowserRouter>
     </MuiThemeProvider>

@@ -29,7 +29,7 @@ const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedS
     if (!googleServiceAccountCredentials) {
         throw Error(`No google service credentials found for channel: ${request.channelName}`)
     }
-    const googleCredentials = JSON.parse(channelConfig.googleServiceAccountCredentials)
+    const googleCredentials = JSON.parse(channelConfig.googleServiceAccountCredentials || '{}')
     if (!isGoogleServiceAccountCredentials(googleCredentials)) {
         throw Error(`Invalid google credentials for channel: ${channelName}`)
     }

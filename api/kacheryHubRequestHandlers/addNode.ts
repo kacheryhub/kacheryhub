@@ -1,10 +1,16 @@
 import { AddNodeRequest } from '../../src/kachery-js/types/kacheryHubTypes'
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
+import { VerifiedReCaptchaInfo } from '../kacheryHub'
 
-const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: UserId) => {
+const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined) => {
     if (verifiedUserId !== request.node.ownerId) {
         throw Error('Not authorized')
+    }
+    if (!verifiedReCaptchaInfo) {
+        if (process.env.REACT_APP_RECAPTCHA_KEY) {
+            throw Error('Recaptcha info is not verified')
+        }
     }
 
     const db = firestoreDatabase()

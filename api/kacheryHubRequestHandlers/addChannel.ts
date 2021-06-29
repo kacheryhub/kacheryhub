@@ -1,8 +1,14 @@
 import { AddChannelRequest } from '../../src/kachery-js/types/kacheryHubTypes'
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
+import { VerifiedReCaptchaInfo } from '../kacheryHub'
 
-const addChannelHandler = async (request: AddChannelRequest, verifiedUserId: UserId) => {
+const addChannelHandler = async (request: AddChannelRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo) => {
+    if (!verifiedReCaptchaInfo) {
+        if (process.env.REACT_APP_RECAPTCHA_KEY) {
+            throw Error('Recaptcha info is not verified')
+        }
+    }
     if (verifiedUserId !== request.channel.ownerId) {
         throw Error('Not authorized')
     }
