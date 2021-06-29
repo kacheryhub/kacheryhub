@@ -1,3 +1,4 @@
+import { auth } from "google-auth-library"
 import { isChannelConfig, isNodeConfig, NodeChannelAuthorization, Passcode } from "../../src/kachery-js/types/kacheryHubTypes"
 import { ChannelName, NodeId, UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "./firestoreDatabase"
@@ -59,9 +60,12 @@ export const loadNodeChannelAuthorization = async (args: {channelName: ChannelNa
         for (const pc of (channelMembership.channelPasscodes || [])) {
             const authorizedPasscode = (channelConfig.authorizedPasscodes || []).filter(x => (x.passcode === pc))[0]
             if (authorizedPasscode) {
-                for (let k of ['requestFiles', 'provideFiles', 'requestFeeds', 'provideFeeds', 'requestTasks', 'provideTasks']) {
-                    authorization.permissions[k] = authorization.permissions[k] || authorizedPasscode.permissions[k]
-                }
+                authorization.permissions.requestFiles = authorization.permissions.requestFiles || authorizedPasscode.permissions.requestFiles
+                authorization.permissions.provideFiles = authorization.permissions.provideFiles || authorizedPasscode.permissions.provideFiles
+                authorization.permissions.requestFeeds = authorization.permissions.requestFeeds || authorizedPasscode.permissions.requestFeeds
+                authorization.permissions.provideFeeds = authorization.permissions.provideFeeds || authorizedPasscode.permissions.provideFeeds
+                authorization.permissions.requestTasks = authorization.permissions.requestTasks || authorizedPasscode.permissions.requestTasks
+                authorization.permissions.provideTasks = authorization.permissions.provideTasks || authorizedPasscode.permissions.provideTasks
                 validPasscodes.push(pc)
             }
         }

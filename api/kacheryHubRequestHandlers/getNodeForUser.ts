@@ -29,9 +29,14 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
     }
     for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
         const m = (nodeConfig.channelMemberships || [])[i]
-        const {authorization, validPasscodes} = await loadNodeChannelAuthorization({channelName: m.channelName, nodeId: request.nodeId, nodeOwnerId: verifiedUserId})
-        m.authorization = authorization
-        m.validChannelPasscodes = validPasscodes
+        try {
+            const {authorization, validPasscodes} = await loadNodeChannelAuthorization({channelName: m.channelName, nodeId: request.nodeId, nodeOwnerId: verifiedUserId})
+            m.authorization = authorization
+            m.validChannelPasscodes = validPasscodes
+        }
+        catch(err) {
+            console.warn('Problem loading node channel authorization', m.channelName, request.nodeId, verifiedUserId, err)
+        }
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
             const channelConfig = channelResults.docs[0].data()

@@ -28,9 +28,14 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
         throw Error('Not a valid node config')
     }
     for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
-        const m = (nodeConfig.channelMemberships || [])[i]
-        const {authorization, validPasscodes} = await loadNodeChannelAuthorization({channelName: m.channelName, nodeId: verifiedNodeId, nodeOwnerId: request.ownerId})
-        m.authorization = authorization
+        const m = (nodeConfig.channelMemberships || [])[i]        
+        try {
+            const {authorization} = await loadNodeChannelAuthorization({channelName: m.channelName, nodeId: verifiedNodeId, nodeOwnerId: request.ownerId})
+            m.authorization = authorization
+        }
+        catch(err) {
+            console.warn('Problem loading node channel authorization', m.channelName, request.nodeId, verifiedUserId, err)
+        }
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
             const channelConfig = channelResults.docs[0].data()
