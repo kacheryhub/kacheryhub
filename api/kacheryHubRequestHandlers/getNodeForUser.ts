@@ -27,7 +27,7 @@ const getNodeForUserHandler = async (request: GetNodeForUserRequest, verifiedUse
         throw Error('Not a valid node config')
     }
     for (let i = 0; i < (nodeConfig.channelMemberships || []).length; i++) {
-        const m = nodeConfig.channelMemberships[i]
+        const m = (nodeConfig.channelMemberships || [])[i]
         const channelResults = await channelsCollection.where('channelName', '==', m.channelName).get()
         if (channelResults.docs.length === 1) {
             const channelConfig = channelResults.docs[0].data()

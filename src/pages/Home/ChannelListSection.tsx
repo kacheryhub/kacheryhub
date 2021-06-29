@@ -37,7 +37,7 @@ const useChannelsForUser = (userId?: UserId | null) => {
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const channels = await kacheryHubApiRequest(req)
+            const channels = await kacheryHubApiRequest(req, {reCaptcha: false})
             if (!isArrayOf(isChannelConfig)(channels)) {
                 console.warn('Invalid channels', channels)
                 return
@@ -58,7 +58,7 @@ const addChannel = async (channel: ChannelConfig, googleSignInClient: GoogleSign
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
 const deleteChannel = async (channelName: ChannelName, googleSignInClient: GoogleSignInClient) => {
@@ -70,7 +70,7 @@ const deleteChannel = async (channelName: ChannelName, googleSignInClient: Googl
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {

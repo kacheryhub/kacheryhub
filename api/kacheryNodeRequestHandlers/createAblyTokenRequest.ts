@@ -3,7 +3,7 @@ import { AblyTokenRequest, ChannelConfig, isAblyTokenRequest, NodeChannelAuthori
 
 const createTokenRequestAsync = async (ably: Ably.Rest, tokenParams: Ably.Types.TokenParams): Promise<Ably.Types.TokenRequest> => {
     return new Promise((resolve, reject) => {
-        ably.auth.createTokenRequest(tokenParams, null, (err, tokenRequest) => {
+        ably.auth.createTokenRequest(tokenParams, undefined, (err, tokenRequest) => {
             if (err) reject(err)
             else resolve(tokenRequest)
         })

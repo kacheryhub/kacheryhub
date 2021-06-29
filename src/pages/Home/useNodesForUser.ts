@@ -24,7 +24,7 @@ const useNodesForUser = (userId?: UserId | null) => {
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const nodes = await kacheryHubApiRequest(req)
+            const nodes = await kacheryHubApiRequest(req, {reCaptcha: false})
             if (!isArrayOf(isNodeConfig)(nodes)) {
                 console.warn('Invalid nodes', nodes)
                 return

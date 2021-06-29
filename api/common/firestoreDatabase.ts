@@ -3,9 +3,14 @@ import {isGoogleServiceAccountCredentials} from '../../src/kachery-js/types/kach
 
 let db: Firestore | null = null
 
+const GOOGLE_CREDENTIALS = process.env.GOOGLE_CREDENTIALS
+if (!GOOGLE_CREDENTIALS) {
+    throw Error('Environment variable not set: GOOGLE_CREDENTIALS')
+}
+
 const firestoreDatabase = () => {
     if (!db) {
-        const googleCredentials = JSON.parse(process.env.GOOGLE_CREDENTIALS)
+        const googleCredentials = JSON.parse(GOOGLE_CREDENTIALS)
         if (!isGoogleServiceAccountCredentials(googleCredentials)) {
             throw Error('Invalid google credentials.')
         }

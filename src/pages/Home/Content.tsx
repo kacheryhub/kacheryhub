@@ -8,7 +8,6 @@ import './Home.css'
 import NodeListSection from './NodeListSection'
 import SignInSection from './SignInSection'
 import usePage from './usePage'
-import Hyperlink from 'commonComponents/Hyperlink/Hyperlink'
 
 type Props = {
     

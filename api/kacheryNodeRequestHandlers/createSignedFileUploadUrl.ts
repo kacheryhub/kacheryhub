@@ -32,7 +32,7 @@ const createSignedFileUploadUrlHandler = async (request: CreateSignedFileUploadU
     }
     // create the signed url!
     // const signedUrl = await create
-    const googleCredentials = JSON.parse(channelConfig.googleServiceAccountCredentials)
+    const googleCredentials = JSON.parse(channelConfig.googleServiceAccountCredentials || '{}')
     if (!isGoogleServiceAccountCredentials(googleCredentials)) {
         throw Error(`Invalid google credentials for channel: ${channelName}`)
     }

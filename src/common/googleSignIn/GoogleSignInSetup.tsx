@@ -1,8 +1,6 @@
-import React from 'react'
-import { FunctionComponent } from "react"
+import React, { FunctionComponent } from 'react';
 import GoogleSignInContext from './GoogleSignInContext';
 import useSetupGoogleSignIn from './useSetupGoogleSignIn';
-
 
 const GoogleSignInSetup: FunctionComponent = (props) => {
     const googleSignInData = useSetupGoogleSignIn()

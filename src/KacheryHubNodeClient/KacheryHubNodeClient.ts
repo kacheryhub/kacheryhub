@@ -55,7 +55,7 @@ class KacheryHubNodeClient {
     }
     public get channelMemberships() {
         if (!this.#nodeConfig) return undefined
-        return this.#nodeConfig.channelMemberships
+        return this.#nodeConfig.channelMemberships || []
     }
     onInitialized(callback: () => void) {
         this.#onInitializedCallbacks.push(callback)

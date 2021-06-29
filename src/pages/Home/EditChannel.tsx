@@ -22,7 +22,7 @@ const addAuthorizedNode = async (googleSignInClient: GoogleSignInClient, channel
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
 export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, authorization: NodeChannelAuthorization) => {
@@ -34,7 +34,7 @@ export const updateNodeChannelAuthorization = async (googleSignInClient: GoogleS
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, nodeId: NodeId) => {
@@ -47,7 +47,7 @@ export const deleteNodeChannelAuthorization = async (googleSignInClient: GoogleS
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
@@ -61,7 +61,7 @@ export const updateChannelProperty = async (googleSignInClient: GoogleSignInClie
             googleIdToken: googleSignInClient.idToken || undefined
         }
     }
-    await kacheryHubApiRequest(req)
+    await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
 const EditChannel: FunctionComponent<Props> = ({channelName}) => {
@@ -179,7 +179,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                     googleIdToken: googleSignInClient?.idToken || undefined
                 }
             }
-            const x = await kacheryHubApiRequest(req)
+            const x = await kacheryHubApiRequest(req, {reCaptcha: false})
             if (!isChannelConfig(x)) {
                 console.warn('Invalid channel', x)
                 return

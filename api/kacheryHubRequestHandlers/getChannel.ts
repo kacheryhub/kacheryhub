@@ -33,7 +33,7 @@ const getChannelHandler = async (request: GetChannelRequest, verifiedUserId: Use
         })
         if (nodeConfigs.length > 0) {
             const nodeConfig = nodeConfigs[0]
-            const channelMembership = nodeConfig.channelMemberships.filter((cm: NodeChannelMembership) => (cm.channelName === channelName))[0]
+            const channelMembership = (nodeConfig.channelMemberships || []).filter((cm: NodeChannelMembership) => (cm.channelName === channelName))[0]
             if (channelMembership) {
                 authorizedNode.roles = channelMembership.roles
             }

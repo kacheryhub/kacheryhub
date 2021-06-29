@@ -1,8 +1,14 @@
 import { AddAuthorizedNodeRequest, NodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes"
 import { UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
+import { VerifiedReCaptchaInfo } from "../kacheryHub"
 
-const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId) => {
+const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo) => {
+    if (!verifiedReCaptchaInfo) {
+        if (process.env.REACT_APP_RECAPTCHA_KEY) {
+            throw Error('Recaptcha info is not verified')
+        }
+    }
     const db = firestoreDatabase()
     const channelsCollection = db.collection('channels')
     const channelResults = await channelsCollection
