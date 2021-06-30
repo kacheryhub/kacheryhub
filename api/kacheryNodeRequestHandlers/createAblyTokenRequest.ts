@@ -5,7 +5,13 @@ const createTokenRequestAsync = async (ably: Ably.Rest, tokenParams: Ably.Types.
     return new Promise((resolve, reject) => {
         ably.auth.createTokenRequest(tokenParams, undefined, (err, tokenRequest) => {
             if (err) reject(err)
-            else resolve(tokenRequest)
+            else {
+                if (!tokenRequest) {
+                    reject(new Error('No tokenRequest'))
+                    return
+                }
+                resolve(tokenRequest)
+            }
         })
     })
 }

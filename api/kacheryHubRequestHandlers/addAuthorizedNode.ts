@@ -3,7 +3,7 @@ import { UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import { VerifiedReCaptchaInfo } from "../kacheryHub"
 
-const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo) => {
+const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined) => {
     if (!verifiedReCaptchaInfo) {
         if (process.env.REACT_APP_RECAPTCHA_KEY) {
             throw Error('Recaptcha info is not verified')

@@ -48,12 +48,13 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         return
     }
     const auth = request.auth
-    if (!auth.userId) throw Error('No auth user id')
-    if (!auth.googleIdToken) throw Error('No google id token')
+    const {userId, googleIdToken, reCaptchaToken} = auth
+    if (!userId) throw Error('No auth user id')
+    if (!googleIdToken) throw Error('No google id token')
 
     ;(async () => {
-        const verifiedUserId = await googleVerifyIdToken(auth.userId, auth.googleIdToken)
-        const verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined = await verifyReCaptcha(auth.reCaptchaToken)
+        const verifiedUserId = await googleVerifyIdToken(userId, googleIdToken)
+        const verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined = await verifyReCaptcha(reCaptchaToken)
         if (verifiedReCaptchaInfo) {
             if (!verifiedReCaptchaInfo.success) {
                 throw Error('Error verifying reCaptcha token')

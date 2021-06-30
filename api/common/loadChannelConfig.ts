@@ -1,4 +1,3 @@
-import { auth } from "google-auth-library"
 import { isChannelConfig, isNodeConfig, NodeChannelAuthorization, Passcode } from "../../src/kachery-js/types/kacheryHubTypes"
 import { ChannelName, NodeId, UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "./firestoreDatabase"
