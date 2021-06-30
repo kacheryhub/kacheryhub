@@ -18,7 +18,7 @@ const createTokenRequestAsync = async (ably: Ably.Rest, tokenParams: Ably.Types.
 
 const createAblyTokenRequest = async (channelConfig: ChannelConfig, authorization: NodeChannelAuthorization): Promise<AblyTokenRequest> => {
     const ablyApiKey = channelConfig.ablyApiKey
-    if (!ablyApiKey) throw Error('No ably api key.')
+    if (!ablyApiKey) throw Error(`No ably api key for channel: ${channelConfig.channelName}`)
 
     const ably = new Ably.Rest({ key: ablyApiKey });
 
