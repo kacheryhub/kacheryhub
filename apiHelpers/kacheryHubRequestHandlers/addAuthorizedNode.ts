@@ -1,7 +1,7 @@
 import { AddAuthorizedNodeRequest, NodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes"
 import { UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
-import { VerifiedReCaptchaInfo } from "../kacheryHub"
+import { VerifiedReCaptchaInfo } from "../../api/kacheryHub"
 
 const addAuthorizedNodeHandler = async (request: AddAuthorizedNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined) => {
     if (!verifiedReCaptchaInfo) {

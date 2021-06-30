@@ -1,7 +1,7 @@
 import { AddAuthorizedPasscodeRequest, PasscodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes"
 import { UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
-import { VerifiedReCaptchaInfo } from "../kacheryHub"
+import { VerifiedReCaptchaInfo } from "../../api/kacheryHub"
 
 const addAuthorizedPasscodeHandler = async (request: AddAuthorizedPasscodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined) => {
     if (!verifiedReCaptchaInfo) {
