@@ -1,7 +1,7 @@
 import { AddNodeRequest } from '../../src/kachery-js/types/kacheryHubTypes'
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
-import { VerifiedReCaptchaInfo } from '../kacheryHub'
+import { VerifiedReCaptchaInfo } from '../../api/kacheryHub'
 
 const addNodeHandler = async (request: AddNodeRequest, verifiedUserId: UserId, verifiedReCaptchaInfo: VerifiedReCaptchaInfo | undefined) => {
     if (verifiedUserId !== request.node.ownerId) {
