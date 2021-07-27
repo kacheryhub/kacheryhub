@@ -46,7 +46,7 @@ const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskR
     if (!isSha1Hash(taskId)) {
         throw Error('Task ID is not a sha1 hash')
     }
-    const fileName = `task_results/${pathifyHash(taskId)}`
+    const fileName = `task_results/${channelName}/${pathifyHash(taskId)}`
     const signedUrl = await generateV4UploadSignedUrl(storage, bucketName, fileName, size)
     return {signedUrl}
 }
