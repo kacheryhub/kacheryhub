@@ -22,7 +22,7 @@ const AddChannelControl: FunctionComponent<Props> = ({onAddChannel, onCancel}) =
     return (
         <div>
             <span>
-                <span>Channel name:</span>
+                <span>Channel name: </span>
                 <input type="text" value={(editChannelName || '').toString()} onChange={handleChange} />
                 <button onClick={okayToAdd ? handleAdd : undefined} disabled={!okayToAdd}>Add</button>
                 <button onClick={onCancel}>Cancel</button>

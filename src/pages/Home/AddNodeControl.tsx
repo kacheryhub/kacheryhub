@@ -2,7 +2,7 @@ import React, { FunctionComponent, useCallback, useState } from 'react'
 
 type Props = {
     onAddNode: (nodeId: string) => void
-    onCancel: () => void
+    onCancel?: () => void
 }
 
 const AddNodeControl: FunctionComponent<Props> = ({onAddNode, onCancel}) => {
@@ -17,10 +17,10 @@ const AddNodeControl: FunctionComponent<Props> = ({onAddNode, onCancel}) => {
     return (
         <div>
             <span>
-                <span>Node ID:</span>
+                <span>Node ID: </span>
                 <input type="text" value={editNodeId} onChange={handleChange} />
                 <button onClick={handleAdd}>Add</button>
-                <button onClick={onCancel}>Cancel</button>
+                {onCancel && <button onClick={onCancel}>Cancel</button>}
             </span>
         </div>
     )

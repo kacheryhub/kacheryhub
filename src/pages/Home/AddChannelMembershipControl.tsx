@@ -3,7 +3,7 @@ import { ChannelName, isChannelName } from 'kachery-js/types/kacheryTypes'
 
 type Props = {
     onAddChannelMembership: (channelName: ChannelName) => void
-    onCancel: () => void
+    onCancel?: () => void
 }
 
 const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMembership, onCancel}) => {
@@ -22,10 +22,10 @@ const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMemb
     return (
         <div>
             <span>
-                <span>Channel name:</span>
+                <span>Channel name: </span>
                 <input type="text" value={editChannelName} onChange={handleChange} />
                 <button onClick={okayToAdd ? handleAdd : undefined} disabled={!okayToAdd}>Add</button>
-                <button onClick={onCancel}>Cancel</button>
+                {onCancel && <button onClick={onCancel}>Cancel</button>}
             </span>
         </div>
     )

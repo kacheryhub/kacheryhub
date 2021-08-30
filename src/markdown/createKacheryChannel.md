@@ -30,13 +30,13 @@ These are the instructions for creating and configuring a Google storage bucket 
 [
     {
       "origin": ["http://localhost:3000"],
-      "method": ["GET"],
+      "method": ["GET", "HEAD"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600
     },
     {
       "origin": ["https://domain-of-web-app"],
-      "method": ["GET"],
+      "method": ["GET", "HEAD"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600
     }

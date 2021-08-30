@@ -10,6 +10,10 @@ export type Page = {
 } | {
     page: 'channel'
     channelName: ChannelName
+} | {
+    page: 'registerNode'
+} | {
+    page: 'joinChannel'
 }
 
 const usePage = () => {
@@ -33,6 +37,16 @@ const usePage = () => {
                 channelName: cn
             }
         }
+        else if (p[1] === 'registerNode') {
+            return {
+                page: 'registerNode'
+            }
+        }
+        else if (p[1] === 'joinChannel') {
+            return {
+                page: 'joinChannel'
+            }
+        }
         return {
             page: 'home'
         }
@@ -48,6 +62,18 @@ const usePage = () => {
             history.push({
                 ...location,
                 pathname: `/channel/${page.channelName}`
+            })
+        }
+        else if (page.page === 'registerNode') {
+            history.push({
+                ...location,
+                pathname: `/registerNode`
+            })
+        }
+        else if (page.page === 'joinChannel') {
+            history.push({
+                ...location,
+                pathname: `/joinChannel`
             })
         }
         else {

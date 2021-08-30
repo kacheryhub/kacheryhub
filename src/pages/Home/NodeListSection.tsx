@@ -18,7 +18,7 @@ type Props = {
     onSelectNode: (nodeId: NodeId) => void
 }
 
-const addNode = async (node: NodeConfig, googleSignInClient: GoogleSignInClient) => {
+export const addNode = async (node: NodeConfig, googleSignInClient: GoogleSignInClient) => {
     const req: AddNodeRequest = {
         type: 'addNode',
         node,

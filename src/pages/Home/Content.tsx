@@ -8,6 +8,9 @@ import './Home.css'
 import NodeListSection from './NodeListSection'
 import SignInSection from './SignInSection'
 import usePage from './usePage'
+import CommonActionsSection from './CommonActionsSection'
+import RegisterNodePage from './RegisterNodePage'
+import JoinChannelPage from './JoinChannelPage'
 
 type Props = {
     
@@ -35,6 +38,7 @@ const Content: FunctionComponent<Props> = () => {
                 {
                     signedIn && (
                         <span>
+                            <CommonActionsSection />
                             <NodeListSection onSelectNode={handleSelectNode} />
                             <ChannelListSection onSelectChannel={handleSelectChannel} />
                         </span>
@@ -57,6 +61,22 @@ const Content: FunctionComponent<Props> = () => {
             <div>
                 <EditChannel
                     channelName={page.channelName}
+                />
+            </div>
+        )
+    }
+    else if (page.page === 'registerNode') {
+        return (
+            <div>
+                <RegisterNodePage
+                />
+            </div>
+        )
+    }
+    else if (page.page === 'joinChannel') {
+        return (
+            <div>
+                <JoinChannelPage
                 />
             </div>
         )

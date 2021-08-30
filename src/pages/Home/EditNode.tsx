@@ -13,7 +13,7 @@ type Props = {
     nodeId: NodeId
 }
 
-const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: ChannelName) => {
+export const addNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, nodeId: NodeId, channelName: ChannelName) => {
     const req: AddNodeChannelMembershipRequest = {
         type: 'addNodeChannelMembership',
         nodeId,

@@ -19,7 +19,7 @@ const AddAuthorizedNodeControl: FunctionComponent<Props> = ({channelName, onAddA
     return (
         <div>
             <span>
-                <span>Node ID:</span>
+                <span>Node ID: </span>
                 <input type="text" value={editNodeId} onChange={handleChange} />
                 <button onClick={handleAdd}>Add</button>
                 <button onClick={onCancel}>Cancel</button>
