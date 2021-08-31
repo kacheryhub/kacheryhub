@@ -5,9 +5,11 @@ import useVisible from 'commonComponents/useVisible';
 import { NodeConfig } from 'kachery-js/types/kacheryHubTypes';
 import { isNodeId, NodeId } from 'kachery-js/types/kacheryTypes';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
-import hostKacheryNodeMd from '../../markdown/hostKacheryNode.md.gen'
+import hostKacheryNodeMd from '../../markdown/hostKacheryNode.md.gen';
 import AddNodeControl from './AddNodeControl';
+import { getNodeLabel } from './DropdownNodeSelector';
 import { addNode } from './NodeListSection';
+import useNodesForUser from './useNodesForUser';
 import usePage from './usePage';
 
 type Props = {
@@ -21,6 +23,8 @@ const RegisterNodePage: FunctionComponent<Props> = () => {
     const googleSignInClient = useGoogleSignInClient()
     const [status, setStatus] = useState<'ready' | 'processing' | 'finished'>('ready')
     const [errorMessage, setErrorMessage] = useState<string>('')
+
+    const {nodesForUser} = useNodesForUser(googleSignInClient?.userId)
 
     // todo: deduplicate this code
     const handleAddNode = useCallback((nodeId: string) => {
@@ -49,14 +53,19 @@ const RegisterNodePage: FunctionComponent<Props> = () => {
     }, [googleSignInClient, status])
 
     const {setPage} = usePage()
+
+    const handleGotoNode = useCallback((nodeId: NodeId) => {
+        setPage({
+            page: 'node',
+            nodeId
+        })
+    }, [setPage])
+
     useEffect(() => {
         if ((status === 'finished') && (addedNodeId)) {
-            setPage({
-                page: 'node',
-                nodeId: addedNodeId
-            })
+            handleGotoNode(addedNodeId)
         }
-    }, [status, addedNodeId, setPage])
+    }, [status, addedNodeId, handleGotoNode])
 
     return (
         <div>
@@ -79,6 +88,14 @@ const RegisterNodePage: FunctionComponent<Props> = () => {
                     <div style={{color: 'red'}}>{errorMessage}</div>
                 )
             }
+            <p>You have already registered the following nodes:</p>
+            <ul>
+                {
+                    (nodesForUser || []).map(node => (
+                        <li><Hyperlink onClick={() => {handleGotoNode(node.nodeId)}}>{node.nodeId} ({getNodeLabel(node)})</Hyperlink></li>
+                    ))
+                }
+            </ul>
             <MarkdownDialog
                 visible={hostKacheryNodeVisible.visible}
                 onClose={hostKacheryNodeVisible.hide}

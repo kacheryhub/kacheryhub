@@ -55,15 +55,22 @@ const EditNodeChannelPasscodes: FunctionComponent<Props> = ({nodeChannelMembersh
         return true
     }, [editPasscode, nodeChannelMembership])
 
+    const channelPasscodes = useMemo(() => (
+        (a || {}).channelPasscodes || []
+    ), [a])
+    const validChannelPasscodes = useMemo(() => (
+        (a || {}).validChannelPasscodes || []
+    ), [a])
+
     if (!a) return <span />
     return (
         <div style={{maxWidth: 500}}>
             <div>
                 {
-                    ((a || {}).channelPasscodes || []).map(p => (
-                        <span style={{background: 'gray', color: 'white', margin: 3, padding: 3, whiteSpace: 'pre'}}>
+                    channelPasscodes.map(p => (
+                        <span style={{color: validChannelPasscodes.includes(p) ? 'darkgreen' : 'darkred', background: 'lightgray', margin: 3, paddingBottom: 7, paddingTop: 4, whiteSpace: 'pre'}}>
                             <IconButton onClick={() => handleDeletePasscode(p)}><Delete /></IconButton>
-                            <HidePasscode passcode={p} />
+                            <HidePasscode passcode={p} copyable={true} />
                         </span>
                     ))
                 }

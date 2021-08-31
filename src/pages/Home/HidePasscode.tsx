@@ -1,5 +1,5 @@
 import { IconButton } from '@material-ui/core';
-import { FiberManualRecord } from '@material-ui/icons';
+import { Visibility } from '@material-ui/icons';
 import { Passcode } from 'kachery-js/types/kacheryHubTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink';
@@ -18,14 +18,14 @@ const HidePasscode: FunctionComponent<Props> = ({passcode, onClick, copyable}) =
     const handleFocusOut = useCallback(() => {
         setCopyClicked(false)
     }, [])
-    const elmt = useMemo(() => (<span title={passcode.toString()}>{passcode.slice(0, 6)}...</span>), [passcode])
+    const elmt = useMemo(() => (<span title={passcode.toString()}>{passcode.split('-')[0]}-...</span>), [passcode])
     if (!copyable) return elmt
     return (
         copyClicked ? (
             <input type="text" readOnly={true} onBlur={handleFocusOut} ref={(x) => x?.select()} value={passcode.toString()} style={{maxWidth: 120}} />
         ) : (
             <span>
-                <IconButton onClick={handleCopyClick}><FiberManualRecord /></IconButton>
+                <IconButton onClick={handleCopyClick}><Visibility /></IconButton>
                 {
                     onClick ? (
                         <Hyperlink onClick={onClick}>

@@ -11,6 +11,7 @@ import usePage from './usePage'
 import CommonActionsSection from './CommonActionsSection'
 import RegisterNodePage from './RegisterNodePage'
 import JoinChannelPage from './JoinChannelPage'
+import NodeChannelMembershipPage from './NodeChannelMembershipPage'
 
 type Props = {
     
@@ -77,6 +78,17 @@ const Content: FunctionComponent<Props> = () => {
         return (
             <div>
                 <JoinChannelPage
+                    nodeId={page.nodeId}
+                />
+            </div>
+        )
+    }
+    else if (page.page === 'nodeChannelMembership') {
+        return (
+            <div>
+                <NodeChannelMembershipPage
+                    nodeId={page.nodeId}
+                    channelName={page.channelName}
                 />
             </div>
         )

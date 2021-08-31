@@ -4,9 +4,10 @@ import { ChannelName, isChannelName } from 'kachery-js/types/kacheryTypes'
 type Props = {
     onAddChannelMembership: (channelName: ChannelName) => void
     onCancel?: () => void
+    readOnly?: boolean
 }
 
-const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMembership, onCancel}) => {
+const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMembership, onCancel, readOnly}) => {
     const [editChannelName, setEditChannelName] = useState<string>('')
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = useCallback((e) => {
         setEditChannelName(e.target.value)
@@ -23,7 +24,7 @@ const AddChannelMembershipControl: FunctionComponent<Props> = ({onAddChannelMemb
         <div>
             <span>
                 <span>Channel name: </span>
-                <input type="text" value={editChannelName} onChange={handleChange} />
+                <input type="text" value={editChannelName} onChange={handleChange} readOnly={readOnly} />
                 <button onClick={okayToAdd ? handleAdd : undefined} disabled={!okayToAdd}>Add</button>
                 {onCancel && <button onClick={onCancel}>Cancel</button>}
             </span>

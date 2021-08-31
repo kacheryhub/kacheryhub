@@ -8,6 +8,7 @@ import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, Ge
 import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
 import { updateNodeChannelAuthorization } from './EditChannel'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
+import CommonNodeActions from './CommonNodeActions'
 
 type Props = {
     nodeId: NodeId
@@ -26,7 +27,7 @@ export const addNodeChannelMembership = async (googleSignInClient: GoogleSignInC
     await kacheryHubApiRequest(req, {reCaptcha: true})
 }
 
-const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
+export const updateNodeChannelMembership = async (googleSignInClient: GoogleSignInClient, membership: NodeChannelMembership) => {
     const req: UpdateNodeChannelMembershipRequest = {
         type: 'updateNodeChannelMembership',
         membership,
@@ -51,96 +52,12 @@ const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
     await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
-const EditNode: FunctionComponent<Props> = ({nodeId}) => {
+export const useNodeConfig = (nodeId: NodeId) => {
     const [nodeConfig, setNodeConfig] = useState<NodeConfig | undefined>(undefined)
+    const [nodeConfigStatusMessage, setNodeConfigStatusMessage] = useState<string>('')
     const googleSignInClient = useGoogleSignInClient()
     const userId = googleSignInClient?.userId
     const [refreshCode, setRefreshCode] = useState<number>(0)
-    const incrementRefreshCode = useCallback(() => setRefreshCode(c => (c + 1)), [])
-    const [errorMessage, setErrorMessage] = useState<string>('')
-    const [nodeConfigStatusMessage, setNodeConfigStatusMessage] = useState<string>('')
-    const node = useMemo(() => {
-        if (!userId) return undefined
-        if (!nodeConfig) return undefined
-        if (nodeConfig.ownerId !== userId) {
-            return undefined
-        }
-        if (nodeConfig.nodeId !== nodeId) return undefined
-        return nodeConfig
-    }, [nodeId, nodeConfig, userId])
-
-    const handleAddNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
-        // hideAddChannelMembership()
-        setErrorMessage('')
-        if (!googleSignInClient) {
-            setErrorMessage('Not signed in')
-            return
-        }
-        ;(async () => {
-            try {
-                await addNodeChannelMembership(googleSignInClient, nodeId, channelName)
-                incrementRefreshCode()
-            }
-            catch(err) {
-                setErrorMessage(err.message)
-            }
-        })()
-    }, [googleSignInClient, incrementRefreshCode])
-
-    const handleUpdateNodeChannelMembership = useCallback((a: NodeChannelMembership) => {
-        // hideAddChannelMembership()
-        setErrorMessage('')
-        if (!googleSignInClient) {
-            setErrorMessage('Not signed in')
-            return
-        }
-        ;(async () => {
-            try {
-                await updateNodeChannelMembership(googleSignInClient, a)
-                incrementRefreshCode()
-            }
-            catch(err) {
-                setErrorMessage(err.message)
-            }
-        })()
-    }, [googleSignInClient, incrementRefreshCode])
-
-    const handleDeleteNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
-        // hideAddChannelMembership()
-        setErrorMessage('')
-        if (!googleSignInClient) {
-            setErrorMessage('Not signed in')
-            return
-        }
-        ;(async () => {
-            try {
-                await deleteNodeChannelMembership(googleSignInClient, channelName, nodeId)
-                incrementRefreshCode()
-            }
-            catch(err) {
-                setErrorMessage(err.message)
-            }
-        })()
-    }, [googleSignInClient, incrementRefreshCode])
-
-    const handleUpdateNodeChannelAuthorization = useCallback((a: NodeChannelAuthorization) => {
-        // hideAddChannelMembership()
-        setErrorMessage('')
-        if (!googleSignInClient) {
-            setErrorMessage('Not signed in')
-            return
-        }
-        ;(async () => {
-            try {
-                await updateNodeChannelAuthorization(googleSignInClient, a)
-                incrementRefreshCode()
-            }
-            catch(err) {
-                setErrorMessage(err.message)
-            }
-        })()
-    }, [googleSignInClient, incrementRefreshCode])
-
     useEffect(() => {
         if (!userId) return undefined
         ;(async () => {
@@ -170,6 +87,104 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
             setNodeConfigStatusMessage(err.message)
         })
     }, [nodeId, userId, googleSignInClient, refreshCode])
+
+    const refreshNodeConfig = useCallback(() => {
+        setRefreshCode((c) => (c + 1))
+    }, [])
+
+    return {
+        nodeConfig,
+        nodeConfigStatusMessage,
+        refreshNodeConfig
+    }
+}
+
+const EditNode: FunctionComponent<Props> = ({nodeId}) => {
+    const {nodeConfig, nodeConfigStatusMessage, refreshNodeConfig} = useNodeConfig(nodeId)
+    const googleSignInClient = useGoogleSignInClient()
+    const userId = googleSignInClient?.userId
+    const [errorMessage, setErrorMessage] = useState<string>('')
+    const node = useMemo(() => {
+        if (!userId) return undefined
+        if (!nodeConfig) return undefined
+        if (nodeConfig.ownerId !== userId) {
+            return undefined
+        }
+        if (nodeConfig.nodeId !== nodeId) return undefined
+        return nodeConfig
+    }, [nodeId, nodeConfig, userId])
+
+    const handleAddNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await addNodeChannelMembership(googleSignInClient, nodeId, channelName)
+                refreshNodeConfig()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, refreshNodeConfig])
+
+    const handleUpdateNodeChannelMembership = useCallback((a: NodeChannelMembership) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await updateNodeChannelMembership(googleSignInClient, a)
+                refreshNodeConfig()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, refreshNodeConfig])
+
+    const handleDeleteNodeChannelMembership = useCallback((channelName: ChannelName, nodeId: NodeId) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await deleteNodeChannelMembership(googleSignInClient, channelName, nodeId)
+                refreshNodeConfig()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, refreshNodeConfig])
+
+    const handleUpdateNodeChannelAuthorization = useCallback((a: NodeChannelAuthorization) => {
+        // hideAddChannelMembership()
+        setErrorMessage('')
+        if (!googleSignInClient) {
+            setErrorMessage('Not signed in')
+            return
+        }
+        ;(async () => {
+            try {
+                await updateNodeChannelAuthorization(googleSignInClient, a)
+                refreshNodeConfig()
+            }
+            catch(err) {
+                setErrorMessage(err.message)
+            }
+        })()
+    }, [googleSignInClient, refreshNodeConfig])
 
     const tableRows = useMemo(() => {
         const ret: {key: string, label: string | JSX.Element, value: any}[] = []
@@ -215,6 +230,10 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                                 </TableBody>
                             </Table>
                         </div>
+                        <h2>Common actions</h2>
+                        <CommonNodeActions
+                            nodeId={node.nodeId}
+                        />
                         <EditNodeChannelMemberships
                             node={node}
                             onAddNodeChannelMembership={handleAddNodeChannelMembership}
