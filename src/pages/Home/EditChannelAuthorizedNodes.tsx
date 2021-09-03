@@ -74,7 +74,7 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
     return (
         <div>
             <h2>Authorized nodes</h2>
-            <p>Configure which nodes are authorized to belong to this channel in which roles.</p>
+            <p>Configure which nodes are authorized to belong to this channel.</p>
             {
                 onAddAuthorizedNode && (
                     <span>

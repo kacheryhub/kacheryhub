@@ -1,6 +1,7 @@
 import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from '../../src/kachery-js/types/kacheryHubTypes'
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
+import isAdminUser from './isAdminUser'
 
 const updateChannelPropertyHandler = async (request: UpdateChannelPropertyRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
@@ -14,7 +15,7 @@ const updateChannelPropertyHandler = async (request: UpdateChannelPropertyReques
         throw Error(`Unexpected: more than one channel with name ${request.channelName}`)
     }
     const doc = channelResults.docs[0]
-    if (verifiedUserId !== doc.get('ownerId')) {
+    if ((verifiedUserId !== doc.get('ownerId')) && (!isAdminUser(verifiedUserId))) {
         throw Error('Not authorized')
     }
     if (request.propertyName === 'bucketUri') {

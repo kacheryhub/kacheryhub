@@ -17,11 +17,15 @@ export const useSignedIn = () => {
             incrementUpdateCode()
         })
     }, [signInClient, incrementUpdateCode])
-    return signInClient?.signedIn
+    return {
+        signedIn: signInClient?.signedIn || false,
+        userId: signInClient?.userId,
+        googleIdToken: signInClient?.idToken || undefined
+    }
 }
 
 const GoogleSignIn: FunctionComponent<Props> = ({client}) => {
-    const signedIn = useSignedIn()
+    const {signedIn} = useSignedIn()
     const gapi = client.gapi
 
     const handleSignIn = useCallback(() => {

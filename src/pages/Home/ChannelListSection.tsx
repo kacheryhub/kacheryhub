@@ -1,17 +1,17 @@
 import { IconButton } from '@material-ui/core'
 import { AddCircle, Refresh } from '@material-ui/icons'
+import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from 'kachery-js/types/kacheryHubTypes'
+import { ChannelName, isArrayOf, UserId } from 'kachery-js/types/kacheryTypes'
 import React, { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import { default as kacheryHubApiRequest } from '../../common/kacheryHubApiRequest'
-import { ChannelName, isArrayOf, UserId } from 'kachery-js/types/kacheryTypes'
-import { AddChannelRequest, ChannelConfig, DeleteChannelRequest, GetChannelsForUserRequest, isChannelConfig } from 'kachery-js/types/kacheryHubTypes'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import MarkdownDialog from '../../commonComponents/Markdown/MarkdownDialog'
 import useVisible from '../../commonComponents/useVisible'
+import createKacheryChannelMd from '../../markdown/createKacheryChannel.md.gen'
 import AddChannelControl from './AddChannelControl'
 import ChannelsTable from './ChannelsTable'
-import createKacheryChannelMd from '../../markdown/createKacheryChannel.md.gen'
 
 type Props = {
     onSelectChannel: (channel: ChannelName) => void

@@ -1,4 +1,4 @@
-import { isChannelConfig, isNodeConfig, NodeChannelAuthorization, Passcode } from "../../src/kachery-js/types/kacheryHubTypes"
+import { ChannelConfig, isChannelConfig, isNodeConfig, NodeChannelAuthorization, Passcode } from "../../src/kachery-js/types/kacheryHubTypes"
 import { ChannelName, NodeId, UserId } from "../../src/kachery-js/types/kacheryTypes"
 import firestoreDatabase from "./firestoreDatabase"
 
@@ -19,7 +19,7 @@ const loadChannelConfig = async (args: {channelName: ChannelName}) => {
         console.warn(channelConfig)
         throw Error('Unexpected, not a valid channel config')
     }
-    return channelConfig
+    return channelConfig as ChannelConfig
 }
 
 const loadNodeConfig = async (args: {nodeId: NodeId, ownerId: UserId}) => {

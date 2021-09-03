@@ -8,15 +8,25 @@ type Props = {
     channels: ChannelConfig[]
     onClickChannel?: (channelName: ChannelName) => void
     onDeleteChannel?: (channelName: ChannelName) => void
+    showOwners?: boolean
 }
 
-const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDeleteChannel}) => {
-    const columns = useMemo(() => ([
-        {
-            key: 'channelName',
-            label: 'Channel'
+const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDeleteChannel, showOwners}) => {
+    const columns = useMemo(() => {
+        const r = [
+            {
+                key: 'channelName',
+                label: 'Channel'
+            }
+        ]
+        if (showOwners) {
+            r.push({
+                key: 'ownerId',
+                label: 'Owner'
+            })
         }
-    ]), [])
+        return r
+    }, [showOwners])
     const rows = useMemo(() => (
         channels.map(channel => ({
             key: channel.channelName.toString(),
@@ -24,6 +34,9 @@ const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDe
                 channelName: {
                     text: channel.channelName.toString(),
                     element: <Hyperlink onClick={() => {onClickChannel && onClickChannel(channel.channelName)}}>{channel.channelName}</Hyperlink>
+                },
+                ownerId: {
+                    text: channel.ownerId.toString()
                 }
             }
         }))
@@ -37,7 +50,6 @@ const ChannelsTable: FunctionComponent<Props> = ({channels, onClickChannel, onDe
             rows={rows}
             columns={columns}
             onDeleteRow={onDeleteChannel && handleDeleteChannel}
-        
         />
     )
 }

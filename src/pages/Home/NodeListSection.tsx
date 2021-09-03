@@ -98,7 +98,7 @@ const NodeListSection: FunctionComponent<Props> = ({onSelectNode}) => {
             <h2>Your nodes</h2>
             <p>
                 These are nodes hosted by you; each is associated with a kachery daemon running on a computer.
-                You can configure which channels these nodes belong to in which roles.
+                You can configure which channels these nodes belong to.
             </p>
 
             <p><Hyperlink onClick={hostKacheryNodeVisible.show}>How to host a kachery node</Hyperlink></p>

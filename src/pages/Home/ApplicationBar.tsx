@@ -31,7 +31,7 @@ const ApplicationBar: FunctionComponent<Props> = () => {
     const gapi = client?.gapi
     const {setPage} = usePage()
 
-    const signedIn = useSignedIn()
+    const {signedIn} = useSignedIn()
 
     const handleLogin = useCallback(() => {
         gapi.auth2.getAuthInstance().signIn();

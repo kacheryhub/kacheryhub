@@ -10,6 +10,7 @@ import getNodeConfigHandler from '../apiHelpers/kacheryNodeRequestHandlers/getNo
 import getPubsubAuthForChannelHandler from '../apiHelpers/kacheryNodeRequestHandlers/getPubsubAuthForChannel'
 import reportHandler from '../apiHelpers/kacheryNodeRequestHandlers/report'
 import logMessageToChannel from '../apiHelpers/common/logMessageToChannel'
+import { statsReportFileUpload, statsReportNodeRequest, statsReportNodeRequestError, statsReportTaskResultUpload, statsReportUploadFeedMessages } from '../apiHelpers/common/stats'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -21,14 +22,15 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
 
     let channelName: ChannelName | undefined = undefined
 
+    const body = request.body
     ;(async () => {
-        const body = request.body
         const signature = request.signature
         if (!await verifySignature(body as any as JSONValue, hexToPublicKey(nodeIdToPublicKeyHex(request.nodeId)), signature)) {
             throw Error('Invalid signature')
         }
         const verifiedNodeId = request.nodeId
 
+        await statsReportNodeRequest({type: body.type, nodeId: verifiedNodeId.toString(), channelName: body['channelName'] || undefined})
         if (body.type === 'report') {
             return await reportHandler(body, verifiedNodeId)
         }
@@ -45,15 +47,21 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (body.type === 'createSignedFileUploadUrl') {
             channelName = body.channelName
-            return await createSignedFileUploadUrlHandler(body, verifiedNodeId)
+            const ret = await createSignedFileUploadUrlHandler(body, verifiedNodeId)
+            await statsReportFileUpload({nodeId: verifiedNodeId.toString(), channelName: body.channelName.toString(), size: Number(body.size)})
+            return ret
         }
         else if (body.type === 'createSignedSubfeedMessageUploadUrl') {
             channelName = body.channelName
-            return await createSignedSubfeedMessageUploadUrlHandler(body, verifiedNodeId)
+            const ret = await createSignedSubfeedMessageUploadUrlHandler(body, verifiedNodeId)
+            await statsReportUploadFeedMessages({nodeId: verifiedNodeId.toString(), channelName: body.channelName.toString(), numMessages: 1})
+            return ret
         }
         else if (body.type === 'createSignedTaskResultUploadUrl') {
             channelName = body.channelName
-            return await createSignedTaskResultUploadUrlHandler(body, verifiedNodeId)
+            const ret = await createSignedTaskResultUploadUrlHandler(body, verifiedNodeId)
+            await statsReportTaskResultUpload({nodeId: verifiedNodeId.toString(), channelName: body.channelName.toString(), size: Number(body.size)})
+            return ret
         }
         else {
             throw Error(`Unexpected request type (kacheryNode): ${body["type"]}`)
@@ -69,15 +77,20 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         res.json(result)
     }).catch((error: Error) => {
-        const logMessage = {
-            type: 'kacheryhub-node-request-error',
-            request,
-            errorMessage: error.message
-        } as any as JSONValue
-        if (channelName) {
-            logMessageToChannel(channelName, logMessage)
-        }
+        // const logMessage = {
+        //     type: 'kacheryhub-node-request-error',
+        //     request,
+        //     errorMessage: error.message
+        // } as any as JSONValue
         console.warn(error.message)
-        res.status(404).send(`Error: ${error.message}`)
+        statsReportNodeRequestError({type: body.type, nodeId: request.nodeId.toString(), channelName: body['channelName']}).then(() => {
+            // if (channelName) {
+            //     logMessageToChannel(channelName, logMessage)
+            // }
+            res.status(404).send(`Error: ${error.message}`)
+        }).catch(() => {
+            console.warn('Unable to report node request error.')
+            res.status(404).send(`Error: ${error.message}`)
+        })
     })
 }

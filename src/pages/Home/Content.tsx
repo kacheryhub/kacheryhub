@@ -1,25 +1,28 @@
+import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
 import React, { FunctionComponent, useCallback } from 'react'
 import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
-import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
+import AllChannelListSection from './AllChannelListSection'
 import ChannelListSection from './ChannelListSection'
+import CommonActionsSection from './CommonActionsSection'
 import EditChannel from './EditChannel'
 import EditNode from './EditNode'
 import './Home.css'
-import NodeListSection from './NodeListSection'
-import SignInSection from './SignInSection'
-import usePage from './usePage'
-import CommonActionsSection from './CommonActionsSection'
-import RegisterNodePage from './RegisterNodePage'
 import JoinChannelPage from './JoinChannelPage'
 import NodeChannelMembershipPage from './NodeChannelMembershipPage'
+import NodeListSection from './NodeListSection'
+import RegisterNodePage from './RegisterNodePage'
+import SignInSection from './SignInSection'
+import usePage from './usePage'
+import useUserConfig from './useUserConfig'
 
 type Props = {
     
 }
 
 const Content: FunctionComponent<Props> = () => {
-    const signedIn = useSignedIn()
+    const {signedIn} = useSignedIn()
     const {page, setPage} = usePage()
+    const userConfig = useUserConfig()
 
     const handleSelectNode = useCallback((nodeId: NodeId) => {
         setPage({page: 'node', nodeId})
@@ -28,6 +31,8 @@ const Content: FunctionComponent<Props> = () => {
     const handleSelectChannel = useCallback((channelName: ChannelName) => {
         setPage({page: 'channel', channelName})
     }, [setPage])
+
+    const isAdmin = userConfig && userConfig.admin
 
     if (page.page === 'home') {
         return (
@@ -42,6 +47,11 @@ const Content: FunctionComponent<Props> = () => {
                             <CommonActionsSection />
                             <NodeListSection onSelectNode={handleSelectNode} />
                             <ChannelListSection onSelectChannel={handleSelectChannel} />
+                            {
+                                isAdmin && (
+                                    <AllChannelListSection onSelectChannel={handleSelectChannel} />
+                                )
+                            }
                         </span>
                     )
                 }

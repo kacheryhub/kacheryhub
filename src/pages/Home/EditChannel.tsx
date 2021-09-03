@@ -8,6 +8,8 @@ import { AddAuthorizedNodeRequest, AddAuthorizedPasscodeRequest, ChannelConfig, 
 import EditChannelAuthorizedNodes from './EditChannelAuthorizedNodes'
 import EditString from './EditString'
 import EditChannelAuthorizedPasscodes from './EditChannelAuthorizedPasscodes'
+import useUserConfig from './useUserConfig'
+import ChannelStatsView from './ChannelStatsView'
 
 type Props = {
     channelName: ChannelName
@@ -111,15 +113,17 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
     const [refreshCode, setRefreshCode] = useState<number>(0)
     const incrementRefreshCode = useCallback(() => setRefreshCode(c => (c + 1)), [])
     const [errorMessage, setErrorMessage] = useState<string>('')
+    const userConfig = useUserConfig()
+    const isAdmin = userConfig && userConfig.admin
     const channel = useMemo(() => {
         if (!channelName) return undefined
         if (!channelConfig) return undefined
-        if (channelConfig.ownerId !== userId) {
+        if ((channelConfig.ownerId !== userId) && (!isAdmin)) {
             return undefined
         }
         if (channelConfig.channelName !== channelName) return undefined
         return channelConfig
-    }, [channelName, channelConfig, userId])
+    }, [channelName, channelConfig, userId, isAdmin])
     
     const handleAddAuthorizedNode = useCallback((channelName: ChannelName, nodeId: string) => {
         // hideAddChannelMembership()
@@ -137,7 +141,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await addAuthorizedNode(googleSignInClient, channelName, nodeId)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -158,7 +162,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await addAuthorizedPasscode(googleSignInClient, channelName, passcode)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -176,7 +180,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await updateNodeChannelAuthorization(googleSignInClient, a)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -194,7 +198,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await updatePasscodeChannelAuthorization(googleSignInClient, a)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -212,7 +216,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await deleteNodeChannelAuthorization(googleSignInClient, channelName, nodeId)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -230,7 +234,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await deletePasscodeChannelAuthorization(googleSignInClient, channelName, passcode)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -247,7 +251,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                 await updateChannelProperty(googleSignInClient, channelName, propertyName, x)
                 incrementRefreshCode()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -335,6 +339,9 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                                 </TableBody>
                             </Table>
                         </div>
+                        <ChannelStatsView
+                            channelName={channel.channelName}
+                        />
                         <EditChannelAuthorizedNodes
                             channel={channel}
                             onAddAuthorizedNode={handleAddAuthorizedNode}

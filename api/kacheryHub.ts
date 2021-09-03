@@ -14,12 +14,15 @@ import deleteNodeChannelMembershipHandler from '../apiHelpers/kacheryHubRequestH
 import deletePasscodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/deletePasscodeChannelAuthorization'
 import getChannelHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannel'
 import getChannelsForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannelsForUser'
+import getAllChannelsHandler from '../apiHelpers/kacheryHubRequestHandlers/getAllChannels'
 import getNodeForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getNodeForUser'
+import getUserConfigHandler from '../apiHelpers/kacheryHubRequestHandlers/getUserConfig'
 import getNodesForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getNodesForUser'
 import updateChannelPropertyHandler from '../apiHelpers/kacheryHubRequestHandlers/updateChannelProperty'
 import updateNodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/updateNodeChannelAuthorization'
 import updateNodeChannelMembershipRequestHandler from '../apiHelpers/kacheryHubRequestHandlers/updateNodeChannelMembership'
 import updatePasscodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/updatePasscodeChannelAuthorization'
+import getChannelStatsHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannelStats'
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
 
@@ -99,12 +102,24 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         else if (request.type === 'getChannelsForUser') {
             return await getChannelsForUserHandler(request, verifiedUserId)
         }
+        else if (request.type === 'getAllChannels') {
+            return await getAllChannelsHandler(request, verifiedUserId)
+        }
+        else if (request.type === 'getChannelStats') {
+            return await getChannelStatsHandler(request, verifiedUserId)
+        }
         else if (request.type === 'getNodeForUser') {
             return await getNodeForUserHandler(request, verifiedUserId)
+        }
+        else if (request.type === 'getUserConfig') {
+            return await getUserConfigHandler(request, verifiedUserId)
         }
         else if (request.type === 'getNodesForUser') {
             return await getNodesForUserHandler(request, verifiedUserId)
         }
+        // else if (request.type === 'getNodeStats') {
+        //     return await getNodeStatsHandler(request, verifiedUserId)
+        // }
         else if (request.type === 'updateChannelProperty') {
             return await updateChannelPropertyHandler(request, verifiedUserId)
         }

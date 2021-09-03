@@ -1,4 +1,5 @@
-import React, { FunctionComponent, useCallback, useState } from 'react'
+import { isNodeId } from 'kachery-js/types/kacheryTypes'
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
 
 type Props = {
     onAddNode: (nodeId: string) => void
@@ -14,12 +15,15 @@ const AddNodeControl: FunctionComponent<Props> = ({onAddNode, onCancel}) => {
         setEditNodeId('')
         onAddNode(editNodeId)
     }, [editNodeId, onAddNode])
+    const okayToAdd = useMemo(() => {
+        return isNodeId(editNodeId)
+    }, [editNodeId])
     return (
         <div>
             <span>
                 <span>Node ID: </span>
                 <input type="text" value={editNodeId} onChange={handleChange} />
-                <button onClick={handleAdd}>Add</button>
+                <button onClick={handleAdd} disabled={!okayToAdd}>Add</button>
                 {onCancel && <button onClick={onCancel}>Cancel</button>}
             </span>
         </div>

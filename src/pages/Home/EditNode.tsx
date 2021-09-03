@@ -126,7 +126,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 await addNodeChannelMembership(googleSignInClient, nodeId, channelName)
                 refreshNodeConfig()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -144,7 +144,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 await updateNodeChannelMembership(googleSignInClient, a)
                 refreshNodeConfig()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -162,7 +162,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 await deleteNodeChannelMembership(googleSignInClient, channelName, nodeId)
                 refreshNodeConfig()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
@@ -180,7 +180,7 @@ const EditNode: FunctionComponent<Props> = ({nodeId}) => {
                 await updateNodeChannelAuthorization(googleSignInClient, a)
                 refreshNodeConfig()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()

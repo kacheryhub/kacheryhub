@@ -8,7 +8,7 @@ type Props = {
 const SignInSection: FunctionComponent<Props> = () => {
 
     const googleSignInClient = useGoogleSignInClient()
-    const signedIn = useSignedIn()
+    const {signedIn} = useSignedIn()
     const [googleSignInVisible, setGoogleSignInVisible] = useState(false)
     useEffect(() => {
         if ((signedIn) && (googleSignInVisible)) {

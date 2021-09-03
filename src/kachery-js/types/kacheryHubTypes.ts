@@ -1,4 +1,4 @@
-import { ChannelName, ErrorMessage, isArrayOf, isBoolean, isChannelName, isEqualTo, isErrorMessage, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isString, isTaskFunctionId, isTaskFunctionType, isTaskId, isTaskKwargs, isTimestamp, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, TaskFunctionId, TaskFunctionType, TaskId, TaskKwargs, Timestamp, UserId, _validateObject } from "./kacheryTypes"
+import { ChannelName, ErrorMessage, isArrayOf, isBoolean, isChannelName, isEqualTo, isErrorMessage, isNodeId, isNodeLabel, isNumber, isOneOf, isSha1Hash, isSignature, isString, isTaskFunctionId, isTaskFunctionType, isTaskId, isTaskKwargs, isTimestamp, isUserConfig, isUserId, NodeId, NodeLabel, optional, Sha1Hash, Signature, TaskFunctionId, TaskFunctionType, TaskId, TaskKwargs, Timestamp, UserConfig, UserId, _validateObject } from "./kacheryTypes"
 
 export type GoogleServiceAccountCredentials = {
     type: 'service_account',
@@ -265,6 +265,20 @@ export const isGetChannelsForUserRequest = (x: any): x is GetChannelsForUserRequ
     })
 }
 
+export type GetAllChannelsRequest = {
+    type: 'getAllChannels'
+    userId: UserId
+    auth: Auth
+}
+
+export const isGetAllChannelsRequest = (x: any): x is GetAllChannelsRequest => {
+    return _validateObject(x, {
+        type: isEqualTo('getAllChannels'),
+        userId: isUserId,
+        auth: isAuth
+    })
+}
+
 export type AddChannelRequest = {
     type: 'addChannel'
     channel: ChannelConfig
@@ -335,6 +349,30 @@ export const isGetNodeForUserResponse = (x: any): x is GetNodeForUserResponse =>
     })
 }
 
+export type GetUserConfigRequest = {
+    type: 'getUserConfig'
+    userId: UserId
+    auth: Auth
+}
+
+export const isGetUserConfigRequest = (x: any): x is GetUserConfigRequest => {
+    return _validateObject(x, {
+        type: isEqualTo('getUserConfig'),
+        userId: isUserId,
+        auth: isAuth
+    })
+}
+
+export type GetUserConfigResponse = {
+    userConfig: UserConfig
+}
+
+export const isGetUserConfigResponse = (x: any): x is GetUserConfigResponse => {
+    return _validateObject(x, {
+        userConfig: isUserConfig
+    })
+}
+
 export type GetChannelRequest = {
     type: 'getChannel'
     channelName: ChannelName
@@ -347,6 +385,28 @@ export const isGetChannelRequest = (x: any): x is GetChannelRequest => {
         channelName: isChannelName,
         auth: isAuth
     })
+}
+
+export type GetChannelStatsRequest = {
+    type: 'getChannelStats'
+    channelName: ChannelName
+    auth: Auth
+}
+
+export const isGetChannelStatsRequest = (x: any): x is GetChannelStatsRequest => {
+    return _validateObject(x, {
+        type: isEqualTo('getChannelStats'),
+        channelName: isChannelName,
+        auth: isAuth
+    })
+}
+
+export type GetChannelStatsResponse = {
+    channelStats: {[key: string]: number}
+}
+
+export const isGetChannelStatsResponse = (x: any): x is GetChannelStatsResponse => {
+    return true
 }
 
 export type TestChannelRequest = {
@@ -612,7 +672,10 @@ export type KacheryHubRequest =
     DeletePasscodeChannelAuthorizationRequest |
     GetChannelRequest |
     GetChannelsForUserRequest |
-    GetNodeForUserRequest | 
+    GetAllChannelsRequest |
+    GetChannelStatsRequest |
+    GetNodeForUserRequest |
+    GetUserConfigRequest |
     GetNodesForUserRequest |
     UpdateChannelPropertyRequest |
     UpdateNodeChannelMembershipRequest |
@@ -633,7 +696,10 @@ export const isKacheryHubRequest = (x: any): x is KacheryHubRequest => {
         isDeletePasscodeChannelAuthorizationRequest,
         isGetChannelRequest,
         isGetChannelsForUserRequest,
-        isGetNodeForUserRequest, 
+        isGetAllChannelsRequest,
+        isGetChannelStatsRequest,
+        isGetNodeForUserRequest,
+        isGetUserConfigRequest, 
         isGetNodesForUserRequest,
         isUpdateChannelPropertyRequest,
         isUpdateNodeChannelMembershipRequest,
