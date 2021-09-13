@@ -16,7 +16,7 @@ const createSignedTaskResultUploadUrlHandler = async (request: CreateSignedTaskR
 
     const bucketUri = channelConfig.bucketUri
     if (!bucketUri) {
-        throw Error('No bucket uri for channel')
+        throw Error('No bucket uri for channel (createSignedTaskResultUploadUrlHandler)')
     }
     const bucketName = bucketNameFromUri(bucketUri)
     const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})

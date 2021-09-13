@@ -12,7 +12,7 @@ const kacheryHubApiRequest = async (request: KacheryHubRequest, opts: {reCaptcha
         const x = await axios.post('/api/kacheryHub', request2)
         return x.data
     }
-    catch(err) {
+    catch(err: any) {
         if (err.response) {
             console.log(err.response)
             throw Error(err.response.data)

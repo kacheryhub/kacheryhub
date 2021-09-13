@@ -16,7 +16,7 @@ const createSignedFileUploadUrlHandler = async (request: CreateSignedFileUploadU
 
     const bucketUri = channelConfig.bucketUri
     if (!bucketUri) {
-        throw Error('No bucket uri for channel')
+        throw Error('No bucket uri for channel (createSignedFileUploadUrlHandler)')
     }
     const bucketName = bucketNameFromUri(bucketUri)
     const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})

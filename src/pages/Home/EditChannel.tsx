@@ -92,7 +92,7 @@ export const deletePasscodeChannelAuthorization = async (googleSignInClient: Goo
     await kacheryHubApiRequest(req, {reCaptcha: false})
 }
 
-export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
+export const updateChannelProperty = async (googleSignInClient: GoogleSignInClient, channelName: ChannelName, propertyName: 'bitwooderResourceKey' | 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials', propertyValue: string) => {
     const req: UpdateChannelPropertyRequest = {
         type: 'updateChannelProperty',
         channelName,
@@ -240,7 +240,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
         })()
     }, [googleSignInClient, incrementRefreshCode])
 
-    const handleChangeChannelProperty = useCallback((x: string, propertyName: 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials') => {
+    const handleChangeChannelProperty = useCallback((x: string, propertyName: 'bitwooderResourceKey' | 'bucketUri' | 'ablyApiKey' | 'googleServiceAccountCredentials') => {
         setErrorMessage('')
         if (!googleSignInClient) {
             setErrorMessage('Not signed in')
@@ -256,6 +256,10 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             }
         })()
     }, [googleSignInClient, incrementRefreshCode, channelName])
+
+    const handleChangeBitwooderResourceKey = useCallback((x: string) => {
+        handleChangeChannelProperty(x, 'bitwooderResourceKey')
+    }, [handleChangeChannelProperty])
 
     const handleChangeBucketUri = useCallback((x: string) => {
         handleChangeChannelProperty(x, 'bucketUri')
@@ -302,6 +306,25 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             value: <span>{channel?.ownerId || ''}</span>
         })
         ret.push({
+            key: 'bitwooderResourceId',
+            label: 'Bitwooder resource key',
+            value: <EditString value={channel?.bitwooderResourceKey || ''} onChange={channel ? handleChangeBitwooderResourceKey : undefined} />
+        })
+        ret.push({
+            key: 'bitwooderResourceId',
+            label: 'Bitwooder resource ID',
+            value: channel?.bitwooderResourceId || ''
+        })
+        ret.push({
+            key: 'bucketBaseUrl',
+            label: 'Bucket base URL',
+            value: channel?.bucketBaseUrl || ''
+        })
+        return ret
+    }, [channelName, channel, handleChangeBitwooderResourceKey])
+    const tableRowsOld = useMemo(() => {
+        const ret: {key: string, label: string | JSX.Element, value: any}[] = []
+        ret.push({
             key: 'googleBucketName',
             label: 'Bucket URI:',
             value: <EditString value={channel?.bucketUri || ''} onChange={channel ? handleChangeBucketUri : undefined} />
@@ -317,7 +340,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             value: <EditString value={channel?.googleServiceAccountCredentials || ''} onChange={channel ? handleChangeGoogleServiceAccountCredentials : undefined} />
         })
         return ret
-    }, [channelName, channel, handleChangeBucketUri, handleChangeAblyApiKey, handleChangeGoogleServiceAccountCredentials])
+    }, [channel, handleChangeBucketUri, handleChangeAblyApiKey, handleChangeGoogleServiceAccountCredentials])
     return (
         <div className="EditChannel">
             <h2>Channel configuration</h2>
@@ -330,6 +353,21 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
                                 <TableBody>
                                     {
                                         tableRows.map(r => (
+                                            <TableRow key={r.key}>
+                                                <TableCell key="label">{r.label}</TableCell>
+                                                <TableCell key="value">{r.value}</TableCell>
+                                            </TableRow>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </div>
+                        <p>Old:</p>
+                        <div style={{maxWidth: 600}}>
+                            <Table>
+                                <TableBody>
+                                    {
+                                        tableRowsOld.map(r => (
                                             <TableRow key={r.key}>
                                                 <TableCell key="label">{r.label}</TableCell>
                                                 <TableCell key="value">{r.value}</TableCell>

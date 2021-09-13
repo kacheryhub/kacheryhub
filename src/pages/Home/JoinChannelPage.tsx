@@ -4,7 +4,8 @@ import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import AddChannelMembershipControl from './AddChannelMembershipControl';
 import DropdownNodeSelector from './DropdownNodeSelector';
-import { addNodeChannelMembership, useNodeConfig } from './EditNode';
+import { addNodeChannelMembership } from './EditNode';
+import useNodeConfig from './useNodeConfig';
 import usePage from './usePage';
 
 type Props = {

@@ -3,10 +3,11 @@ import useGoogleSignInClient from 'common/googleSignIn/useGoogleSignInClient';
 import { NodeChannelMembership } from 'kachery-js/types/kacheryHubTypes';
 import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
-import { updateNodeChannelMembership, useNodeConfig } from './EditNode';
+import { updateNodeChannelMembership } from './EditNode';
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization';
 import EditNodeChannelMembership from './EditNodeChannelMembership';
 import EditNodeChannelPasscodes from './EditNodeChannelPasscodes';
+import useNodeConfig from './useNodeConfig';
 
 type Props = {
     nodeId: NodeId

@@ -1,14 +1,15 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
+import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, NodeChannelAuthorization, NodeChannelMembership, UpdateNodeChannelMembershipRequest } from 'kachery-js/types/kacheryHubTypes'
+import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
+import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
 import formatTime from '../../common/formatTime'
 import GoogleSignInClient from '../../common/googleSignIn/GoogleSignInClient'
 import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient'
 import kacheryHubApiRequest from '../../common/kacheryHubApiRequest'
-import { AddNodeChannelMembershipRequest, DeleteNodeChannelMembershipRequest, GetNodeForUserRequest, isGetNodeForUserResponse, NodeChannelAuthorization, NodeChannelMembership, NodeConfig, UpdateNodeChannelMembershipRequest } from 'kachery-js/types/kacheryHubTypes'
-import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
+import CommonNodeActions from './CommonNodeActions'
 import { updateNodeChannelAuthorization } from './EditChannel'
 import EditNodeChannelMemberships from './EditNodeChannelMemberships'
-import CommonNodeActions from './CommonNodeActions'
+import useNodeConfig from './useNodeConfig'
 
 type Props = {
     nodeId: NodeId
@@ -50,53 +51,6 @@ const deleteNodeChannelMembership = async (googleSignInClient: GoogleSignInClien
         }
     }
     await kacheryHubApiRequest(req, {reCaptcha: false})
-}
-
-export const useNodeConfig = (nodeId: NodeId) => {
-    const [nodeConfig, setNodeConfig] = useState<NodeConfig | undefined>(undefined)
-    const [nodeConfigStatusMessage, setNodeConfigStatusMessage] = useState<string>('')
-    const googleSignInClient = useGoogleSignInClient()
-    const userId = googleSignInClient?.userId
-    const [refreshCode, setRefreshCode] = useState<number>(0)
-    useEffect(() => {
-        if (!userId) return undefined
-        ;(async () => {
-            setNodeConfigStatusMessage(`Loading config for node: ${nodeId}`)
-            const req: GetNodeForUserRequest = {
-                type: 'getNodeForUser',
-                nodeId,
-                userId,
-                auth: {
-                    userId: googleSignInClient?.userId || undefined,
-                    googleIdToken: googleSignInClient?.idToken || undefined
-                }
-            }
-            const x = await kacheryHubApiRequest(req, {reCaptcha: false})
-            if (!isGetNodeForUserResponse(x)) {
-                console.warn('Invalid response for getNodeForUser', x)
-                return
-            }
-            if (x.found) {
-                if (!x.nodeConfig) throw Error('Unexpected: no nodeConfig')
-                setNodeConfig(x.nodeConfig)
-            }
-            else {
-                setNodeConfigStatusMessage(`Node not found for user ${userId}: ${nodeId}`)
-            }
-        })().catch((err) => {
-            setNodeConfigStatusMessage(err.message)
-        })
-    }, [nodeId, userId, googleSignInClient, refreshCode])
-
-    const refreshNodeConfig = useCallback(() => {
-        setRefreshCode((c) => (c + 1))
-    }, [])
-
-    return {
-        nodeConfig,
-        nodeConfigStatusMessage,
-        refreshNodeConfig
-    }
 }
 
 const EditNode: FunctionComponent<Props> = ({nodeId}) => {

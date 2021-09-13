@@ -4,6 +4,9 @@ const hideChannelSecrets = (x: ChannelConfig, opts: {hidePasscodes: boolean}) =>
     const ret: ChannelConfig = {
         channelName: x.channelName,
         ownerId: x.ownerId,
+        bitwooderResourceId: x.bitwooderResourceId,
+        bitwooderResourceKey: x.bitwooderResourceKey ? '*private*' : undefined,
+        bucketBaseUrl: x.bucketBaseUrl,
         bucketUri: x.bucketUri,
         googleServiceAccountCredentials: x.googleServiceAccountCredentials ? '*private*' : undefined,
         ablyApiKey: x.ablyApiKey ? '*private*' : undefined,

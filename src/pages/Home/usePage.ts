@@ -20,6 +20,8 @@ export type Page = {
     page: 'nodeChannelMembership',
     nodeId: NodeId
     channelName: ChannelName
+} | {
+    page: 'figurlWizard'
 }
 
 const usePage = () => {
@@ -66,6 +68,11 @@ const usePage = () => {
                 }
             }
         }
+        else if (p[1] === 'figurlWizard') {
+            return {
+                page: 'figurlWizard'
+            }
+        }
         return {
             page: 'home'
         }
@@ -100,6 +107,13 @@ const usePage = () => {
             history.push({
                 ...location,
                 pathname: `/nodeChannelMembership/${page.nodeId}/${page.channelName}`
+            })
+        }
+        else if (page.page === 'figurlWizard') {
+            history.push({
+                ...location,
+                pathname: '/figurlWizard',
+                search: ''
             })
         }
         else {

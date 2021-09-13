@@ -678,8 +678,8 @@ export const feedName = (x: string): FeedName => {
 export interface FeedSubfeedId extends String {
     __feedSubfeedId__: never; // phantom
 }
-export const feedSubfeedId = (feedId: FeedId, subfeedHash: SubfeedHash, channelName: ChannelName | undefined): FeedSubfeedId => {
-    return (feedId.toString() + ':' + subfeedHash.toString() + ':' + (channelName?.toString() || '')) as any as FeedSubfeedId; 
+export const feedSubfeedId = (feedId: FeedId, subfeedHash: SubfeedHash, channelName: ChannelName | '*local*'): FeedSubfeedId => {
+    return (feedId.toString() + ':' + subfeedHash.toString() + ':' + channelName.toString()) as any as FeedSubfeedId; 
 }
 export const isFeedSubfeedId = (x: any): x is FeedSubfeedId => {
     if (!isString(x)) return false;
@@ -785,12 +785,14 @@ export interface SubfeedWatch {
     feedId: FeedId,
     subfeedHash: SubfeedHash,
     position: SubfeedPosition
+    channelName: ChannelName
 }
 export const isSubfeedWatch = (x: any): x is SubfeedWatch => {
     return _validateObject(x, {
         feedId: isFeedId,
         subfeedHash: isSubfeedHash,
-        position: isSubfeedPosition
+        position: isSubfeedPosition,
+        channelName: isString
     });
 }
 

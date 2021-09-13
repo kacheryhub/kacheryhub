@@ -2,6 +2,27 @@ import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from 
 import { UserId } from '../../src/kachery-js/types/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import isAdminUser from './isAdminUser'
+import axios from 'axios'
+
+const _bitwooderResourceRequest = async (req: any) => {
+    const x = await axios.post('http://localhost:3001/api/resource', req)
+    return x.data
+}
+
+type ResourceInfo = {
+    resourceId: string,
+    resourceType: string,
+    bucketBaseUrl?: string
+}
+
+const getBitwooderResourceInfoForKey = async (key: string): Promise<ResourceInfo> => {
+    const req = {
+        type: 'getResourceInfo',
+        resourceKey: key
+    }
+    const resp = await _bitwooderResourceRequest(req)
+    return resp.resourceInfo as ResourceInfo
+}
 
 const updateChannelPropertyHandler = async (request: UpdateChannelPropertyRequest, verifiedUserId: UserId) => {
     const db = firestoreDatabase()
@@ -18,7 +39,16 @@ const updateChannelPropertyHandler = async (request: UpdateChannelPropertyReques
     if ((verifiedUserId !== doc.get('ownerId')) && (!isAdminUser(verifiedUserId))) {
         throw Error('Not authorized')
     }
-    if (request.propertyName === 'bucketUri') {
+    if (request.propertyName === 'bitwooderResourceKey') {
+        const bitwooderResourceKey = request.propertyValue
+        const resourceInfo = await getBitwooderResourceInfoForKey(bitwooderResourceKey)
+        await doc.ref.update({
+            bitwooderResourceKey,
+            bitwooderResourceId: resourceInfo.resourceId,
+            bucketBaseUrl: resourceInfo.bucketBaseUrl || ''
+        })
+    }
+    else if (request.propertyName === 'bucketUri') {
         await doc.ref.update({bucketUri: request.propertyValue})
     }
     else if (request.propertyName === 'ablyApiKey') {

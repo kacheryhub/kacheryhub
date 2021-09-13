@@ -1,4 +1,5 @@
 import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes'
+import FigurlWizard from 'pages/wizards/FigurlWizard/FigurlWizard'
 import React, { FunctionComponent, useCallback } from 'react'
 import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn'
 import AllChannelListSection from './AllChannelListSection'
@@ -100,6 +101,13 @@ const Content: FunctionComponent<Props> = () => {
                     nodeId={page.nodeId}
                     channelName={page.channelName}
                 />
+            </div>
+        )
+    }
+    else if (page.page === 'figurlWizard') {
+        return (
+            <div>
+                <FigurlWizard />
             </div>
         )
     }

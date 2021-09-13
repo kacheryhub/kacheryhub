@@ -41,6 +41,8 @@ const getNodeConfigHandler = async (request: GetNodeConfigRequestBody, verifiedN
             const channelConfig = channelResults.docs[0].data()
             if (isChannelConfig(channelConfig)) {
                 m.channelBucketUri = channelConfig.bucketUri
+                m.channelResourceId = channelConfig.bitwooderResourceId
+                m.channelBucketBaseUrl = channelConfig.bucketBaseUrl
             }
             else {
                 console.warn('Invalid channel config', channelConfig)

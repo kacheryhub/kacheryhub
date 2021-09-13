@@ -15,7 +15,7 @@ const createSignedSubfeedMessageUploadUrlHandler = async (request: CreateSignedS
     const channelConfig = await loadChannelConfig({channelName})
     const bucketUri = channelConfig.bucketUri
     if (!bucketUri) {
-        throw Error('No bucket uri for channel')
+        throw Error('No bucket uri for channel (createSignedSubfeedMessageUploadUrlHandler)')
     }
     const bucketName = bucketNameFromUri(bucketUri)
     const {authorization} = await loadNodeChannelAuthorization({channelName, nodeId: verifiedNodeId, nodeOwnerId: ownerId})

@@ -11,6 +11,7 @@ import getPubsubAuthForChannelHandler from '../apiHelpers/kacheryNodeRequestHand
 import reportHandler from '../apiHelpers/kacheryNodeRequestHandlers/report'
 import logMessageToChannel from '../apiHelpers/common/logMessageToChannel'
 import { statsReportFileUpload, statsReportNodeRequest, statsReportNodeRequestError, statsReportTaskResultUpload, statsReportUploadFeedMessages } from '../apiHelpers/common/stats'
+import getBitwooderCertForChannelHandler from '../apiHelpers/kacheryNodeRequestHandlers/getBitwooderCertForChannel'
 
 module.exports = (req: VercelRequest, res: VercelResponse) => {    
     const {body: request} = req
@@ -40,6 +41,10 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         else if (body.type === 'getChannelConfig') {
             channelName = body.channelName
             return await getChannelConfigHandler(body, verifiedNodeId)
+        }
+        else if (body.type === 'getBitwooderCertForChannel') {
+            channelName = body.channelName
+            return await getBitwooderCertForChannelHandler(body, verifiedNodeId)
         }
         else if (body.type === 'getPubsubAuthForChannel') {
             channelName = body.channelName
