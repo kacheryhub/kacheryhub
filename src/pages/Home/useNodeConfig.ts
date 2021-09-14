@@ -26,6 +26,7 @@ const useNodeConfig = (nodeId: NodeId | undefined) => {
             }
             const x = await kacheryHubApiRequest(req, {reCaptcha: false})
             if (!isGetNodeForUserResponse(x)) {
+                console.warn(x)
                 console.warn('Invalid response for getNodeForUser', x)
                 return
             }

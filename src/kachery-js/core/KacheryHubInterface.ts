@@ -6,13 +6,11 @@ import IncomingTaskManager, { ProbeTaskFunctionsResult } from "../tasks/Incoming
 import OutgoingTaskManager from "../tasks/outgoingTaskManager";
 import { NodeConfig, RegisteredTaskFunction, RequestedTask } from "../types/kacheryHubTypes";
 import { KacheryNodeRequestBody } from "../types/kacheryNodeRequestTypes";
-import { ByteCount, channelName, ChannelName, DurationMsec, durationMsecToNumber, elapsedSince, errorMessage, ErrorMessage, FeedId, FileKey, fileKeyHash, isMessageCount, isSignedSubfeedMessage, JSONValue, messageCount, MessageCount, NodeId, NodeLabel, nowTimestamp, pathifyHash, pubsubChannelName, PubsubChannelName, scaledDurationMsec, Sha1Hash, Signature, SignedSubfeedMessage, SubfeedHash, SubfeedPosition, TaskFunctionId, TaskFunctionType, TaskId, TaskKwargs, TaskStatus, toTaskId, urlString, UrlString, UserId, _validateObject } from "../types/kacheryTypes";
+import { ByteCount, ChannelName, DurationMsec, durationMsecToNumber, elapsedSince, errorMessage, ErrorMessage, FeedId, FileKey, fileKeyHash, isMessageCount, isSignedSubfeedMessage, JSONValue, MessageCount, NodeId, NodeLabel, nowTimestamp, pathifyHash, pubsubChannelName, PubsubChannelName, scaledDurationMsec, Sha1Hash, Signature, SignedSubfeedMessage, SubfeedHash, SubfeedPosition, TaskFunctionId, TaskFunctionType, TaskId, TaskKwargs, TaskStatus, toTaskId, urlString, UrlString, UserId, _validateObject } from "../types/kacheryTypes";
 import { KacheryHubPubsubMessageBody, KacheryHubPubsubMessageData, ProbeTaskFunctionsBody, RequestFileMessageBody, RequestSubfeedMessageBody, RequestTaskMessageBody, UpdateSubfeedMessageCountMessageBody, UpdateTaskStatusMessageBody, UploadFileStatusMessageBody } from "../types/pubsubMessages";
 import cacheBust from "../util/cacheBust";
 import computeTaskHash from "../util/computeTaskHash";
 import randomAlphaString from "../util/randomAlphaString";
-import urlFromUri from "../util/urlFromUri";
-import GoogleObjectStorageClient from "./GoogleObjectStorageClient";
 import NodeStats from "./NodeStats";
 
 type IncomingFileRequestCallback = (args: {fileKey: FileKey, fromNodeId: NodeId, channelName: ChannelName}) => void
@@ -470,7 +468,7 @@ class KacheryHubInterface {
         // const channelBucketName = await this.getChannelBucketName(channelName)
         const bucketBaseUrl = await this.getChannelBucketBaseUrl(channelName)
         const subfeedPath = getSubfeedPath(feedId, subfeedHash)
-        const subfeedJsonPath = `${subfeedPath}/subfeed.json`
+        // const subfeedJsonPath = `${subfeedPath}/subfeed.json`
 
         const url2 = urlString(`${bucketBaseUrl}/${channelName}/${subfeedPath}/subfeed.json`)
         const subfeedJson = await downloadJson(url2, {cacheBust: true})
@@ -869,10 +867,10 @@ const downloadJson = async (url: UrlString, opts: {cacheBust: boolean}): Promise
 }
 
 
-const bucketNameFromUri = (bucketUri: string) => {
-    if (!bucketUri.startsWith('gs://')) throw Error(`Invalid bucket uri: ${bucketUri}`)
-    const a = bucketUri.split('/')
-    return a[2]
-}
+// const bucketNameFromUri = (bucketUri: string) => {
+//     if (!bucketUri.startsWith('gs://')) throw Error(`Invalid bucket uri: ${bucketUri}`)
+//     const a = bucketUri.split('/')
+//     return a[2]
+// }
 
 export default KacheryHubInterface
