@@ -57,6 +57,7 @@
     "ably": "^1.2.10",
     "bson": "^4.4.0",
     "google-auth-library": "^7.1.0",
-    "vercel": "^23.0.0"
+    "vercel": "^23.0.0",
+    "winston": "^3.3.3"
   }
 }
