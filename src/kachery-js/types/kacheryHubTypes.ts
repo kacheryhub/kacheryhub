@@ -157,7 +157,7 @@ export const isChannelConfig = (x: any): x is ChannelConfig => {
         deleted: optional(isBoolean),
         authorizedNodes: optional(isArrayOf(isNodeChannelAuthorization)),
         authorizedPasscodes: optional(isArrayOf(isPasscodeChannelAuthorization))
-    })
+    }, {allowAdditionalFields: true})
 }
 
 export type NodeReport = {
@@ -213,7 +213,7 @@ const isNodeChannelMembership = (x: any): x is NodeChannelMembership => {
         validChannelPasscodes: optional(isArrayOf(isPasscode)),
         channelBucketUri: optional(isString),
         authorization: optional(isNodeChannelAuthorization)
-    })
+    }, {allowAdditionalFields: true})
 }
 
 export type NodeConfig = {
