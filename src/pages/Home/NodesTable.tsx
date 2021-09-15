@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react'
-import formatTime from '../../common/formatTime'
-import { isNodeId, NodeId } from 'kachery-js/types/kacheryTypes'
-import { NodeConfig } from 'kachery-js/types/kacheryHubTypes'
-import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
-import NiceTable from '../../commonComponents/NiceTable/NiceTable'
+import formatTime from 'commonInterface/util/formatTime'
+import { isNodeId, NodeId } from 'commonInterface/kacheryTypes'
+import { NodeConfig } from 'kacheryInterface/kacheryHubTypes'
+import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink'
+import NiceTable from 'commonInterface/commonComponents/NiceTable/NiceTable'
 
 type Props = {
     nodes: NodeConfig[]

@@ -1,4 +1,4 @@
-import { ChannelName } from 'kachery-js/types/kacheryTypes';
+import { ChannelName } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback } from 'react';
 import SubmitText from './SubmitText';
 import WizardState from './WizardState';

@@ -1,5 +1,5 @@
-import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserId } from '../../src/commonInterface/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import isAdminUser from './isAdminUser'
 import axios from 'axios'

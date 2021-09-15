@@ -1,4 +1,4 @@
-import { ChannelName, NodeId } from "kachery-js/types/kacheryTypes"
+import { ChannelName, NodeId } from "commonInterface/kacheryTypes"
 
 type WizardState = {
     isRunningDaemon?: boolean

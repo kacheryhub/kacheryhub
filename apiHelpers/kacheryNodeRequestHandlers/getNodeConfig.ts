@@ -1,6 +1,6 @@
-import { isChannelConfig, isNodeConfig } from '../../src/kachery-js/types/kacheryHubTypes'
-import { GetNodeConfigRequestBody, GetNodeConfigResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
+import { isChannelConfig, isNodeConfig } from '../../src/kacheryInterface/kacheryHubTypes'
+import { GetNodeConfigRequestBody, GetNodeConfigResponse } from "../../src/kacheryInterface/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/commonInterface/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 

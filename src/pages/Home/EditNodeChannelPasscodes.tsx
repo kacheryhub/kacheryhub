@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core'
 import { Add, Delete } from '@material-ui/icons'
-import { isPasscode, NodeChannelMembership, Passcode } from 'kachery-js/types/kacheryHubTypes'
+import { isPasscode, NodeChannelMembership, Passcode } from 'kacheryInterface/kacheryHubTypes'
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
 import HidePasscode from './HidePasscode'
 

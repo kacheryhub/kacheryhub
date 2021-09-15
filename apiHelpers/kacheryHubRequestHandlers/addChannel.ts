@@ -1,5 +1,5 @@
-import { AddChannelRequest } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { AddChannelRequest } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserId } from '../../src/commonInterface/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import { VerifiedReCaptchaInfo } from '../../api/kacheryHub'
 

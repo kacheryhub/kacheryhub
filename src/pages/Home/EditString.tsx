@@ -1,7 +1,7 @@
 import { IconButton, Input } from '@material-ui/core'
 import { Cancel, Check, Edit } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useState } from 'react'
-import useVisible from '../../commonComponents/useVisible'
+import useVisible from '../../commonInterface/commonComponents/useVisible'
 
 type Props = {
     value: string

@@ -1,7 +1,7 @@
-import { useSignedIn } from "common/googleSignIn/GoogleSignIn";
-import kacheryHubApiRequest from "common/kacheryHubApiRequest";
-import { GetUserConfigRequest, isGetUserConfigResponse } from "kachery-js/types/kacheryHubTypes";
-import { UserConfig } from "kachery-js/types/kacheryTypes";
+import { useSignedIn } from "commonInterface/googleSignIn/GoogleSignIn";
+import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest";
+import { GetUserConfigRequest, isGetUserConfigResponse } from "kacheryInterface/kacheryHubTypes";
+import { UserConfig } from "commonInterface/kacheryTypes";
 import { useEffect, useState } from "react";
 
 const useUserConfig = () => {

@@ -1,5 +1,5 @@
-import { DeletePasscodeChannelAuthorizationRequest, PasscodeChannelAuthorization } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { DeletePasscodeChannelAuthorizationRequest, PasscodeChannelAuthorization } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserId } from '../../src/commonInterface/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const deletePasscodeChannelAuthorizationHandler = async (request: DeletePasscodeChannelAuthorizationRequest, verifiedUserId: UserId) => {

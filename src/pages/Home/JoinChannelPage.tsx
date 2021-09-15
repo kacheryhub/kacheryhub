@@ -1,6 +1,6 @@
-import useGoogleSignInClient from 'common/googleSignIn/useGoogleSignInClient';
-import Hyperlink from 'commonComponents/Hyperlink/Hyperlink';
-import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes';
+import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
+import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink';
+import { ChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import AddChannelMembershipControl from './AddChannelMembershipControl';
 import DropdownNodeSelector from './DropdownNodeSelector';
@@ -46,7 +46,7 @@ const JoinChannelPage: FunctionComponent<Props> = ({nodeId}) => {
                 setStatus('finished')
                 handleSelectNodeChannelMembership(channelName)
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()

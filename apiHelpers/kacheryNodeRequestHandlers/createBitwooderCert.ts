@@ -1,7 +1,7 @@
-import { createKeyPair, hexToPrivateKey, hexToPublicKey, privateKeyToHex, publicKeyToHex, signMessage } from '../../src/kachery-js/crypto/signatures';
-import { ChannelConfig, NodeChannelAuthorization } from "../../src/kachery-js/types/kacheryHubTypes";
-import { isPrivateKeyHex, isPublicKeyHex, JSONValue, PrivateKeyHex } from '../../src/kachery-js/types/kacheryTypes';
-import BitwooderDelegationCert from '../../src/kachery-js/types/BitwooderDelegationCert';
+import { createKeyPair, hexToPrivateKey, hexToPublicKey, privateKeyToHex, publicKeyToHex, signMessage } from '../../src/commonInterface/crypto/signatures';
+import { ChannelConfig, NodeChannelAuthorization } from "../../src/kacheryInterface/kacheryHubTypes";
+import { isPrivateKeyHex, isPublicKeyHex, JSONValue, PrivateKeyHex } from '../../src/commonInterface/kacheryTypes';
+import BitwooderDelegationCert from '../../src/bitwooderInterface/BitwooderDelegationCert';
 
 const minuteMsec = 1000 * 60
 

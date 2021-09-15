@@ -1,7 +1,7 @@
-import useGoogleSignInClient from "common/googleSignIn/useGoogleSignInClient"
-import kacheryHubApiRequest from "common/kacheryHubApiRequest"
-import { ChannelConfig, GetChannelRequest, isChannelConfig } from "kachery-js/types/kacheryHubTypes"
-import { ChannelName } from "kachery-js/types/kacheryTypes"
+import useGoogleSignInClient from "commonInterface/googleSignIn/useGoogleSignInClient"
+import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest"
+import { ChannelConfig, GetChannelRequest, isChannelConfig } from "kacheryInterface/kacheryHubTypes"
+import { ChannelName } from "commonInterface/kacheryTypes"
 import { useCallback, useEffect, useState } from "react"
 
 const useChannelConfig = (channelName: ChannelName | undefined) => {

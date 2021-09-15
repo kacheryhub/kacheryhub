@@ -1,7 +1,7 @@
-import useGoogleSignInClient from "common/googleSignIn/useGoogleSignInClient"
-import kacheryHubApiRequest from "common/kacheryHubApiRequest"
-import { GetNodeForUserRequest, isGetNodeForUserResponse, NodeConfig } from "kachery-js/types/kacheryHubTypes"
-import { NodeId } from "kachery-js/types/kacheryTypes"
+import useGoogleSignInClient from "commonInterface/googleSignIn/useGoogleSignInClient"
+import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest"
+import { GetNodeForUserRequest, isGetNodeForUserResponse, NodeConfig } from "kacheryInterface/kacheryHubTypes"
+import { NodeId } from "commonInterface/kacheryTypes"
 import { useCallback, useEffect, useState } from "react"
 
 const useNodeConfig = (nodeId: NodeId | undefined) => {

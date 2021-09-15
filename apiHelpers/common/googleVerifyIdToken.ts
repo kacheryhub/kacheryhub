@@ -1,5 +1,5 @@
 import {OAuth2Client} from 'google-auth-library'
-import { isUserId, UserId } from '../../src/kachery-js/types/kacheryTypes';
+import { isUserId, UserId } from '../../src/commonInterface/kacheryTypes';
 
 const REACT_APP_GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID
 if (!REACT_APP_GOOGLE_CLIENT_ID) {

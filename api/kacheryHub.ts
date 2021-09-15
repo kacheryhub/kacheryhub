@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import axios from 'axios'
-import { isKacheryHubRequest } from '../src/kachery-js/types/kacheryHubTypes'
+import { isKacheryHubRequest } from '../src/kacheryInterface/kacheryHubTypes'
 import googleVerifyIdToken from '../apiHelpers/common/googleVerifyIdToken'
 import addAuthorizedNodeHandler from '../apiHelpers/kacheryHubRequestHandlers/addAuthorizedNode'
 import addAuthorizedPasscodeHandler from '../apiHelpers/kacheryHubRequestHandlers/addAuthorizedPasscode'

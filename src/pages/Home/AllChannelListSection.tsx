@@ -1,10 +1,10 @@
 import { IconButton } from '@material-ui/core'
 import { Refresh } from '@material-ui/icons'
-import { useSignedIn } from 'common/googleSignIn/GoogleSignIn'
-import { ChannelConfig, GetAllChannelsRequest, isChannelConfig } from 'kachery-js/types/kacheryHubTypes'
-import { ChannelName, isArrayOf } from 'kachery-js/types/kacheryTypes'
+import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn'
+import { ChannelConfig, GetAllChannelsRequest, isChannelConfig } from 'kacheryInterface/kacheryHubTypes'
+import { ChannelName, isArrayOf } from 'commonInterface/kacheryTypes'
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'
-import { default as kacheryHubApiRequest } from '../../common/kacheryHubApiRequest'
+import { default as kacheryHubApiRequest } from 'kacheryInterface/kacheryHubApiRequest'
 import ChannelsTable from './ChannelsTable'
 
 type Props = {

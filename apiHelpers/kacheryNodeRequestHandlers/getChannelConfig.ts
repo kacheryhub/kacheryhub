@@ -1,5 +1,5 @@
-import { GetChannelConfigRequestBody, GetChannelConfigResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
-import { NodeId } from "../../src/kachery-js/types/kacheryTypes"
+import { GetChannelConfigRequestBody, GetChannelConfigResponse } from "../../src/kacheryInterface/kacheryNodeRequestTypes"
+import { NodeId } from "../../src/commonInterface/kacheryTypes"
 import hideChannelSecrets from "../common/hideChannelSecrets"
 import loadChannelConfig from "../common/loadChannelConfig"
 

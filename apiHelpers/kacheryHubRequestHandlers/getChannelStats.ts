@@ -1,5 +1,5 @@
-import { GetChannelStatsRequest, GetChannelStatsResponse } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { GetChannelStatsRequest, GetChannelStatsResponse } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserId } from '../../src/commonInterface/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const getChannelStatsHandler = async (request: GetChannelStatsRequest, verifiedUserId: UserId): Promise<GetChannelStatsResponse> => {

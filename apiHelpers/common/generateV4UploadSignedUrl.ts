@@ -1,5 +1,5 @@
 import { GetSignedUrlConfig, Storage } from '@google-cloud/storage'
-import { ByteCount, urlString, UrlString } from "../../src/kachery-js/types/kacheryTypes"
+import { ByteCount, urlString, UrlString } from "../../src/commonInterface/kacheryTypes"
 
 const generateV4UploadSignedUrl = async (storage: Storage, bucketName: string, fileName: string, size: ByteCount | null): Promise<UrlString> => {
     // These options will allow temporary uploading of the file with outgoing

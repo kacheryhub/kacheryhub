@@ -1,5 +1,5 @@
 import { Grid } from '@material-ui/core';
-import { NodeId } from 'kachery-js/types/kacheryTypes';
+import { NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback } from 'react';
 import BoxButton from './BoxButton';
 import usePage from './usePage';

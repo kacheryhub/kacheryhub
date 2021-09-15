@@ -1,4 +1,4 @@
-import { NodeId } from 'kachery-js/types/kacheryTypes';
+import { NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import ChannelPart from './ChannelPart';
 import ChannelResourcesPart from './ChannelResourcesPart';

@@ -1,7 +1,7 @@
 import { Storage } from '@google-cloud/storage'
-import { isGoogleServiceAccountCredentials } from '../../src/kachery-js/types/kacheryHubTypes'
-import { CreateSignedFileUploadUrlResponse, CreateSignedTaskResultUploadUrlRequestBody } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
-import { isSha1Hash, NodeId, pathifyHash } from "../../src/kachery-js/types/kacheryTypes"
+import { isGoogleServiceAccountCredentials } from '../../src/kacheryInterface/kacheryHubTypes'
+import { CreateSignedFileUploadUrlResponse, CreateSignedTaskResultUploadUrlRequestBody } from "../../src/kacheryInterface/kacheryNodeRequestTypes"
+import { isSha1Hash, NodeId, pathifyHash } from "../../src/commonInterface/kacheryTypes"
 import bucketNameFromUri from '../common/bucketNameFromUri'
 import generateV4UploadSignedUrl from '../common/generateV4UploadSignedUrl'
 import loadChannelConfig, { loadNodeChannelAuthorization } from '../common/loadChannelConfig'

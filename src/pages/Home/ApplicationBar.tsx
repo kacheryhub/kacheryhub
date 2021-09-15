@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import React, { FunctionComponent, useCallback } from 'react';
-import { useSignedIn } from '../../common/googleSignIn/GoogleSignIn';
-import useGoogleSignInClient from '../../common/googleSignIn/useGoogleSignInClient';
+import { useSignedIn } from '../../commonInterface/googleSignIn/GoogleSignIn';
+import useGoogleSignInClient from '../../commonInterface/googleSignIn/useGoogleSignInClient';
 import usePage from './usePage';
 
 type Props = {

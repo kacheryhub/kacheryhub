@@ -1,7 +1,7 @@
 import { MenuItem, Select } from '@material-ui/core';
-import useGoogleSignInClient from 'common/googleSignIn/useGoogleSignInClient';
-import { NodeConfig } from 'kachery-js/types/kacheryHubTypes';
-import { isNodeId, NodeId } from 'kachery-js/types/kacheryTypes';
+import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
+import { NodeConfig } from 'kacheryInterface/kacheryHubTypes';
+import { isNodeId, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback } from 'react';
 import useNodesForUser from './useNodesForUser';
 

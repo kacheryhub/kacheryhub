@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core';
-import useGoogleSignInClient from 'common/googleSignIn/useGoogleSignInClient';
-import { NodeChannelMembership } from 'kachery-js/types/kacheryHubTypes';
-import { ChannelName, NodeId } from 'kachery-js/types/kacheryTypes';
+import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
+import { NodeChannelMembership } from 'kacheryInterface/kacheryHubTypes';
+import { ChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { updateNodeChannelMembership } from './EditNode';
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization';
@@ -58,7 +58,7 @@ const NodeChannelMembershipView: FunctionComponent<Props2> = ({nodeChannelMember
                 await updateNodeChannelMembership(googleSignInClient, a)
                 onRefresh()
             }
-            catch(err) {
+            catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()

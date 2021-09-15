@@ -1,4 +1,4 @@
-import { ChannelName, JSONValue } from "../../src/kachery-js/types/kacheryTypes"
+import { ChannelName, JSONValue } from "../../src/commonInterface/kacheryTypes"
 
 const logMessageToChannel = async (channelName: ChannelName, message: JSONValue) => {
     // not yet implemented

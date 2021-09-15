@@ -1,7 +1,7 @@
 import { Checkbox, IconButton } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
-import { PasscodeChannelAuthorization } from 'kachery-js/types/kacheryHubTypes'
+import { PasscodeChannelAuthorization } from 'kacheryInterface/kacheryHubTypes'
 
 type Props = {
     authorization?: PasscodeChannelAuthorization

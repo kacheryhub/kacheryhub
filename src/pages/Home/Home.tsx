@@ -1,6 +1,6 @@
 import { brown } from '@material-ui/core/colors'
 import React, { FunctionComponent } from 'react'
-import version from '../../common/version'
+import version from '../../version'
 import ApplicationBar from './ApplicationBar'
 import Content from './Content'
 import './Home.css'

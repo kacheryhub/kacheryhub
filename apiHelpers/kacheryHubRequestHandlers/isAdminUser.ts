@@ -1,4 +1,4 @@
-import { UserId } from "../../src/kachery-js/types/kacheryTypes";
+import { UserId } from "../../src/commonInterface/kacheryTypes";
 
 const ADMIN_USERS = JSON.parse(process.env.ADMIN_USERS || "[]")
 

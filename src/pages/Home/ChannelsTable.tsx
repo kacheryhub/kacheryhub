@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useCallback, useMemo } from 'react'
-import { ChannelConfig } from 'kachery-js/types/kacheryHubTypes'
-import { ChannelName, isChannelName } from 'kachery-js/types/kacheryTypes'
-import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
-import NiceTable from '../../commonComponents/NiceTable/NiceTable'
+import { ChannelConfig } from 'kacheryInterface/kacheryHubTypes'
+import { ChannelName, isChannelName } from 'commonInterface/kacheryTypes'
+import Hyperlink from '../../commonInterface/commonComponents/Hyperlink/Hyperlink'
+import NiceTable from '../../commonInterface/commonComponents/NiceTable/NiceTable'
 
 type Props = {
     channels: ChannelConfig[]

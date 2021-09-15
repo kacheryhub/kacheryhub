@@ -1,7 +1,7 @@
 import { IconButton } from '@material-ui/core'
 import { Edit } from '@material-ui/icons'
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
-import { NodeChannelMembership } from 'kachery-js/types/kacheryHubTypes'
+import { NodeChannelMembership } from 'kacheryInterface/kacheryHubTypes'
 import RoleComponent from './RoleComponent'
 
 type Props = {

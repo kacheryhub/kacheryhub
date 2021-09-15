@@ -1,9 +1,9 @@
-import useGoogleSignInClient from 'common/googleSignIn/useGoogleSignInClient';
-import Hyperlink from 'commonComponents/Hyperlink/Hyperlink';
-import MarkdownDialog from 'commonComponents/Markdown/MarkdownDialog';
-import useVisible from 'commonComponents/useVisible';
-import { NodeConfig } from 'kachery-js/types/kacheryHubTypes';
-import { isNodeId, NodeId } from 'kachery-js/types/kacheryTypes';
+import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
+import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink';
+import MarkdownDialog from 'commonInterface/commonComponents/Markdown/MarkdownDialog';
+import useVisible from 'commonInterface/commonComponents/useVisible';
+import { NodeConfig } from 'kacheryInterface/kacheryHubTypes';
+import { isNodeId, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 import hostKacheryNodeMd from '../../markdown/hostKacheryNode.md.gen';
 import AddNodeControl from './AddNodeControl';

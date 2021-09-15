@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useCallback, useState } from 'react'
-import { ChannelName } from 'kachery-js/types/kacheryTypes'
-import randomAlphaString from 'kachery-js/util/randomAlphaString'
+import { ChannelName } from 'commonInterface/kacheryTypes'
+import randomAlphaString from 'commonInterface/util/randomAlphaString'
 
 type Props = {
     channelName: ChannelName

@@ -1,5 +1,5 @@
-import { GetUserConfigRequest, GetUserConfigResponse } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserConfig, UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { GetUserConfigRequest, GetUserConfigResponse } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserConfig, UserId } from '../../src/commonInterface/kacheryTypes'
 import isAdminUser from './isAdminUser'
 
 const getUserConfigHandler = async (request: GetUserConfigRequest, verifiedUserId: UserId): Promise<GetUserConfigResponse> => {

@@ -1,5 +1,5 @@
-import { useSignedIn } from 'common/googleSignIn/GoogleSignIn';
-import { NodeId } from 'kachery-js/types/kacheryTypes';
+import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
+import { NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback } from 'react';
 import SubmitText from './SubmitText';
 import WizardState from './WizardState';

@@ -1,4 +1,4 @@
-import { isNodeId } from 'kachery-js/types/kacheryTypes'
+import { isNodeId } from 'commonInterface/kacheryTypes'
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react'
 
 type Props = {

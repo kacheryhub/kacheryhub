@@ -1,5 +1,5 @@
-import { PasscodeChannelAuthorization, UpdatePasscodeChannelAuthorizationRequest } from '../../src/kachery-js/types/kacheryHubTypes'
-import { UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { PasscodeChannelAuthorization, UpdatePasscodeChannelAuthorizationRequest } from '../../src/kacheryInterface/kacheryHubTypes'
+import { UserId } from '../../src/commonInterface/kacheryTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 
 const updatePasscodeChannelAuthorizationHandler = async (request: UpdatePasscodeChannelAuthorizationRequest, verifiedUserId: UserId) => {

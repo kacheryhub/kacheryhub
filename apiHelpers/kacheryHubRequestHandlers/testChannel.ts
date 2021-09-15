@@ -1,5 +1,5 @@
-import { ChannelConfig, TestChannelRequest, TestChannelResponse } from '../../src/kachery-js/types/kacheryHubTypes'
-import { errorMessage, ErrorMessage, UserId } from '../../src/kachery-js/types/kacheryTypes'
+import { ChannelConfig, TestChannelRequest, TestChannelResponse } from '../../src/kacheryInterface/kacheryHubTypes'
+import { errorMessage, ErrorMessage, UserId } from '../../src/commonInterface/kacheryTypes'
 import loadChannelConfig from '../common/loadChannelConfig'
 
 const testChannelHandler = async (request: TestChannelRequest, verifiedUserId: UserId): Promise<TestChannelResponse> => {

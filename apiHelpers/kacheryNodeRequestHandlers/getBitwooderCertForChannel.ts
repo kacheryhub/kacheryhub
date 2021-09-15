@@ -1,7 +1,7 @@
-import BitwooderDelegationCert from '../../src/kachery-js/types/BitwooderDelegationCert'
-import { isChannelConfig } from '../../src/kachery-js/types/kacheryHubTypes'
-import { GetBitwooderCertForChannelRequestBody, GetBitwooderCertForChannelResponse } from "../../src/kachery-js/types/kacheryNodeRequestTypes"
-import { NodeId, PrivateKeyHex } from "../../src/kachery-js/types/kacheryTypes"
+import BitwooderDelegationCert from '../../src/bitwooderInterface/BitwooderDelegationCert'
+import { isChannelConfig } from '../../src/kacheryInterface/kacheryHubTypes'
+import { GetBitwooderCertForChannelRequestBody, GetBitwooderCertForChannelResponse } from "../../src/kacheryInterface/kacheryNodeRequestTypes"
+import { NodeId, PrivateKeyHex } from "../../src/commonInterface/kacheryTypes"
 import firestoreDatabase from "../common/firestoreDatabase"
 import { loadNodeChannelAuthorization } from '../common/loadChannelConfig'
 import createBitwooderCert from './createBitwooderCert'

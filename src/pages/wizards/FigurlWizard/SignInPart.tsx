@@ -1,4 +1,4 @@
-import { useSignedIn } from 'common/googleSignIn/GoogleSignIn';
+import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
 import React, { FunctionComponent, useEffect } from 'react';
 import WizardState from './WizardState';
 

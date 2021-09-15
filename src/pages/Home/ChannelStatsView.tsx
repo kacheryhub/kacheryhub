@@ -1,7 +1,7 @@
-import { useSignedIn } from 'common/googleSignIn/GoogleSignIn';
-import kacheryHubApiRequest from 'common/kacheryHubApiRequest';
-import { GetChannelStatsRequest, isGetChannelStatsResponse } from 'kachery-js/types/kacheryHubTypes';
-import { ChannelName } from 'kachery-js/types/kacheryTypes';
+import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
+import kacheryHubApiRequest from 'kacheryInterface/kacheryHubApiRequest';
+import { GetChannelStatsRequest, isGetChannelStatsResponse } from 'kacheryInterface/kacheryHubTypes';
+import { ChannelName } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';
 
 type Props = {
