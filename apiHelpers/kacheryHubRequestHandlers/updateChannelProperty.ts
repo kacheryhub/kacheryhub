@@ -5,7 +5,7 @@ import isAdminUser from './isAdminUser'
 import axios from 'axios'
 
 const _bitwooderResourceRequest = async (req: any) => {
-    const x = await axios.post('http://bitwooder.vercel.app/api/resource', req)
+    const x = await axios.post('http://bitwooder.net/api/resource', req)
     return x.data
 }
 
