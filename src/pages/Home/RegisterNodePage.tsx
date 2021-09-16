@@ -1,7 +1,7 @@
-import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
-import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink';
-import MarkdownDialog from 'commonInterface/commonComponents/Markdown/MarkdownDialog';
-import useVisible from 'commonInterface/commonComponents/useVisible';
+import useGoogleSignInClient from 'commonComponents/googleSignIn/useGoogleSignInClient';
+import Hyperlink from 'commonComponents/Hyperlink/Hyperlink';
+import MarkdownDialog from 'commonComponents/Markdown/MarkdownDialog';
+import useVisible from 'commonComponents/useVisible';
 import { NodeConfig } from 'kacheryInterface/kacheryHubTypes';
 import { isNodeId, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core'
 import { Refresh } from '@material-ui/icons'
-import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn'
+import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn'
 import { ChannelConfig, GetAllChannelsRequest, isChannelConfig } from 'kacheryInterface/kacheryHubTypes'
 import { ChannelName, isArrayOf } from 'commonInterface/kacheryTypes'
 import React, { FunctionComponent, useCallback, useEffect, useState } from 'react'

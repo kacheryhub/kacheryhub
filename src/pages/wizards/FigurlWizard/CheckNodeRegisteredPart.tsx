@@ -1,6 +1,6 @@
 import { Button, Icon } from '@material-ui/core';
 import { Check } from '@material-ui/icons';
-import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
+import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn';
 import useNodesForUser from 'pages/Home/useNodesForUser';
 import React, { FunctionComponent, useEffect, useMemo } from 'react';
 import WizardState from './WizardState';

@@ -2,8 +2,8 @@ import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import formatTime from 'commonInterface/util/formatTime'
 import { isNodeId, NodeId } from 'commonInterface/kacheryTypes'
 import { NodeConfig } from 'kacheryInterface/kacheryHubTypes'
-import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink'
-import NiceTable from 'commonInterface/commonComponents/NiceTable/NiceTable'
+import Hyperlink from 'commonComponents/Hyperlink/Hyperlink'
+import NiceTable from 'commonComponents/NiceTable/NiceTable'
 
 type Props = {
     nodes: NodeConfig[]

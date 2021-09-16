@@ -1,7 +1,7 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import GoogleSignInSetup from './commonInterface/googleSignIn/GoogleSignInSetup';
+import GoogleSignInSetup from './commonComponents/googleSignIn/GoogleSignInSetup';
 import Home from './pages/Home/Home';
 import { BrowserRouter } from 'react-router-dom';
 import { MuiThemeProvider } from '@material-ui/core';

@@ -1,4 +1,4 @@
-import { useSignedIn } from "commonInterface/googleSignIn/GoogleSignIn";
+import { useSignedIn } from "commonComponents/googleSignIn/GoogleSignIn";
 import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest";
 import { GetUserConfigRequest, isGetUserConfigResponse } from "kacheryInterface/kacheryHubTypes";
 import { UserConfig } from "commonInterface/kacheryTypes";

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn'
-import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient'
+import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn'
+import useGoogleSignInClient from 'commonComponents/googleSignIn/useGoogleSignInClient'
 
 type Props = {
 }

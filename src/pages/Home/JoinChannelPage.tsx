@@ -1,5 +1,5 @@
-import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
-import Hyperlink from 'commonInterface/commonComponents/Hyperlink/Hyperlink';
+import useGoogleSignInClient from 'commonComponents/googleSignIn/useGoogleSignInClient';
+import Hyperlink from 'commonComponents/Hyperlink/Hyperlink';
 import { ChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import AddChannelMembershipControl from './AddChannelMembershipControl';

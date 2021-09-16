@@ -1,4 +1,4 @@
-import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
+import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn';
 import kacheryHubApiRequest from 'kacheryInterface/kacheryHubApiRequest';
 import { GetChannelStatsRequest, isGetChannelStatsResponse } from 'kacheryInterface/kacheryHubTypes';
 import { ChannelName } from 'commonInterface/kacheryTypes';

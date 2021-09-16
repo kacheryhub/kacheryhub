@@ -2,7 +2,7 @@ import { IconButton } from '@material-ui/core';
 import { FiberManualRecord } from '@material-ui/icons';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import { NodeId } from 'commonInterface/kacheryTypes';
-import Hyperlink from '../../commonInterface/commonComponents/Hyperlink/Hyperlink';
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink';
 
 type Props = {
     nodeId: NodeId

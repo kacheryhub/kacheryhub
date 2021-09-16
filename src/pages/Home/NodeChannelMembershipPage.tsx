@@ -1,5 +1,5 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core';
-import useGoogleSignInClient from 'commonInterface/googleSignIn/useGoogleSignInClient';
+import useGoogleSignInClient from 'commonComponents/googleSignIn/useGoogleSignInClient';
 import { NodeChannelMembership } from 'kacheryInterface/kacheryHubTypes';
 import { ChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';

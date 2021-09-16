@@ -1,4 +1,4 @@
-import { useSignedIn } from 'commonInterface/googleSignIn/GoogleSignIn';
+import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn';
 import { NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback } from 'react';
 import SubmitText from './SubmitText';

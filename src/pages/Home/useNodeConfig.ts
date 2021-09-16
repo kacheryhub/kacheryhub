@@ -1,4 +1,4 @@
-import useGoogleSignInClient from "commonInterface/googleSignIn/useGoogleSignInClient"
+import useGoogleSignInClient from "commonComponents/googleSignIn/useGoogleSignInClient"
 import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest"
 import { GetNodeForUserRequest, isGetNodeForUserResponse, NodeConfig } from "kacheryInterface/kacheryHubTypes"
 import { NodeId } from "commonInterface/kacheryTypes"

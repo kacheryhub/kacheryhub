@@ -1,4 +1,4 @@
-import useGoogleSignInClient from "commonInterface/googleSignIn/useGoogleSignInClient"
+import useGoogleSignInClient from "commonComponents/googleSignIn/useGoogleSignInClient"
 import kacheryHubApiRequest from "kacheryInterface/kacheryHubApiRequest"
 import { ChannelConfig, GetChannelRequest, isChannelConfig } from "kacheryInterface/kacheryHubTypes"
 import { ChannelName } from "commonInterface/kacheryTypes"

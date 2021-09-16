@@ -2,7 +2,7 @@ import { IconButton } from '@material-ui/core';
 import { Visibility } from '@material-ui/icons';
 import { Passcode } from 'kacheryInterface/kacheryHubTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
-import Hyperlink from '../../commonInterface/commonComponents/Hyperlink/Hyperlink';
+import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink';
 
 type Props = {
     passcode: Passcode
