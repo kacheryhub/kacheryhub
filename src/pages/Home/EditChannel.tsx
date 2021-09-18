@@ -306,7 +306,7 @@ const EditChannel: FunctionComponent<Props> = ({channelName}) => {
             value: <span>{channel?.ownerId || ''}</span>
         })
         ret.push({
-            key: 'bitwooderResourceId',
+            key: 'bitwooderResourceKey',
             label: 'Bitwooder resource key',
             value: <EditString value={channel?.bitwooderResourceKey || ''} onChange={channel ? handleChangeBitwooderResourceKey : undefined} />
         })

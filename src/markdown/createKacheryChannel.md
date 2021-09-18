@@ -1,5 +1,7 @@
 # How to create a kachery channel
 
+**IMPORTANT: This page needs to be updated to reflect the new Bitwooder system**
+
 You can create a kachery channel by allocating the necessary cloud resources and then configuring your channel on kacheryhub to use those resources. A channel allows authorized kachery nodes to communicate with one another, share data, and execute tasks.
 
 ## Creating a Google storage bucket

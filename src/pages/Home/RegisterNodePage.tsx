@@ -11,6 +11,7 @@ import { getNodeLabel } from './DropdownNodeSelector';
 import { addNode } from './NodeListSection';
 import useNodesForUser from './useNodesForUser';
 import usePage from './usePage';
+import AbbreviatedNodeId from './AbbreviatedNodeId';
 
 type Props = {
 
@@ -71,7 +72,7 @@ const RegisterNodePage: FunctionComponent<Props> = () => {
         <div>
             <h2>Register a kachery node</h2>
             <p>
-                To register a kachery node, you must first
+                To register a node, you must first
                 &nbsp;<Hyperlink onClick={hostKacheryNodeVisible.show}>host a kachery node</Hyperlink>
                 &nbsp;on your computer.
             </p>
@@ -92,7 +93,17 @@ const RegisterNodePage: FunctionComponent<Props> = () => {
             <ul>
                 {
                     (nodesForUser || []).map(node => (
-                        <li><Hyperlink onClick={() => {handleGotoNode(node.nodeId)}}>{node.nodeId} ({getNodeLabel(node)})</Hyperlink></li>
+                        <li>
+                            <AbbreviatedNodeId
+                                nodeId={node.nodeId}
+                                onClick={() => {handleGotoNode(node.nodeId)}}
+                                copyable={false}
+                            />
+                            <span>
+                                ({getNodeLabel(node)})
+                            </span>
+                            {/* <Hyperlink onClick={() => {handleGotoNode(node.nodeId)}}>{node.nodeId} ({getNodeLabel(node)})</Hyperlink> */}
+                        </li>
                     ))
                 }
             </ul>

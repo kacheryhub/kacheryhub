@@ -10,9 +10,7 @@ type Props = {
 const BoxButton: FunctionComponent<Props> = ({label, onClick}) => {
     return (
         <div className="BoxButton" onClick={onClick}>
-            <span style={{verticalAlign: 'middle'}}>
-                <h2>{label}</h2>
-            </span>
+            {label}
         </div>
     )
 }

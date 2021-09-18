@@ -17,6 +17,8 @@ export type Page = {
     page: 'joinChannel',
     nodeId?: NodeId
 } | {
+    page: 'createChannel'
+} | {
     page: 'nodeChannelMembership',
     nodeId: NodeId
     channelName: ChannelName
@@ -55,6 +57,11 @@ const usePage = () => {
             return {
                 page: 'joinChannel',
                 nodeId: query['node'] ? query['node'] as any as NodeId : undefined
+            }
+        }
+        else if (p[1] === 'createChannel') {
+            return {
+                page: 'createChannel'
             }
         }
         else if (p[1] === 'nodeChannelMembership') {
@@ -101,6 +108,13 @@ const usePage = () => {
                 ...location,
                 pathname: `/joinChannel`,
                 search: page.nodeId ? queryString({node: page.nodeId.toString()}) : ''
+            })
+        }
+        else if (page.page === 'createChannel') {
+            history.push({
+                ...location,
+                pathname: `/createChannel`,
+                search: ''
             })
         }
         else if (page.page === 'nodeChannelMembership') {

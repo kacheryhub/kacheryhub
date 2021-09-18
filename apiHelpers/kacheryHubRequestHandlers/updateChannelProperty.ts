@@ -15,7 +15,7 @@ type ResourceInfo = {
     bucketBaseUrl?: string
 }
 
-const getBitwooderResourceInfoForKey = async (key: string): Promise<ResourceInfo> => {
+export const getBitwooderResourceInfoForKey = async (key: string): Promise<ResourceInfo> => {
     const req = {
         type: 'getResourceInfo',
         resourceKey: key

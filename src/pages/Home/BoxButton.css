@@ -1,12 +1,17 @@
 .BoxButton {
-    width: 300px;
-    height: 120px;
-    border: solid 4px gray;
-    box-shadow: 2px 4px gray;
+    width: 180px;
+    height: 16px;
+    border: solid 2px rgb(115, 116, 103);
+    box-shadow: 3px 3px rgb(157, 151, 206);
     text-align: center;
     margin: 5px;
     cursor: pointer;
+    font-size: 16px;
+    padding-top: 20px;
+    color: white;
+    background-color: #795548;
+    padding-bottom: 20px;
 }
 .BoxButton:hover {
-    background-color: lightgray;
+    background-color: rgb(235, 240, 240);
 }

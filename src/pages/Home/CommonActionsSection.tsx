@@ -15,6 +15,9 @@ const CommonActionsSection: FunctionComponent<Props> = () => {
     const handleJoinChannel = useCallback(() => {
         setPage({page: 'joinChannel'})
     }, [setPage])
+    const handleCreateChannel = useCallback(() => {
+        setPage({page: 'createChannel'})
+    }, [setPage])
 
     return (
         <div>
@@ -22,6 +25,7 @@ const CommonActionsSection: FunctionComponent<Props> = () => {
             <Grid container>
                 <Grid item><BoxButton label="Register a new node" onClick={handleRegisterNewNode} /></Grid>
                 <Grid item><BoxButton label="Join a channel" onClick={handleJoinChannel} /></Grid>
+                <Grid item><BoxButton label="Create a channel" onClick={handleCreateChannel} /></Grid>
             </Grid>
         </div>
     )

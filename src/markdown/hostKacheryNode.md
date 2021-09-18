@@ -83,6 +83,8 @@ Log in to kacheryhub with the same google account you passed for the
 the daemon, then click the `add kachery node` button and follow the
 instructions on screen to register your node.
 
+**Important: This section needs to be updated to reflect the new Bitwooder system**
+
 You can now click on your node ID to join channels. Indicate the roles
 you would like to perform, and inform the channel owner (through another
 means of communication) of your name and node id. Once you've been authorized,

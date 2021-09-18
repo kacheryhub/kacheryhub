@@ -1,9 +1,9 @@
-import React, { FunctionComponent, useCallback, useMemo } from 'react'
-import formatTime from 'commonInterface/util/formatTime'
-import { isNodeId, NodeId } from 'commonInterface/kacheryTypes'
-import { NodeConfig } from 'kacheryInterface/kacheryHubTypes'
-import Hyperlink from 'commonComponents/Hyperlink/Hyperlink'
 import NiceTable from 'commonComponents/NiceTable/NiceTable'
+import { isNodeId, NodeId } from 'commonInterface/kacheryTypes'
+import formatTime from 'commonInterface/util/formatTime'
+import { NodeConfig } from 'kacheryInterface/kacheryHubTypes'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
+import AbbreviatedNodeId from './AbbreviatedNodeId'
 
 type Props = {
     nodes: NodeConfig[]
@@ -38,7 +38,13 @@ const NodesTable: FunctionComponent<Props> = ({nodes, onDeleteNode, onClickNode}
                 },
                 nodeId: {
                     text: node.nodeId.toString(),
-                    element: <Hyperlink onClick={() => {onClickNode && onClickNode(node.nodeId)}}>{node.nodeId}</Hyperlink>
+                    element: (
+                        <AbbreviatedNodeId
+                            nodeId={node.nodeId}
+                            onClick={onClickNode ? () => {onClickNode(node.nodeId)} : undefined}
+                            copyable={false}
+                        />
+                    )
                 }
             }
         }))
@@ -48,12 +54,14 @@ const NodesTable: FunctionComponent<Props> = ({nodes, onDeleteNode, onClickNode}
         onDeleteNode && onDeleteNode(nodeId)
     }, [onDeleteNode])
     return (
-        <NiceTable
-            rows={rows}
-            columns={columns}
-            onDeleteRow={handleDeleteNode}
-            deleteRowLabel="Delete node"
-        />
+        <div style={{maxWidth: 700}}>
+            <NiceTable
+                rows={rows}
+                columns={columns}
+                onDeleteRow={onDeleteNode ? handleDeleteNode : undefined}
+                deleteRowLabel="Delete node"
+            />
+        </div>
     )
 }
 

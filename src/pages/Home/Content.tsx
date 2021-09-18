@@ -1,62 +1,25 @@
-import { ChannelName, NodeId } from 'commonInterface/kacheryTypes'
+import CreateChannelPage from 'pages/CreateChannelPage/CreateChannelPage'
+import HomePage from 'pages/HomePage/HomePage'
 import FigurlWizard from 'pages/wizards/FigurlWizard/FigurlWizard'
-import React, { FunctionComponent, useCallback } from 'react'
-import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn'
-import AllChannelListSection from './AllChannelListSection'
-import ChannelListSection from './ChannelListSection'
-import CommonActionsSection from './CommonActionsSection'
+import React, { FunctionComponent } from 'react'
 import EditChannel from './EditChannel'
 import EditNode from './EditNode'
 import './Home.css'
 import JoinChannelPage from './JoinChannelPage'
 import NodeChannelMembershipPage from './NodeChannelMembershipPage'
-import NodeListSection from './NodeListSection'
 import RegisterNodePage from './RegisterNodePage'
-import SignInSection from './SignInSection'
 import usePage from './usePage'
-import useUserConfig from './useUserConfig'
 
 type Props = {
     
 }
 
 const Content: FunctionComponent<Props> = () => {
-    const {signedIn} = useSignedIn()
-    const {page, setPage} = usePage()
-    const userConfig = useUserConfig()
-
-    const handleSelectNode = useCallback((nodeId: NodeId) => {
-        setPage({page: 'node', nodeId})
-    }, [setPage])
-
-    const handleSelectChannel = useCallback((channelName: ChannelName) => {
-        setPage({page: 'channel', channelName})
-    }, [setPage])
-
-    const isAdmin = userConfig && userConfig.admin
+    const {page} = usePage()
 
     if (page.page === 'home') {
         return (
-            <div>
-                <h2>Welcome to kacheryhub.</h2>
-                <p><a href="https://github.com/kacheryhub/kachery-doc/blob/main/README.md" rel="noreferrer" target="_blank">Read about kachery</a></p>
-                <p>Here you can manage your kachery nodes and channels.</p>
-                <SignInSection />
-                {
-                    signedIn && (
-                        <span>
-                            <CommonActionsSection />
-                            <NodeListSection onSelectNode={handleSelectNode} />
-                            <ChannelListSection onSelectChannel={handleSelectChannel} />
-                            {
-                                isAdmin && (
-                                    <AllChannelListSection onSelectChannel={handleSelectChannel} />
-                                )
-                            }
-                        </span>
-                    )
-                }
-            </div>
+            <HomePage />
         )
     }
     else if (page.page === 'node') {
@@ -90,6 +53,14 @@ const Content: FunctionComponent<Props> = () => {
             <div>
                 <JoinChannelPage
                     nodeId={page.nodeId}
+                />
+            </div>
+        )
+    }
+    else if (page.page === 'createChannel') {
+        return (
+            <div>
+                <CreateChannelPage
                 />
             </div>
         )

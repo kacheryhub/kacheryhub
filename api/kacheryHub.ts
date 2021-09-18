@@ -1,6 +1,5 @@
 import { VercelRequest, VercelResponse } from '@vercel/node'
 import axios from 'axios'
-import { isKacheryHubRequest } from '../src/kacheryInterface/kacheryHubTypes'
 import googleVerifyIdToken from '../apiHelpers/common/googleVerifyIdToken'
 import addAuthorizedNodeHandler from '../apiHelpers/kacheryHubRequestHandlers/addAuthorizedNode'
 import addAuthorizedPasscodeHandler from '../apiHelpers/kacheryHubRequestHandlers/addAuthorizedPasscode'
@@ -12,17 +11,19 @@ import deleteNodeHandler from '../apiHelpers/kacheryHubRequestHandlers/deleteNod
 import deleteNodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/deleteNodeChannelAuthorization'
 import deleteNodeChannelMembershipHandler from '../apiHelpers/kacheryHubRequestHandlers/deleteNodeChannelMembership'
 import deletePasscodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/deletePasscodeChannelAuthorization'
+import getAllChannelsHandler from '../apiHelpers/kacheryHubRequestHandlers/getAllChannels'
+import getBitwooderResourceInfoHandler from '../apiHelpers/kacheryHubRequestHandlers/getBitwooderResourceInfo'
 import getChannelHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannel'
 import getChannelsForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannelsForUser'
-import getAllChannelsHandler from '../apiHelpers/kacheryHubRequestHandlers/getAllChannels'
+import getChannelStatsHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannelStats'
 import getNodeForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getNodeForUser'
-import getUserConfigHandler from '../apiHelpers/kacheryHubRequestHandlers/getUserConfig'
 import getNodesForUserHandler from '../apiHelpers/kacheryHubRequestHandlers/getNodesForUser'
+import getUserConfigHandler from '../apiHelpers/kacheryHubRequestHandlers/getUserConfig'
 import updateChannelPropertyHandler from '../apiHelpers/kacheryHubRequestHandlers/updateChannelProperty'
 import updateNodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/updateNodeChannelAuthorization'
 import updateNodeChannelMembershipRequestHandler from '../apiHelpers/kacheryHubRequestHandlers/updateNodeChannelMembership'
 import updatePasscodeChannelAuthorizationHandler from '../apiHelpers/kacheryHubRequestHandlers/updatePasscodeChannelAuthorization'
-import getChannelStatsHandler from '../apiHelpers/kacheryHubRequestHandlers/getChannelStats'
+import { isKacheryHubRequest } from '../src/kacheryInterface/kacheryHubTypes'
 
 const RECAPTCHA_SECRET_KEY = process.env.RECAPTCHA_SECRET_KEY
 
@@ -131,6 +132,9 @@ module.exports = (req: VercelRequest, res: VercelResponse) => {
         }
         else if (request.type === 'updateNodeChannelMembership') {
             return await updateNodeChannelMembershipRequestHandler(request, verifiedUserId)
+        }
+        else if (request.type === 'getBitwooderResourceInfo') {
+            return await getBitwooderResourceInfoHandler(request, verifiedUserId, verifiedReCaptchaInfo)
         }
         else {
             throw Error(`Unexpected request type: ${request.type}`)

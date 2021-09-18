@@ -124,8 +124,8 @@ const ChannelListSection: FunctionComponent<Props> = ({onSelectChannel}) => {
         <div>
             <h2>Your channels</h2>
             <p>
-                These are channels hosted by you; you provide the cloud storage and network communication services.
-                You can configure which nodes are allowed to belong to these channels in various roles.
+                These are channels owned by you.
+                You can configure which nodes are authorized to belong to these channels.
             </p>
 
             <p><Hyperlink onClick={createKacheryChannelVisible.show}>How to create a kachery channel</Hyperlink></p>
