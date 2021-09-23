@@ -32,7 +32,6 @@ const verifyReCaptcha = async (token: string | undefined) => {
     if (!token) return undefined
 
     const url = `https://www.google.com/recaptcha/api/siteverify?secret=${RECAPTCHA_SECRET_KEY}&response=${token}`
-    console.info(url)
     const x = await axios.post(url)
     return x.data
 }

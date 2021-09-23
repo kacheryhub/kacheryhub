@@ -3,7 +3,7 @@ import { isResourceInfo, ResourceInfo } from 'bitwooderInterface/BitwooderResour
 import { useSignedIn } from 'commonComponents/googleSignIn/GoogleSignIn';
 import { ChannelName, isChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import kacheryHubApiRequest from 'kacheryInterface/kacheryHubApiRequest';
-import { AddChannelRequest, GetBitwooderResourceInfoRequest } from 'kacheryInterface/kacheryHubTypes';
+import { AddChannelRequest, AddNodeChannelMembershipRequest, GetBitwooderResourceInfoRequest } from 'kacheryInterface/kacheryHubTypes';
 import { getNodeLabel } from 'pages/Home/DropdownNodeSelector';
 import useNodesForUser from 'pages/Home/useNodesForUser';
 import usePage from 'pages/Home/usePage';
@@ -128,6 +128,24 @@ const CreateChannelPage: FunctionComponent<Props> = () => {
             }
             try {
                 await kacheryHubApiRequest(req, {reCaptcha: true})
+            }
+            catch(err: any) {
+                setSubmitErrorText(err.message)
+                return
+            }
+            try {
+                for (let nodeId of nodeIdsToAuthorize) {
+                    const req2: AddNodeChannelMembershipRequest = {
+                        type: 'addNodeChannelMembership',
+                        nodeId: nodeId as any as NodeId,
+                        channelName: newChannelName as any as ChannelName,
+                        auth: {
+                            userId,
+                            googleIdToken
+                        }
+                    }
+                    await kacheryHubApiRequest(req2, {reCaptcha: true})
+                }
             }
             catch(err: any) {
                 setSubmitErrorText(err.message)
