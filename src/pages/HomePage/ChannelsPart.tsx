@@ -42,7 +42,12 @@ const ChannelsPart: FunctionComponent<Props> = () => {
         setPage({page: 'channel', channelName})
     }, [setPage])
 
-    if (!channelsForUser) return <div>No channelsForUser</div>
+    if (!channelsForUser) return (
+        <div>
+            <h2>Your channels</h2>
+            <p>Loading channels...</p>
+        </div>
+    )
     return (
         <div>
             <h2>Your channels</h2>
@@ -57,7 +62,7 @@ const ChannelsPart: FunctionComponent<Props> = () => {
                     </div>
                 ) : (
                     <div>
-                        <p>You have own the following channels:</p>
+                        <p>You own the following channels:</p>
                         <IconButton onClick={refreshChannelsForUser} title="Refresh channels"><Refresh /></IconButton>
                         <ChannelsTable
                             channels={channelsForUser}

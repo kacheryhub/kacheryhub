@@ -42,7 +42,12 @@ const NodesPart: FunctionComponent<Props> = () => {
         setPage({page: 'node', nodeId})
     }, [setPage])
 
-    if (!nodesForUser) return <div>No nodesForUser</div>
+    if (!nodesForUser) return (
+        <div>
+            <h2>Your nodes</h2>
+            <p>Loading nodes...</p>
+        </div>
+    )
     return (
         <div>
             <h2>Your nodes</h2>
