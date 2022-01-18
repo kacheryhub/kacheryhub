@@ -25,11 +25,11 @@ const EditChannelAuthorizedPasscodes: FunctionComponent<Props> = ({channel, onUp
         {
             key: 'authorization',
             label: 'Authorization'
-        },
-        {
-            key: 'roles',
-            label: 'Roles'
         }
+        // {
+        //     key: 'roles',
+        //     label: 'Roles'
+        // }
     ]), [])
     const rows = useMemo(() => (
         (channel.authorizedPasscodes || []).map(x => {

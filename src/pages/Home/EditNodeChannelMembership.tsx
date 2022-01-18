@@ -54,11 +54,11 @@ const EditNodeChannelMembership: FunctionComponent<Props> = ({nodeChannelMembers
         if (!editing) return
         if (!editNodeChannelMembership) return
         setEditNodeChannelMembership({
-            ...editNodeChannelMembership,
-            roles: {
-                ...editNodeChannelMembership.roles,
-                [roleKey]: v
-            }
+            ...editNodeChannelMembership
+            // roles: {
+            //     ...editNodeChannelMembership.roles,
+            //     [roleKey]: v
+            // }
         })
     }, [editNodeChannelMembership, editing])
     

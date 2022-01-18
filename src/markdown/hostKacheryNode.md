@@ -85,8 +85,7 @@ instructions on screen to register your node.
 
 **Important: This section needs to be updated to reflect the new Bitwooder system**
 
-You can now click on your node ID to join channels. Indicate the roles
-you would like to perform, and inform the channel owner (through another
+You can now click on your node ID to join channels. Inform the channel owner (through another
 means of communication) of your name and node id. Once you've been authorized,
 you can start using the client commands discussed in the
 [kachery-client documentation](https://github.com/kacheryhub/kachery-doc/blob/main/doc/client-howto.md).

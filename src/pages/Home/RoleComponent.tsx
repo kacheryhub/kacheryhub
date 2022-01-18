@@ -14,7 +14,8 @@ const RoleComponent: FunctionComponent<RoleComponentProps> = ({roleKey, label, r
     const authorized = (!requiresAuth) || (
         (nodeChannelMembership) && (nodeChannelMembership.authorization) && ((nodeChannelMembership.authorization.permissions as {[key: string]: boolean})[roleKey])
     )
-    const checked = nodeChannelMembership && (nodeChannelMembership.roles as {[key: string]: boolean})[roleKey]
+    // const checked = nodeChannelMembership && (nodeChannelMembership.roles as {[key: string]: boolean})[roleKey]
+    const checked = false
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         const v = e.target.checked
         onChange && onChange(roleKey, v)

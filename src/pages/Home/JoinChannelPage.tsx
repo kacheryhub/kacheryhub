@@ -1,5 +1,4 @@
 import useGoogleSignInClient from 'commonComponents/googleSignIn/useGoogleSignInClient';
-import Hyperlink from 'commonComponents/Hyperlink/Hyperlink';
 import { ChannelName, NodeId } from 'commonInterface/kacheryTypes';
 import React, { FunctionComponent, useCallback, useMemo, useState } from 'react';
 import AddChannelMembershipControl from './AddChannelMembershipControl';
@@ -23,14 +22,14 @@ const JoinChannelPage: FunctionComponent<Props> = ({nodeId}) => {
         nodeId || internalNodeId
     ), [nodeId, internalNodeId])
 
-    const handleSelectNodeChannelMembership = useCallback((channelName: ChannelName) => {
-        if (!selectedNodeId) return
-        setPage({
-            page: 'nodeChannelMembership',
-            nodeId: selectedNodeId,
-            channelName
-        })
-    }, [selectedNodeId, setPage])
+    // const handleSelectNodeChannelMembership = useCallback((channelName: ChannelName) => {
+    //     if (!selectedNodeId) return
+    //     setPage({
+    //         page: 'nodeChannelMembership',
+    //         nodeId: selectedNodeId,
+    //         channelName
+    //     })
+    // }, [selectedNodeId, setPage])
 
     const handleAddChannelMembership = useCallback((channelName: ChannelName) => {
         if (!selectedNodeId) return
@@ -44,13 +43,14 @@ const JoinChannelPage: FunctionComponent<Props> = ({nodeId}) => {
             try {
                 await addNodeChannelMembership(googleSignInClient, selectedNodeId, channelName)
                 setStatus('finished')
-                handleSelectNodeChannelMembership(channelName)
+                // handleSelectNodeChannelMembership(channelName)
+                setPage({page: 'node', nodeId: selectedNodeId})
             }
             catch(err: any) {
                 setErrorMessage(err.message)
             }
         })()
-    }, [googleSignInClient, selectedNodeId, handleSelectNodeChannelMembership])
+    }, [googleSignInClient, selectedNodeId, setPage])
 
     return (
         <div>
@@ -80,7 +80,6 @@ const JoinChannelPage: FunctionComponent<Props> = ({nodeId}) => {
                         }
                         <NodeChannelMemberships
                             nodeId={selectedNodeId}
-                            onSelectNodeChannelMembership={handleSelectNodeChannelMembership}
                         />
                     </div>
                 )
@@ -89,7 +88,7 @@ const JoinChannelPage: FunctionComponent<Props> = ({nodeId}) => {
     )
 }
 
-const NodeChannelMemberships: FunctionComponent<{nodeId: NodeId, onSelectNodeChannelMembership: (channelName: ChannelName) => void}> = ({nodeId, onSelectNodeChannelMembership}) => {
+const NodeChannelMemberships: FunctionComponent<{nodeId: NodeId}> = ({nodeId}) => {
     const {nodeConfig} = useNodeConfig(nodeId)
     const nodeChannelMemberships = useMemo(() => (
         nodeConfig?.channelMemberships || []
@@ -107,7 +106,7 @@ const NodeChannelMemberships: FunctionComponent<{nodeId: NodeId, onSelectNodeCha
                     <span>| </span>
                     {
                         nodeChannelMemberships.map(m => (
-                            <span><Hyperlink onClick={() => {onSelectNodeChannelMembership(m.channelName)}}>{m.channelName}</Hyperlink> | </span>
+                            <span>{m.channelName} | </span>
                         ))
                     }
                 </div>

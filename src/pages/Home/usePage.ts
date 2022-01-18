@@ -18,10 +18,10 @@ export type Page = {
     nodeId?: NodeId
 } | {
     page: 'createChannel'
-} | {
-    page: 'nodeChannelMembership',
-    nodeId: NodeId
-    channelName: ChannelName
+// } | {
+//     page: 'nodeChannelMembership',
+//     nodeId: NodeId
+//     channelName: ChannelName
 } | {
     page: 'figurlWizard'
 }
@@ -64,17 +64,17 @@ const usePage = () => {
                 page: 'createChannel'
             }
         }
-        else if (p[1] === 'nodeChannelMembership') {
-            const ni = p[2]
-            const cn = channelName(p[3])
-            if (isNodeId(ni)) {
-                return {
-                    page: 'nodeChannelMembership',
-                    nodeId: ni,
-                    channelName: cn
-                }
-            }
-        }
+        // else if (p[1] === 'nodeChannelMembership') {
+        //     const ni = p[2]
+        //     const cn = channelName(p[3])
+        //     if (isNodeId(ni)) {
+        //         return {
+        //             page: 'nodeChannelMembership',
+        //             nodeId: ni,
+        //             channelName: cn
+        //         }
+        //     }
+        // }
         else if (p[1] === 'figurlWizard') {
             return {
                 page: 'figurlWizard'
@@ -117,12 +117,12 @@ const usePage = () => {
                 search: ''
             })
         }
-        else if (page.page === 'nodeChannelMembership') {
-            history.push({
-                ...location,
-                pathname: `/nodeChannelMembership/${page.nodeId}/${page.channelName}`
-            })
-        }
+        // else if (page.page === 'nodeChannelMembership') {
+        //     history.push({
+        //         ...location,
+        //         pathname: `/nodeChannelMembership/${page.nodeId}/${page.channelName}`
+        //     })
+        // }
         else if (page.page === 'figurlWizard') {
             history.push({
                 ...location,

@@ -18,7 +18,7 @@ If you are creating the Ably project yourself, follow the detailed instructions 
 
 ## Adding the channel on kacheryhub
 
-Once you have set up a Google bucket and an Ably project for your channel, you can add and configure the channel on kacheryhub. Click the button to `add kachery channel` and provide a name of the channel. You should choose a unique name without spaces. Then click to configure the channel and provide the appropriate credentials for the bucket and the pub/sub project. After that, you can authorize nodes to belong to your channel with various roles.
+Once you have set up a Google bucket and an Ably project for your channel, you can add and configure the channel on kacheryhub. Click the button to `add kachery channel` and provide a name of the channel. You should choose a unique name without spaces. Then click to configure the channel and provide the Bitwooder resource. After that, you can authorize nodes to belong to your channel.
 
 ## Google Storage Bucket creation and configuration
 

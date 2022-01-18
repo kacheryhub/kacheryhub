@@ -6,7 +6,6 @@ import EditChannel from './EditChannel'
 import EditNode from './EditNode'
 import './Home.css'
 import JoinChannelPage from './JoinChannelPage'
-import NodeChannelMembershipPage from './NodeChannelMembershipPage'
 import RegisterNodePage from './RegisterNodePage'
 import usePage from './usePage'
 
@@ -65,16 +64,16 @@ const Content: FunctionComponent<Props> = () => {
             </div>
         )
     }
-    else if (page.page === 'nodeChannelMembership') {
-        return (
-            <div>
-                <NodeChannelMembershipPage
-                    nodeId={page.nodeId}
-                    channelName={page.channelName}
-                />
-            </div>
-        )
-    }
+    // else if (page.page === 'nodeChannelMembership') {
+    //     return (
+    //         <div>
+    //             <NodeChannelMembershipPage
+    //                 nodeId={page.nodeId}
+    //                 channelName={page.channelName}
+    //             />
+    //         </div>
+    //     )
+    // }
     else if (page.page === 'figurlWizard') {
         return (
             <div>

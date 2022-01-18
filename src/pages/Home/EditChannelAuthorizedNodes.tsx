@@ -1,15 +1,14 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
-import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import { ChannelName, isNodeId, NodeId } from 'commonInterface/kacheryTypes'
-import { ChannelConfig, NodeChannelAuthorization, NodeChannelMembership } from 'kacheryInterface/kacheryHubTypes'
+import { ChannelConfig, NodeChannelAuthorization } from 'kacheryInterface/kacheryHubTypes'
+import React, { FunctionComponent, useCallback, useMemo } from 'react'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
 import AbbreviatedNodeId from './AbbreviatedNodeId'
 import AddAuthorizedNodeControl from './AddAuthorizedNodeControl'
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization'
 import usePage from './usePage'
-import EditNodeChannelMembership from './EditNodeChannelMembership'
 
 type Props = {
     channel: ChannelConfig
@@ -28,22 +27,22 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
         {
             key: 'authorization',
             label: 'Authorization'
-        },
-        {
-            key: 'roles',
-            label: 'Roles'
         }
+        // {
+        //     key: 'roles',
+        //     label: 'Roles'
+        // }
     ]), [])
     const gotoNodePage = useCallback((nodeId: NodeId) => {
         setPage({page: 'node', nodeId})
     }, [setPage])
     const rows = useMemo(() => (
         (channel.authorizedNodes || []).map(x => {
-            const nodeChannelMembership: NodeChannelMembership = {
-                nodeId: x.nodeId,
-                channelName: x.channelName,
-                roles: x.roles || {}
-            }
+            // const nodeChannelMembership: NodeChannelMembership = {
+            //     nodeId: x.nodeId,
+            //     channelName: x.channelName
+            //     // roles: x.roles || {}
+            // }
             return {
                 key: x.nodeId.toString(),
                 columnValues: {
@@ -53,10 +52,10 @@ const EditChannelAuthorizedNodes: FunctionComponent<Props> = ({channel, onUpdate
                     },
                     authorization: {
                         element: <EditNodeChannelAuthorization authorization={x} onUpdateAuthorization={onUpdateAuthorization} />
-                    },
-                    roles: {
-                        element: <EditNodeChannelMembership nodeChannelMembership={nodeChannelMembership} />
                     }
+                    // roles: {
+                    //     element: <EditNodeChannelMembership nodeChannelMembership={nodeChannelMembership} />
+                    // }
                 }
             }
         })

@@ -1,16 +1,15 @@
 import { IconButton } from '@material-ui/core'
 import { Add } from '@material-ui/icons'
-import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import { ChannelName, isChannelName, NodeId } from 'commonInterface/kacheryTypes'
 import { NodeChannelAuthorization, NodeChannelMembership, NodeConfig } from 'kacheryInterface/kacheryHubTypes'
+import React, { FunctionComponent, useCallback, useEffect, useMemo, useState } from 'react'
 import Hyperlink from '../../commonComponents/Hyperlink/Hyperlink'
 import NiceTable from '../../commonComponents/NiceTable/NiceTable'
 import useVisible from '../../commonComponents/useVisible'
 import AddChannelMembershipControl from './AddChannelMembershipControl'
 import EditNodeChannelAuthorization from './EditNodeChannelAuthorization'
-import EditNodeChannelMembership from './EditNodeChannelMembership'
-import usePage from './usePage'
 import EditNodeChannelPasscodes from './EditNodeChannelPasscodes'
+import usePage from './usePage'
 
 type Props = {
     node: NodeConfig
@@ -37,12 +36,12 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
             key: 'authorization',
             label: 'Authorization',
             element: <span style={{fontWeight: 'bold'}}>Authorization</span>
-        },
-        {
-            key: 'roles',
-            label: 'Roles',
-            element: <span style={{fontWeight: 'bold'}}>Roles</span>
         }
+        // {
+        //     key: 'roles',
+        //     label: 'Roles',
+        //     element: <span style={{fontWeight: 'bold'}}>Roles</span>
+        // }
     ]), [])
     const gotoChannelPage = useCallback((channelName: ChannelName) => {
         setPage({page: 'channel', channelName})
@@ -62,10 +61,10 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
                     },
                     authorization: {
                         element: <EditNodeChannelAuthorization authorization={x.authorization} onUpdateAuthorization={onUpdateNodeChannelAuthorization} />
-                    },
-                    roles: {
-                        element: <EditNodeChannelMembership nodeChannelMembership={x} onUpdateNodeChannelMembership={onUpdateNodeChannelMembership} />
                     }
+                    // roles: {
+                    //     element: <EditNodeChannelMembership nodeChannelMembership={x} onUpdateNodeChannelMembership={onUpdateNodeChannelMembership} />
+                    // }
                 }
             }
         ))
@@ -89,7 +88,7 @@ const EditNodeChannelMemberships: FunctionComponent<Props> = ({node, onUpdateNod
     return (
         <div>
             <h2>Channel memberships</h2>
-            <p>Configure which channels this node belongs to as well as its roles in those channels. Roles must be authorized by the owner of each channel.</p>
+            <p>Configure which channels this node belongs to. In order for these memberships to take effect, the channel owner must authorize this node..</p>
             <IconButton onClick={showAddChannelMembership} title="Add channel membership"><Add /></IconButton>
             {
                 addChannelMembershipVisible && (
