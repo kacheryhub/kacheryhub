@@ -1,11 +1,13 @@
-import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from '../../src/kacheryInterface/kacheryHubTypes'
+import axios from 'axios'
 import { UserId } from '../../src/commonInterface/kacheryTypes'
+import { isGoogleServiceAccountCredentials, UpdateChannelPropertyRequest } from '../../src/kacheryInterface/kacheryHubTypes'
 import firestoreDatabase from '../common/firestoreDatabase'
 import isAdminUser from './isAdminUser'
-import axios from 'axios'
 
 const _bitwooderResourceRequest = async (req: any) => {
-    const x = await axios.post('http://bitwooder.net/api/resource', req)
+    const protocol = 'http'
+    const endpointDomain = process.env.REACT_APP_BITWOODER_API_DOMAIN ?? 'bitwooder.net'
+    const x = await axios.post(`${protocol}://${endpointDomain}/api/resource`, req)
     return x.data
 }
 
