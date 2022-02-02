@@ -155,11 +155,13 @@ const CreateChannelPage: FunctionComponent<Props> = () => {
         })()
     }, [userId, googleIdToken, newChannelName, resourceKey, resourceInfo, setPage, nodeIdsToAuthorize, authorizeFigurl])
 
+    const endpointDomain = process.env.REACT_APP_BITWOODER_API_DOMAIN ?? 'bitwooder.net'
+    const bitwooderLink = <ExternalLink href={`https://${endpointDomain}`}>{endpointDomain}</ExternalLink>
     return (
         <div>
             <h2>Create a kachery channel</h2>
             <p>
-                Before you create a channel, you will need to obtain cloud resources from <ExternalLink href="https://bitwooder.net">bitwooder.net</ExternalLink>.
+                Before you create a channel, you will need to obtain cloud resources from {bitwooderLink}.
                 Bitwooder allows you to register your own resources (e.g., storage buckets),
                 but also provides some limited resources for free, to help you get started.
             </p>
